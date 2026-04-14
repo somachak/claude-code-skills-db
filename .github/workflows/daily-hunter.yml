@@ -1,25 +1,27 @@
-name: Daily Skills Hunter
+name: Skills Hunter (manual fallback)
+
+# Primary runner is a local Cowork scheduled task that executes on the user's
+# Mac using Claude Opus 4.6 (via Claude Max subscription). The cron trigger
+# below is intentionally disabled — this workflow is kept as a no-credit
+# heuristic-only fallback that can be triggered manually from the Actions tab.
 
 on:
-  schedule:
-    # 07:00 UTC every day. Adjust if the user wants local-time precision.
-    - cron: "0 7 * * *"
   workflow_dispatch:
     inputs:
       mode:
         description: "Run mode"
         required: true
-        default: "auto-commit"
+        default: "dry-run"
         type: choice
         options:
           - dry-run
           - auto-commit
 
 permissions:
-  contents: write  # needed for the hunter to commit + push
+  contents: write
 
 concurrency:
-  group: daily-hunter
+  group: skills-hunter
   cancel-in-progress: false
 
 jobs:
@@ -56,5 +58,5 @@ jobs:
       - name: Run hunter
         run: |
           python hunter/run_hunter.py \
-            --mode "${{ github.event.inputs.mode || 'auto-commit' }}" \
+            --mode "${{ github.event.inputs.mode || 'dry-run' }}" \
             --stack react,nextjs,typescript,node,python,fastapi,django,tailwind,shadcn
