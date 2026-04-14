@@ -28,15 +28,21 @@ Source priority:
 3. Relevant public GitHub skill repositories and public repository discussions
 4. Public web pages and public X discussions with specific, repeatable insights
 
-Validation:
+Regeneration and validation:
 
 Run:
+python /home/user/workspace/claude-code-skills-db/tools/create_actual_skills.py
+python /home/user/workspace/claude-code-skills-db/tools/create_plain_english_guides.py
 python /home/user/workspace/claude-code-skills-db/scripts/validate_skills_db.py
 
 If validation fails, fix the file before finishing.
+If the database changed, regenerate the installable `skills/` folders, the `bundles/` zip files, and the plain-English `README.md` guide inside every skill folder before finishing.
 
 Finish condition:
 
 - Database remains valid
+- Installable `skills/` folders are in sync with the database
+- Plain-English `README.md` guides exist inside every skill folder
+- Bundles are refreshed when the library changes
 - Timestamp and version are refreshed if changes were made
 - No speculative or weakly supported entries are added
