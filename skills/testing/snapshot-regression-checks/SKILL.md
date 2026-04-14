@@ -1,64 +1,41 @@
 ---
 name: snapshot-regression-checks
 description: Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization. Use when outputs should remain consistent over time.
+when_to_use: snapshot testing, golden file, approval testing
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# Snapshot Regression Checks
+## Snapshot Testing for UI and JSON
 
-## When to Use This Skill
+Snapshot tests capture output (rendered HTML, JSON, image) and alert on changes. Useful for regressions, but can become brittle. The skill is knowing when to use snapshots and when not to.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- snapshot testing
-- golden file
-- approval testing
-- email snapshot
+- Rendered component HTML (React, Vue)
+- JSON responses (API output)
+- Generated documents (PDFs, reports)
+- Visual regressions (with pixel-diff tools)
 
-Use it for front-end, back-end workflows in the `testing` category.
+### Decision Framework for Jest, Pytest, or Playwright
 
-## What This Skill Does
+1. **Snapshots are regression detectors, not tests.** They don't assert correctness, only change. Use with unit/integration tests that verify behavior.
+2. **Review snapshots in code review.** New snapshot? Diff is clear. Review change visually. Approve if intentional.
+3. **Pixel-diff for visual regressions.** Use Percy, Chromatic, or similar for screenshot comparison. More robust than HTML snapshots for UI changes.
+4. **Don't snapshot large objects.** Snapshot of entire user object (100 fields) = noisy diffs. Snapshot specific output.
+5. **Intentional snapshot updates.** jest -u updates snapshots. Use when intentional change is made; commit diff in same PR.
 
-Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization. Use when outputs should remain consistent over time.
+### Anti-patterns to Avoid
 
-## Instructions
+- Snapshot as unit test. Snapshot changes, developer runs jest -u without thinking. Changed API contract, didn't notice.
+- Huge snapshots. Diff is unreadable. Snapshot only relevant output.
+- Snapshot with timestamps. Every run creates new snapshot due to datetime. Mock time or remove dynamic values.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Include criteria for when snapshots are appropriate and when they are noisy.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/snapshot-guidelines.md`
-- `examples/stable-output-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Snapshots are paired with unit/integration tests verifying behavior
+- [ ] Snapshot diffs are reviewed in code review (intentional changes only)
+- [ ] Snapshots don't contain timestamps or random data
+- [ ] Large snapshots are broken into smaller, focused ones
+- [ ] jest -u (snapshot update) is used intentionally, not blindly
+- [ ] Pixel-diff tool used for visual regression (if applicable)
+- [ ] Snapshot updates are documented in commit message

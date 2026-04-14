@@ -1,65 +1,42 @@
 ---
 name: hardening-file-uploads
 description: Secures file upload flows for validation, scanning, storage isolation, content-type trust, and post-processing safety. Use when handling avatars, attachments, imports, or user-generated media.
+when_to_use: file upload, content type, virus scan
+allowed-tools: Read Grep Bash
 ---
 
-# File Upload Hardening
+## Secure File Handling
 
-## When to Use This Skill
+File uploads are vectors for RCE, XXE, path traversal, and storage attacks. The skill is validating MIME types, scanning for malware, storing securely, and serving safely.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- file upload
-- content type
-- virus scan
-- attachment
-- storage isolation
+- Building file upload features (avatars, documents, exports)
+- Reviewing upload endpoints for security
+- Designing a file storage service
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Node.js/Python + S3 or Local Storage
 
-## What This Skill Does
+1. **MIME type validation on server, not client.** Check file extension and magic bytes (first few bytes). Don't trust `Content-Type` header.
+2. **Sanitize filenames.** Uploaded file "../../etc/passwd"? Sanitize to remove directory traversal. Use UUIDs instead of original names.
+3. **Virus scanning is essential.** Use ClamAV, VirusTotal, or cloud-native scanning (AWS GuardDuty). Scan before storing.
+4. **Store files outside the web root.** Never serve uploads directly from `public/` where they're executable. Stream from storage, serving as attachments.
+5. **Enforce size limits.** 5GB upload = DoS. Set max file size; reject oversized uploads.
 
-Secures file upload flows for validation, scanning, storage isolation, content-type trust, and post-processing safety. Use when handling avatars, attachments, imports, or user-generated media.
+### Anti-patterns to Avoid
 
-## Instructions
+- Trusting MIME type header. Attacker uploads .exe with type=image/png.
+- Storing files in web root with original name. User uploads shell.php; it's executable.
+- No malware scanning. Uploaded file is a trojan; distributed to other users.
+- Path traversal: filename "../../etc/passwd" stored as-is.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Treat parser execution and storage exposure as first-class concerns.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/upload-security-checklist.md`
-- `examples/upload-edge-cases.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Filename is sanitized (remove .., /, special chars)
+- [ ] File extension is validated (whitelist: jpg, png, pdf, etc.)
+- [ ] MIME type is validated server-side (magic bytes, not just header)
+- [ ] File is scanned for malware before storage
+- [ ] Max file size is enforced
+- [ ] Files are stored outside web root (S3, cloud storage, or protected directory)
+- [ ] Files are served with `Content-Disposition: attachment` (download, not execute)
+- [ ] Test: upload .php file with image MIME type; verify it's rejected or served as attachment, not executed

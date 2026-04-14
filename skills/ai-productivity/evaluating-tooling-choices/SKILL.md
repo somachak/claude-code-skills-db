@@ -1,64 +1,39 @@
 ---
 name: evaluating-tooling-choices
 description: Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.
+when_to_use: tool comparison, library choice, framework evaluation
 ---
 
-# Engineering Tooling Evaluator
+## Decision Framework for Build Tools and Dependencies
 
-## When to Use This Skill
+Choosing the right tool (bundler, testing framework, ORM) affects productivity and maintenance burden for years. The skill is evaluating options systematically and documenting decisions.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- tool comparison
-- library choice
-- framework evaluation
-- build vs buy
+- Choosing tech for new project
+- Auditing existing tools (are they still the best choice?)
+- Team is considering migration (webpack → Vite, Jest → Vitest)
 
-Use it for platform, full-stack workflows in the `ai-productivity` category.
+### Decision Framework
 
-## What This Skill Does
+1. **Evaluation criteria.** Performance, maintainability, community, learning curve, cost. Weight by importance to project.
+2. **Trade-offs are explicit.** Webpack is slower than Vite, but has more loaders. Vitest is newer but faster. Document tradeoffs.
+3. **Proof of concept.** Don't commit based on docs. Build prototype with candidate tool. Measure, compare.
+4. **Decision record.** ADR (Architecture Decision Record) documents: what was the decision, why this tool, alternatives considered, tradeoffs. Helps future decisions.
+5. **Sunsetting strategy.** If switching tools later, is it easy? If tool is proprietary, can you escape? Low switching cost preferred.
 
-Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.
+### Anti-patterns to Avoid
 
-## Instructions
+- Trendy choice. "Everyone uses X." X might not suit your project.
+- One person decides. Tool is imposed on team. Resistance and resentment.
+- No tradeoff analysis. Choose based on one metric (speed, not maintainability).
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep tradeoffs explicit and tied to team constraints rather than hype.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/tooling-evaluation-template.md`
-- `references/decision-criteria.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Evaluation criteria are defined and weighted
+- [ ] Candidates are evaluated against criteria
+- [ ] Proof of concept is built (not just research)
+- [ ] Decision is documented (ADR format)
+- [ ] Team understands tradeoffs and rationale
+- [ ] Migration cost is estimated (if switching later)
+- [ ] Tool is evaluated annually (still best choice?)

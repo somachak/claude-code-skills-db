@@ -1,65 +1,44 @@
 ---
 name: reviewing-caching-strategies
 description: Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks. Use when introducing Redis, CDN, query, or application-level caching.
+when_to_use: cache invalidation, redis, ttl
+allowed-tools: Read Grep Bash
 ---
 
-# Caching Strategy Review
+## Cache Invalidation and Performance
 
-## When to Use This Skill
+Caching is the cheapest optimization until it's wrong. The challenge: invalidation. Use appropriate strategies: TTL, write-through, event-based, or cache-aside. In Node.js/Python with Redis, the skill is knowing when to cache and when not to.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- cache invalidation
-- redis
-- ttl
-- stale data
-- cache key
+- Performance troubleshooting: DB queries are slow
+- Designing read-heavy systems (dashboards, reports)
+- Reducing load on expensive resources (external APIs, complex calculations)
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Redis, Memcached, or In-Memory Cache
 
-## What This Skill Does
+1. **Cache-Aside (Lazy Loaded).** Check cache; miss = load from DB, update cache, return. Simple, but cache miss is slow. Use for non-critical data.
+2. **Write-Through.** Write to cache and DB together. Ensures cache is always fresh, but slightly slower writes.
+3. **TTL (Time-To-Live) for simplicity.** Cache expires after N seconds. Reloads on next miss. Use for data that changes infrequently.
+4. **Event-based invalidation for consistency.** Data changes → publish event → invalidate cache. Used in event-driven systems.
+5. **Cache warming for hot data.** Pre-load cache at startup or on schedule. Avoids cold starts.
 
-Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks. Use when introducing Redis, CDN, query, or application-level caching.
+### Anti-patterns to Avoid
 
-## Instructions
+- Caching mutable objects in-process (Node.js or Python). Next deploy resets cache. Use external cache (Redis).
+- Cache stampede: multiple processes miss cache simultaneously, all hit DB together. Use locks or probabilistic TTL.
+- Stale cache due to no invalidation. Object updated in DB; cache still serves old data. Use TTL or event-based invalidation.
+- Caching sensitive data without encryption. Cache breach = data breach.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Prefer workload-specific guidance over generic caching advice.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/cache-patterns.md`
-- `examples/invalidation-strategies.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Cache strategy is defined (cache-aside, write-through, TTL, event-based)
+- [ ] Cache misses are logged and monitored (hit ratio ≥70% is good)
+- [ ] TTL is set appropriately (short for fast-changing data, long for static)
+- [ ] Invalidation is triggered on writes (event, explicit, or TTL expiry)
+- [ ] Cache is external (Redis, not in-memory in app process)
+- [ ] Sensitive data in cache is encrypted or expires quickly
+- [ ] Cache warming is implemented for hot data (pre-load at startup)
+- [ ] Cache stampede is prevented (locks or probabilistic expiry)
+- [ ] Test: update data in DB, verify cache is invalidated and reloaded
+- [ ] Monitor: cache hit ratio, memory usage, eviction rate

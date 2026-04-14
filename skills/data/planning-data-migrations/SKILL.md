@@ -1,66 +1,43 @@
 ---
 name: planning-data-migrations
 description: Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks. Use when changing live data models or moving data between stores.
-disable-model-invocation: true
+when_to_use: migration plan, backfill, zero downtime migration
+allowed-tools: Read Grep
 ---
 
-# Data Migration Planner
+## Safe, Reversible Database Changes
 
-## When to Use This Skill
+Migrations change production schema without downtime. The skill is writing safe migrations, testing them, and coordinating with application deploys to avoid conflicts.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- migration plan
-- backfill
-- zero downtime migration
-- rollout sequencing
-- data change
+- Adding, removing, or renaming columns
+- Changing column types or constraints
+- Creating or dropping indexes
+- Large data backfills
 
-Use it for back-end, data workflows in the `data` category.
+### Decision Framework for Knex, Alembic, or Django Migrations
 
-## What This Skill Does
+1. **Migrations must be reversible.** UP (add column), DOWN (remove column). Test both directions.
+2. **Backfill data in separate migration.** Add column (NOT NULL): add column (nullable), backfill, add constraint. Avoids long locks.
+3. **Coordinate with app deploy.** If removing column, app must stop using it first. Deploy app → remove column (next deploy).
+4. **Large tables need special care.** Add index on 1B-row table = hours of locking. Use CONCURRENTLY (PostgreSQL) or online DDL (MySQL 8+).
+5. **Test migrations on staging first.** Run migration, verify schema, measure downtime, revert. Repeat on production.
 
-Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks. Use when changing live data models or moving data between stores.
+### Anti-patterns to Avoid
 
-## Instructions
+- No rollback testing. Assume DOWN works? It doesn't. Test both directions.
+- Data loss migration without backup. Always backup before major migrations.
+- Long-running migrations during peak traffic. Schedule for maintenance window or use online DDL.
+- Mixing structural and data migrations. Keep them separate for clarity and rollback.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Favor plan-validate-execute workflows and explicit rollback points.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/migration-checklist.md`
-- `templates/migration-plan-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Migration is reversible (UP and DOWN both tested)
+- [ ] Migration doesn't remove data without backup
+- [ ] Large data changes use backfill migration (separate step)
+- [ ] Adds constraints only after data is backfilled
+- [ ] Tests on staging environment first (full schema, data size, downtime)
+- [ ] Downtime is acceptable or uses online DDL (CONCURRENTLY, MySQL 8+)
+- [ ] Rollback procedure is documented and tested
+- [ ] Coordination with app deploy: app doesn't use removed/renamed columns

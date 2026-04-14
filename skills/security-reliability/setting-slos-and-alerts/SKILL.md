@@ -1,65 +1,41 @@
 ---
 name: setting-slos-and-alerts
 description: Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus. Use when tuning monitoring for APIs, background systems, or customer-facing journeys.
+when_to_use: slo, alert fatigue, slis
+allowed-tools: Read Grep
 ---
 
-# SLO and Alert Design
+## Service Level Objectives and Alerting
 
-## When to Use This Skill
+SLOs (Service Level Objectives) define acceptable uptime and performance. Alerting tells you when you breach SLOs. The skill is setting realistic SLOs and responding to breaches.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- slo
-- alert fatigue
-- slis
-- monitoring thresholds
-- incident response
+- Defining service reliability targets
+- Incident response and on-call
+- Capacity planning and scaling
 
-Use it for platform, back-end workflows in the `security-reliability` category.
+### Decision Framework
 
-## What This Skill Does
+1. **SLO is realistic.** 99.9% uptime (8.76 hours downtime/year) vs. 99.99% (52 minutes/year). Business impact determines target.
+2. **Error budget.** If SLO is 99.9%, you have 8.76 hours of downtime/year. Spend it on deploys, maintenance. Overspend = SLO breach.
+3. **Alerts are high-fidelity.** Alert when SLO is at risk, not on every blip. False alarms = on-call fatigue.
+4. **Runbook exists.** Alert fires; on-call has procedure: check logs, restart service, page engineer. No guessing.
+5. **Blameless post-mortems.** When SLO breaches, investigate and learn. No blame; fix systemic issues.
 
-Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus. Use when tuning monitoring for APIs, background systems, or customer-facing journeys.
+### Anti-patterns to Avoid
 
-## Instructions
+- SLO too strict. 99.99% for non-critical service = constant alerting, no one responds.
+- Alerts everywhere. Alert fatigue; on-call ignores them.
+- No error budget concept. Deploy conservatively even if reliability allows risk-taking.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Prefer user-impact signals over infrastructure vanity metrics.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/slo-guide.md`
-- `examples/alert-routing.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] SLO is defined per service (uptime, latency, error rate)
+- [ ] SLO is realistic and matches business needs
+- [ ] Error budget is tracked and communicated
+- [ ] Alerts are configured for SLO breaches (high-fidelity, low false positive rate)
+- [ ] Runbook exists for critical alerts
+- [ ] On-call rotation is clear (who's on-call, how to escalate)
+- [ ] Incident response process is documented
+- [ ] Post-mortems are conducted (no blame, focus on improvements)

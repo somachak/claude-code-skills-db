@@ -1,67 +1,45 @@
 ---
 name: designing-component-systems
 description: Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
+when_to_use: component library, design system, props api
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Component System Design
+## Building Scalable UI Foundations
 
-## When to Use This Skill
+A component system is a contract: props define behavior, composition rules prevent prop drilling, and documentation ensures consistency. In React with TypeScript and shadcn/ui, the system lives in your component library, not scattered across pages.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- component library
-- design system
-- props api
-- slot patterns
-- headless ui
+- Building or auditing a design system / component library
+- Designing new foundational components (Button, Input, Card, Layout)
+- Establishing naming, composition, and variant patterns
+- Planning a transition from ad-hoc components to a system
 
-Use it for front-end, design-system, full-stack workflows in the `frontend` category.
+### Decision Framework for React/TypeScript + Tailwind
 
-## What This Skill Does
+1. **Composition over inheritance.** Prefer smaller, focused components (Button, Badge, Icon) that combine via layout primitives (Flex, Stack, Grid via Tailwind) rather than bloated "Card" with many optional props.
+2. **Variant-driven props.** Use TypeScript unions for size, color, intent (e.g., `variant: 'primary' | 'secondary' | 'danger'`). shadcn/ui uses the `class-variance-authority` library to manage this cleanly.
+3. **Controlled vs. uncontrolled.** Form inputs should support both; checkboxes can be uncontrolled unless part of a form group. Be explicit in JSDoc.
+4. **Limit prop explosion.** If a component has >5 conditional props, it's doing too much. Split it or introduce a compound component pattern.
+5. **Accessibility by default.** shadcn/ui includes ARIA. Don't bypass it. Document required props (e.g., `aria-label` on IconButton).
 
-Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
+### Anti-patterns to Avoid
 
-## Instructions
+- Deeply nested component APIs (Button within Wrapper within Container). Keep it flat.
+- Props like `isLoading`, `isError`, `isSuccess`—use a single `state` prop or data-driven rendering.
+- Mixing styling concerns: don't accept `className` for every element inside a component. Use composition instead.
+- Exporting internal styles or themes as the public API. Separate styling logic from component code.
+- Creating a "God Component" that tries to handle all use cases; instead, provide primitives and document patterns.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep rules opinionated and consistent across frameworks.
-- Include anti-patterns such as prop explosion and style leakage.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/component-api-guidelines.md`
-- `references/token-strategy.md`
-- `examples/component-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Define component hierarchy and naming conventions (e.g., `Button`, `ButtonGroup`, `ButtonIcon`)
+- [ ] Document all props with TypeScript types and JSDoc examples
+- [ ] Create Storybook stories or a component gallery showing each variant
+- [ ] Test composition: buttons in forms, dropdowns in toolbars, etc.
+- [ ] Define color palette (via Tailwind), spacing scale, typography rules
+- [ ] Ensure consistent sizing (Button height, padding, line-height) across variants
+- [ ] Document accessibility requirements (aria-label, role, keyboard handlers)
+- [ ] Version the system; plan deprecation for breaking changes

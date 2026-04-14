@@ -1,65 +1,41 @@
 ---
 name: improving-observability
 description: Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.
+when_to_use: observability, tracing, structured logs
+allowed-tools: Read Grep
 ---
 
-# Observability Improvement
+## Logging, Metrics, and Tracing for Production Visibility
 
-## When to Use This Skill
+Observability = visibility into system behavior. Logging answers "what happened?", metrics answer "how much?", tracing answers "why is it slow?". The skill is collecting useful data and surfacing it quickly.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- observability
-- tracing
-- structured logs
-- metrics
-- instrumentation
+- Incident: need to understand what happened
+- Performance: query is slow; why?
+- Trends: error rate increasing; investigate
 
-Use it for platform, back-end workflows in the `security-reliability` category.
+### Decision Framework for Prometheus, ELK, Datadog, or similar
 
-## What This Skill Does
+1. **Structured logging.** JSON logs with context (user_id, request_id, service). Searchable and analyzable.
+2. **Metrics for health.** Request latency, error rate, queue depth. Alerting on anomalies (error rate >1%).
+3. **Distributed tracing.** Trace request across services (web → API → database). Find bottleneck (which service is slow?).
+4. **Retention and cost.** Full logs for 7 days; sampled after. Metrics for 1 year. Tracing for 24 hours. Balance detail and cost.
+5. **Dashboards for on-call.** Key metrics on one screen (error rate, latency, queue depth). On-call engineer can assess health in 30s.
 
-Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.
+### Anti-patterns to Avoid
 
-## Instructions
+- Logging everything. Storage cost explodes; noise drowns signal.
+- No metrics. Logs tell you errors happened; metrics tell you the rate.
+- No alerting. Errors occur; team doesn't know until user complains.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Tie every recommendation to a concrete debugging or alerting outcome.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/observability-guide.md`
-- `templates/instrumentation-plan.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Structured logging (JSON) with context (user_id, request_id)
+- [ ] Key metrics are collected (latency, error rate, queue depth, resource usage)
+- [ ] Alerts for critical metrics (error rate >X%, latency >Yms)
+- [ ] Distributed tracing setup (request ID flows across services)
+- [ ] Dashboards show health at a glance
+- [ ] Log retention is set (7-30 days; archive older)
+- [ ] On-call has clear procedure to investigate (runbook)
+- [ ] Regular review of logs (errors, patterns); improve monitoring

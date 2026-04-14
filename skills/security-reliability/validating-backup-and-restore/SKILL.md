@@ -1,66 +1,42 @@
 ---
 name: validating-backup-and-restore
 description: Validates backup scope, recovery steps, restore drills, and data integrity assumptions. Use when services store critical operational or customer data.
-disable-model-invocation: true
+when_to_use: backup restore, recovery drill, rpo rto
+allowed-tools: Read Grep
 ---
 
-# Backup and Restore Validation
+## Data Protection and Disaster Recovery
 
-## When to Use This Skill
+Backups are only useful if you can restore them. The skill is testing restore procedures, knowing RTO (Recovery Time Objective) and RPO (Recovery Point Objective), and ensuring backups are encrypted and stored safely.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- backup restore
-- recovery drill
-- rpo rto
-- disaster recovery
-- restore test
+- Launch of new service
+- Quarterly backup testing
+- Incident: data corruption, need to restore
 
-Use it for platform, back-end workflows in the `security-reliability` category.
+### Decision Framework for Backup Strategy
 
-## What This Skill Does
+1. **Automated daily backups.** Don't rely on manual dumps. Schedule via cron or managed service.
+2. **Multiple backup locations.** Local, offsite, cloud. If one is compromised, others survive.
+3. **RTO and RPO are explicit.** RTO: time to restore (target: <1 hour for critical data). RPO: data loss (target: <1 hour). Affects backup frequency and retention.
+4. **Restore testing, not just backups.** Backup is worthless if restore fails. Test monthly: restore to staging, verify data integrity.
+5. **Encryption at rest and in transit.** Backup is a juicy target. Encrypt with key managed separately from data.
 
-Validates backup scope, recovery steps, restore drills, and data integrity assumptions. Use when services store critical operational or customer data.
+### Anti-patterns to Avoid
 
-## Instructions
+- No backups. Too expensive or "we won't need it." Hardware fails.
+- Backups not tested. "We have backups" until restore fails.
+- Single backup location. Compromised = all gone.
+- No encryption. Backup leaked = data breach.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Treat proof of restoration as more important than backup existence.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/restore-drill-template.md`
-- `references/recovery-checklist.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Automated daily backups (database, files, configs)
+- [ ] Backups are stored in multiple locations (local, cloud, offsite)
+- [ ] Backups are encrypted (AES-256) with separate key management
+- [ ] RTO and RPO are defined and achievable
+- [ ] Restore procedure is documented and tested
+- [ ] Monthly restore test to staging; verify data integrity
+- [ ] Retention policy is clear (keep 30 days, archive old)
+- [ ] Monitoring: backup success/failure, storage usage

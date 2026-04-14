@@ -1,65 +1,43 @@
 ---
 name: auditing-secrets-and-config
 description: Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
+when_to_use: secrets audit, env vars, credential exposure
+allowed-tools: Read Grep
 ---
 
-# Secrets and Config Audit
+## Secret Management and Configuration
 
-## When to Use This Skill
+Secrets (API keys, passwords, database credentials) are targets. Config (feature flags, endpoints) changes between environments. The skill is separating them from code and rotating frequently.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- secrets audit
-- env vars
-- credential exposure
-- config hygiene
-- secret rotation
+- Onboarding service (needs database credentials)
+- Rotating credentials (monthly, after departure)
+- Auditing for exposed secrets
 
-Use it for security, platform, back-end workflows in the `security-reliability` category.
+### Decision Framework for AWS Secrets Manager, HashiCorp Vault, or similar
 
-## What This Skill Does
+1. **Secrets are never in code.** Git history is forever. One leaked secret = account compromise. Use secret manager.
+2. **Config via environment variables.** `process.env.DATABASE_URL`, `process.env.STRIPE_API_KEY`. Different values per environment.
+3. **Least privilege for services.** Database user has only SELECT, not DROP. API service has only its API key, not admin key.
+4. **Rotation schedule.** Database passwords rotated monthly. API keys rotated quarterly. If leaked, damage is limited.
+5. **Audit logs for access.** Who accessed which secret? Alert on unusual access patterns.
 
-Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
+### Anti-patterns to Avoid
 
-## Instructions
+- Secrets in code or .env files. Git history or accidental pushes = leak.
+- One shared secret for all services. If leaked, all services are compromised.
+- No rotation. Secret compromised a year ago; still active.
+- No audit logs. Can't detect breach or investigate.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Focus on removal of trust assumptions and safer defaults.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/secrets-checklist.md`
-- `examples/config-risk-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] No secrets in Git history (`git log -p --all | grep -i password`)
+- [ ] Secrets are in secret manager (AWS Secrets Manager, Vault)
+- [ ] Config is via environment variables
+- [ ] `.env.example` exists (no real secrets); checked in
+- [ ] Least privilege for service credentials
+- [ ] Secrets are rotated monthly
+- [ ] Audit logs for secret access
+- [ ] Leaked secret procedure is documented (revoke, rotate, investigate)
+- [ ] Test: try to access secret without permission; verify denied

@@ -1,65 +1,41 @@
 ---
 name: maintaining-monorepos
 description: Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation. Use when scaling packages, apps, services, and shared libraries together.
+when_to_use: monorepo, workspace graph, nx
+allowed-tools: Bash Read
 ---
 
-# Monorepo Maintenance
+## Workspace Layout, Dependencies, and Tooling
 
-## When to Use This Skill
+Monorepos (single repo, multiple projects) reduce friction but add complexity. The skill is structuring workspaces, managing dependencies, and enabling independent deployment.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- monorepo
-- workspace graph
-- nx
-- turbo
-- package boundaries
+- Multiple related services (API, web app, CLI) in one repo
+- Shared libraries and utilities
+- Coordinating changes across services
 
-Use it for platform, full-stack workflows in the `platform` category.
+### Decision Framework for Lerna, Nx, Turborepo, or pnpm Workspaces
 
-## What This Skill Does
+1. **Clear folder structure.** /packages/api, /packages/web, /packages/shared. Each package has own package.json.
+2. **Shared libraries via symlink.** Monorepo tool symlinks shared packages into node_modules. Code changes instantly reflected.
+3. **Build graph for incremental builds.** Only rebuild packages that changed. If shared library changed, rebuild dependents.
+4. **Publishing from monorepo.** Each package has version, changelog, publish trigger. Coordinated but independent releases.
+5. **Dependency management.** Monorepo tool ensures versions are consistent (shared library same version everywhere).
 
-Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation. Use when scaling packages, apps, services, and shared libraries together.
+### Anti-patterns to Avoid
 
-## Instructions
+- Copy-paste code across packages. Monorepo exists to share. Shared library should be explicit.
+- Tight coupling between packages. One change breaks unrelated package. Defeats scaling.
+- No build isolation. Webpack for web, Node for API in same repo. Build tool conflicts.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep guidance aligned with dependency direction and validation scope.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/monorepo-patterns.md`
-- `examples/package-boundary-rules.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Folder structure is clear (/packages/api, /packages/web, /packages/shared)
+- [ ] Each package has own package.json and tsconfig.json
+- [ ] Monorepo tool (Lerna, Nx, Turborepo) manages dependencies
+- [ ] Build graph is incremental (only changed packages rebuilt)
+- [ ] Shared library is symlinked and changes are instant
+- [ ] Each package can be deployed independently
+- [ ] Dependency versions are consistent across packages
+- [ ] CI runs tests only for changed packages (--since flag)

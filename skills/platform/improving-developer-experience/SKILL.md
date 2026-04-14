@@ -1,65 +1,41 @@
 ---
 name: improving-developer-experience
 description: Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow. Use when repos are hard to bootstrap, inconsistent, or slow to work in.
+when_to_use: developer experience, onboarding, dev setup
+allowed-tools: Bash Read
 ---
 
-# Developer Experience Optimizer
+## Local Dev Setup, Onboarding, and Tooling
 
-## When to Use This Skill
+Developer experience (DX) is force multiplier. Fast, clear setup and tools = faster onboarding and fewer bugs. The skill is automating setup, documenting workflows, and choosing tools that scale.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- developer experience
-- onboarding
-- dev setup
-- scripts cleanup
-- repo ergonomics
+- New team member; setup takes >1 hour
+- Complex local development (many services, databases)
+- Frequent environment-specific bugs
 
-Use it for platform, full-stack workflows in the `platform` category.
+### Decision Framework for Docker Compose, Make, or Devcontainers
 
-## What This Skill Does
+1. **Docker Compose for local dev.** One docker-compose.yml starts all services (API, database, Redis, etc.). `docker compose up` = everything running.
+2. **Makefile or npm scripts for commands.** `make dev`, `make test`, `make lint`. Consistent interface; no one has to remember flags.
+3. **Devcontainers (VSCode) for isolation.** Development happens in container matching production. No "works on my machine" issues.
+4. **README is a checklist.** Prerequisites (Node.js version, Docker), steps to run locally, common issues. New dev follows checklist; done in 30min.
+5. **CI mirrors local tests.** Run same tests locally as in CI. No surprises on push.
 
-Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow. Use when repos are hard to bootstrap, inconsistent, or slow to work in.
+### Anti-patterns to Avoid
 
-## Instructions
+- Manual setup steps. "Install X, run Y, set env var Z." Tedious and error-prone.
+- Documentation is outdated. New team member follows README; steps fail. Frustration.
+- Local dev differs from production. Service runs locally but fails in Docker. Debugging is painful.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Value clear defaults, one-command setup, and smaller cognitive load.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/devex-checklist.md`
-- `templates/onboarding-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Docker Compose starts all services (`docker compose up`)
+- [ ] README has setup checklist (prerequisites, steps, troubleshooting)
+- [ ] `make dev` or `npm run dev` starts local environment
+- [ ] `make test` runs same tests as CI
+- [ ] No secrets in code; env vars are documented (with examples)
+- [ ] Devcontainers (VSCode) or equivalent for reproducible dev environment
+- [ ] New team member can run locally in <1 hour
+- [ ] Local dev matches production (Node.js version, dependencies)

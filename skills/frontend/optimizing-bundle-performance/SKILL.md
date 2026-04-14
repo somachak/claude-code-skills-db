@@ -1,67 +1,45 @@
 ---
 name: optimizing-bundle-performance
 description: Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks. Use when load time, bundle size, or interaction latency becomes a concern.
+when_to_use: bundle size, code splitting, hydration
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Bundle Performance Optimizer
+## Reducing JavaScript to Ship Faster
 
-## When to Use This Skill
+Bundle size directly impacts First Contentful Paint. The strategy: code-split by route, defer non-critical JS, use dynamic imports, and audit dependencies. Next.js handles much of this, but you need to verify.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- bundle size
-- code splitting
-- hydration
-- lazy loading
-- webpack analyze
-- vite
+- Lighthouse reports slow LCP or large JS
+- Adding a new package; need to weigh cost vs. benefit
+- Post-launch: monitoring JS bundle growth
+- App feels slow on 3G or older devices
 
-Use it for front-end, full-stack workflows in the `frontend` category.
+### Decision Framework for Next.js/React
 
-## What This Skill Does
+1. **Route-level code splitting is default in Next.js.** Each page is its own chunk. Don't use one giant bundle.
+2. **dynamic() imports defer non-critical components.** Use `dynamic(() => import('./Heavy'), { ssr: false })` for modals, tabs, or below-the-fold content.
+3. **Audit node_modules.** Run `npm ls` or tools like `bundlesize` or `esbuild` analyzer. A single dependency can bloat the bundle by 100KB.
+4. **Server Components reduce JS.** In Next.js, fetch data on the server; send HTML, not JSON + JS. Only use `'use client'` where interactivity is needed.
+5. **Tree-shaking requires ES modules.** CommonJS dependencies don't tree-shake. Prefer ES module packages or use bundler plugins.
 
-Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks. Use when load time, bundle size, or interaction latency becomes a concern.
+### Anti-patterns to Avoid
 
-## Instructions
+- Importing unused dependencies (e.g., `import moment from 'moment'` for one date; use native Date or date-fns with tree-shaking).
+- Sending entire libraries for minor utilities. Lodash: 70KB. A few native methods: 0KB.
+- Not using dynamic imports for route-dependent code. Every page loads every modal, form, etc.
+- Server Rendering and Client Rendering the same component twice (duplication).
+- Forgetting to build and measure in production mode. Dev mode includes source maps and unminified code.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Prefer measurable budgets and build output analysis over generic advice.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/bundle-budget-guide.md`
-- `examples/dependency-triage.md`
-- `scripts/analyze-bundle.sh`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Run `npm run build; npm run start`; measure Final JS size in DevTools Network tab
+- [ ] Use Next.js built-in bundle analyzer (`@next/bundle-analyzer`)
+- [ ] Check each top-level dependency: is it necessary? Can a smaller alternative replace it?
+- [ ] Verify dynamic imports for non-critical routes (modals, settings, etc.)
+- [ ] Test on slow 3G in DevTools; confirm LCP is <2.5s
+- [ ] Ensure all routes use Server Components by default; mark only interactive parts with `'use client'`
+- [ ] Run Lighthouse; check JS size metric specifically
+- [ ] Monitor bundle size in CI/CD (e.g., via bundlesize package)

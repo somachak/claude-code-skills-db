@@ -1,69 +1,47 @@
 ---
 name: implementing-auth-flows
 description: Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions. Use when shipping login, SSO, OAuth, password reset, invitation, or RBAC features.
-disable-model-invocation: true
-allowed-tools: "Read Grep Bash(pytest *) Bash(npm test *)"
+when_to_use: oauth, sso, session
+allowed-tools: Read Grep Bash
 ---
 
-# Authentication Flow Builder
+## Authentication and Authorization Patterns
 
-## When to Use This Skill
+Authentication (who are you?) and authorization (what can you do?) are bedrock. Implement once, carefully. Use industry-standard flows: OAuth2, OpenID Connect, JWTs or sessions. Don't invent your own crypto.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- oauth
-- sso
-- session
-- jwt
-- rbac
-- password reset
+- Designing login, sign-up, MFA, or logout flows
+- Adding OAuth (GitHub, Google, social login)
+- Reviewing token generation, storage, and validation
+- Planning authorization rules (roles, permissions, ACLs)
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Node.js/Python + Next.js Server Actions
 
-## What This Skill Does
+1. **Use Next.js Auth.js (formerly NextAuth).** It handles OAuth, credentials, sessions, MFA—all vetted, maintained. Don't roll your own.
+2. **Sessions vs. JWTs.** Sessions (encrypted httpOnly cookies) are simpler for monoliths. JWTs for distributed systems (microservices, mobile). Both can work in Next.js.
+3. **Password hashing must use bcrypt or Argon2.** Never store plaintext. Never hash with SHA-256 without salt.
+4. **Tokens have short lifespans.** Access token: 15-30 minutes. Refresh token: days or weeks, stored in httpOnly cookie. Rotate on each use.
+5. **MFA is opt-in security.** TOTP (Google Authenticator) or WebAuthn. Store secret in secure storage, not plaintext.
 
-Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions. Use when shipping login, SSO, OAuth, password reset, invitation, or RBAC features.
+### Anti-patterns to Avoid
 
-## Instructions
+- Storing passwords in plaintext or with weak hashing (MD5, even with salt).
+- JWTs in localStorage (susceptible to XSS). Use httpOnly cookies for JWTs too.
+- No refresh token rotation. Stolen refresh token = infinite session.
+- Hardcoding OAuth secrets in source code. Use environment variables, never commit.
+- Authorization checks in frontend only. Backend must validate every permission.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Treat auth changes as high-risk and recommend validator loops and threat review.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/auth-flow-maps.md`
-- `references/authorization-checklist.md`
-- `examples/auth-edge-cases.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Use Auth.js or similar framework; don't implement crypto yourself
+- [ ] Password hashing uses bcrypt or Argon2 with salt
+- [ ] Login session is httpOnly cookie or httpOnly JWT in cookie
+- [ ] Tokens have short lifespan (access ≤30min, refresh ≤1 week)
+- [ ] Refresh tokens are rotated on use or after set expiry
+- [ ] Logout clears token and session server-side
+- [ ] OAuth (if used) is implemented via Auth.js or certified SDK
+- [ ] MFA (if required) uses TOTP or WebAuthn, not custom schemes
+- [ ] Authorization: every endpoint checks user permission server-side
+- [ ] CSRF token is validated (Next.js Server Actions handle this)
+- [ ] Password reset is secure (token sent via email, expires in 1 hour)

@@ -1,64 +1,42 @@
 ---
 name: generating-unit-tests
 description: Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.
+when_to_use: unit tests, edge case tests, regression test
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# Unit Test Generator
+## Unit Test Design and Coverage
 
-## When to Use This Skill
+Unit tests verify single functions in isolation. The skill is writing fast, focused tests that catch regressions without being brittle.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- unit tests
-- edge case tests
-- regression test
-- branch coverage
+- Writing new functions or components
+- Reviewing untested code
+- Coverage audit (target >80%)
 
-Use it for front-end, back-end, full-stack workflows in the `testing` category.
+### Decision Framework for Jest, Pytest, or Vitest
 
-## What This Skill Does
+1. **One assertion per test.** Test name says what it verifies. test('sum returns 5 when given 2 and 3'). Multiple assertions = one fails, rest skipped.
+2. **Mock external dependencies.** Database, API, filesystem: mock them. Unit test should not hit network or disk.
+3. **Fixtures for setup.** beforeEach initializes test data. Cleaner than inline setup.
+4. **Coverage, not completeness.** 80% coverage catches most bugs. 100% is tedious; diminishing returns. Focus on complex logic, edge cases.
+5. **Test behavior, not implementation.** Test that sum(2, 3) === 5, not the internal algorithm.
 
-Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.
+### Anti-patterns to Avoid
 
-## Instructions
+- Testing private implementation details. If method is private, test via public API.
+- No mocks. Unit test calls real database = slow, flaky.
+- Multiple assertions per test. One fails, others skip.
+- Brittle assertions. test('array has 3 items') fails if data changes. Prefer assertions on structure.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Bias toward behavior-focused tests and small deterministic fixtures.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/unit-test-checklist.md`
-- `examples/test-case-matrix.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] One assertion per test (or logically related assertions)
+- [ ] Mocks for I/O (database, API, filesystem)
+- [ ] Fixtures for common setup
+- [ ] Test name describes what it verifies
+- [ ] Coverage is ≥80% (Codecov, istanbul)
+- [ ] Flaky tests are investigated and fixed
+- [ ] Test runs in <1s (not waiting on mocks)
+- [ ] Edge cases are tested (null, empty, very large values)

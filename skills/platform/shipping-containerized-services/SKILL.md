@@ -1,65 +1,41 @@
 ---
 name: shipping-containerized-services
 description: Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks. Use when containerizing APIs, workers, or internal tools.
+when_to_use: dockerfile, container image, kubernetes deploy
+allowed-tools: Bash Read
 ---
 
-# Containerized Service Shipping
+## Docker, Images, and Container Orchestration
 
-## When to Use This Skill
+Containers package code and dependencies. The skill is writing Dockerfiles that are secure, small, and fast to build.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- dockerfile
-- container image
-- kubernetes deploy
-- runtime config
-- image size
+- Deploying services to production (Kubernetes, ECS, Docker Swarm)
+- Ensuring consistency across dev, staging, production
+- Scaling services horizontally
 
-Use it for platform, back-end workflows in the `platform` category.
+### Decision Framework for Docker + Kubernetes or ECS
 
-## What This Skill Does
+1. **Multi-stage builds reduce image size.** Build stage with build tools, runtime stage with only app + dependencies. Final image is 50% smaller.
+2. **Base image matters.** Alpine (5MB) vs. Ubuntu (77MB). For Node.js, use node:22-alpine. For Python, python:3.11-slim.
+3. **Layer caching aids iteration.** Layers that don't change are reused. Put COPY (changes frequently) after RUN (stable dependencies). Rebuild faster.
+4. **Non-root user for security.** Don't run as root. Create app user; run process as app. Limits damage if container is compromised.
+5. **Healthchecks enable orchestration.** Container reports healthy/unhealthy. Orchestrator (K8s) restarts unhealthy containers.
 
-Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks. Use when containerizing APIs, workers, or internal tools.
+### Anti-patterns to Avoid
 
-## Instructions
+- Single-stage Dockerfile. Build tools in final image = bloat.
+- Running as root. Compromise = full container access.
+- Latest base image tag. Base image changes; build is non-reproducible. Pin version (node:22.3.0).
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Cover build caching, non-root execution, and health checks.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/container-guide.md`
-- `examples/dockerfile-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Dockerfile uses multi-stage builds
+- [ ] Base image is minimal (Alpine, Debian slim)
+- [ ] Layer order optimizes cache (stable dependencies first)
+- [ ] Non-root user is created; process runs as app user
+- [ ] Healthcheck is defined
+- [ ] Image is built and tested in CI before deploy
+- [ ] Image size is <500MB (warn >1GB)
+- [ ] Secrets (API keys, passwords) are not in image

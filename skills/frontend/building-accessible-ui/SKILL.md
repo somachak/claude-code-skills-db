@@ -1,70 +1,63 @@
 ---
 name: building-accessible-ui
 description: Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks. Use when building or reviewing component libraries, forms, dialogs, navigation, and responsive interfaces.
-allowed-tools: "Read Grep Bash(npm run *)"
-when_to_use: Use for React, Vue, HTML, CSS, form, modal, menu, table, and design-system tasks.
+when_to_use: accessibility audit, keyboard navigation, aria
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Accessible UI Review
+## Making Interfaces Usable for Everyone
 
-## When to Use This Skill
+Accessibility isn't an afterthought—it's part of the component contract. A11y shifts from "will screen readers work?" to "does the keyboard navigation flow match the UI intent?" and "are interactive states semantically clear?"
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- accessibility audit
-- keyboard navigation
-- aria
-- screen reader
-- wcag
-- semantic html
+- Auditing component libraries (shadcn/ui, custom React components)
+- Building forms, modals, dialogs, tables, or navigation menus
+- Reviewing keyboard trap bugs or focus-loss issues
+- Implementing ARIA labels, roles, landmarks for complex UIs
 
-Use it for front-end, full-stack workflows in the `frontend` category.
+### Decision Framework for React/TypeScript
 
-## What This Skill Does
+1. **Semantic HTML first.** Prefer `<button>` over `<div role="button">`. Use `<label>` for form fields, `<nav>` for navigation. Check shadcn/ui component source—it often includes ARIA patterns out of the box.
+2. **Focus management.** React doesn't restore focus automatically when content unmounts. Use `useRef` to trap focus in modals; restore it on close. Test with Tab, Shift+Tab, and Escape.
+3. **ARIA only when semantic HTML isn't enough.** Don't add `aria-label` to a properly labeled `<input>`. Do use `aria-live` for toast notifications, `aria-expanded` for accordion toggles.
+4. **Contrast and spacing.** Tailwind defaults (text-foreground on bg-background) usually meet WCAG AA. Verify color contrast in tools like WebAIM. Ensure touch targets are ≥44×44 CSS pixels.
 
-Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks. Use when building or reviewing component libraries, forms, dialogs, navigation, and responsive interfaces.
+### Anti-patterns to Avoid
 
-## Instructions
+- Using `<div onClick>` for buttons without role, ARIA, or keyboard handlers—screen readers see it as text.
+- Hiding focus rings with `outline: none` in CSS without replacing them visually.
+- Forgetting `htmlFor` on `<label>` or wrapping unassociated inputs in fieldset/legend.
+- Relying solely on color to indicate state (error red, success green) without text or icon.
+- Nesting interactive elements (`<button>` inside `<a>`) which confuse keyboard and screen reader users.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
+- [ ] Inspect semantic structure: headings, landmarks, form groups, list hierarchy
+- [ ] Tab through the entire interface; verify focus order matches visual flow
+- [ ] Test with a screen reader (NVDA, JAWS, or Mac VoiceOver)
+- [ ] Check color contrast (WCAG AA minimum 4.5:1 for text)
+- [ ] Verify all interactive elements are keyboard accessible (Enter, Space, Arrow keys as appropriate)
+- [ ] Ensure form error messages are associated with inputs via `aria-describedby`
+- [ ] Run axe DevTools or Lighthouse a11y audit; fix critical violations
 
-- Prefer deterministic checks where possible, then finish with manual interaction review.
-- Pair well with browser-based verification and component-level examples.
+### Worked Example: Accessible Dropdown in React + shadcn/ui
 
-## Supporting Files
+```tsx
+// Bad: no keyboard handling, no semantics
+<div onClick={() => setOpen(!open)}>
+  Menu
+  {open && <div>Option 1</div>}
+</div>
 
-Recommended files to keep with this skill:
-
-- `references/accessibility-checklist.md`
-- `references/component-a11y-patterns.md`
-- `scripts/ui-a11y-audit.sh`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+// Good: uses shadcn Select (which includes ARIA and keyboard)
+<Select value={value} onValueChange={setValue}>
+  <SelectTrigger aria-label="Choose an option">
+    <SelectValue placeholder="Select..." />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectItem value="opt1">Option 1</SelectItem>
+  </SelectContent>
+</Select>
+```

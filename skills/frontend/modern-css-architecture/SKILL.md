@@ -1,66 +1,46 @@
 ---
 name: modern-css-architecture
 description: Improves CSS architecture, token usage, layout consistency, and responsive styling strategy. Use when refactoring styling systems, Tailwind conventions, CSS modules, or shared UI foundations.
+when_to_use: tailwind conventions, css architecture, design tokens
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Modern CSS Architecture
+## Tailwind + Component Architecture
 
-## When to Use This Skill
+CSS architecture in 2026 is about utility-first design systems. Tailwind + shadcn/ui eliminates the need for BEM, OOCSS, or CSS-in-JS for most projects. The skill is knowing when to reach for class-variance-authority (cva), when to use CSS custom properties, and when semantic HTML eliminates the need for classes.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- tailwind conventions
-- css architecture
-- design tokens
-- responsive layout
-- utility classes
+- Setting up Tailwind config for a new project
+- Designing a color palette, spacing scale, or type scale
+- Reviewing component CSS in React or Next.js
+- Migrating from CSS Modules or styled-components to Tailwind
+- Hardening responsive and dark-mode behavior
 
-Use it for front-end workflows in the `frontend` category.
+### Decision Framework for Tailwind + shadcn/ui + TypeScript
 
-## What This Skill Does
+1. **Tailwind config is the API.** Define colors, spacing, fonts, and breakpoints in `tailwind.config.js`. Don't use hardcoded values in JSX. Use CSS variables for runtime theming (dark mode, user preferences).
+2. **cva for variants.** Use class-variance-authority to manage Button sizes, colors, states. It's cleaner than ternary classNames.
+3. **Semantic HTML first.** A `<heading>` doesn't need `text-2xl font-bold`; use CSS to style headings globally or via a utility class. Grid layouts prefer CSS Grid, not Tailwind padding hacks.
+4. **Dark mode via css variables.** Tailwind supports `dark:` prefix, but use CSS custom properties for custom colors so dark mode works everywhere.
+5. **Responsive design is mobile-first.** Tailwind's default breakpoints (sm, md, lg) flow naturally. Test on real devices, not just browser resize.
 
-Improves CSS architecture, token usage, layout consistency, and responsive styling strategy. Use when refactoring styling systems, Tailwind conventions, CSS modules, or shared UI foundations.
+### Anti-patterns to Avoid
 
-## Instructions
+- Hardcoding colors in JSX (`bg-[#FF5733]`). Use semantic tokens from Tailwind config.
+- Layering custom CSS selectors on top of Tailwind utilities. Use `@layer` or refactor into a component.
+- Abusing `!important` to override Tailwind classes. If you need to override, it's a config problem, not a priority problem.
+- Ignoring breakpoints in QA. Responsive means it works at 375px, 768px, 1920px—not just the designer's MacBook.
+- Custom CSS-in-JS for simple styles. Tailwind + CSS custom properties handle 95% of use cases without complexity.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep naming, spacing, and token rules short enough to load reliably.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/css-architecture-guide.md`
-- `references/token-usage.md`
-- `examples/layout-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Tailwind config includes project colors, spacing, fonts, and breakpoints
+- [ ] Component Button uses cva for variants (size, color, state); not nested ternaries
+- [ ] Dark mode works: toggle theme and check colors adapt via css variables or dark: prefix
+- [ ] No hardcoded hex colors in components; all colors reference Tailwind config
+- [ ] Responsive: test at 375px (mobile), 768px (tablet), 1440px (desktop)
+- [ ] Review a component's className: no bloated utility strings; use composition or extract a utility class
+- [ ] Ensure accessibility: focus states visible, text contrast ≥4.5:1, touch targets ≥44×44px
+- [ ] Check that print styles work (if needed) via @media print or Tailwind print: utilities

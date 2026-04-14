@@ -1,65 +1,44 @@
 ---
 name: building-event-driven-services
 description: Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation. Use when adopting queues, streams, outbox patterns, or domain events.
+when_to_use: event driven, kafka, queue design
+allowed-tools: Read Grep Bash
 ---
 
-# Event-Driven Service Design
+## Event-Driven Architecture and Messaging
 
-## When to Use This Skill
+Event-driven decouples services. One service publishes "OrderCreated"; others subscribe and react asynchronously. Common in microservices, real-time systems, and event sourcing.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- event driven
-- kafka
-- queue design
-- outbox pattern
-- consumer group
+- Designing a multi-service system (order → payment → notification → analytics)
+- Building real-time features (notifications, live updates)
+- Event sourcing or audit logs
+- Decoupling services to improve resilience
 
-Use it for back-end workflows in the `backend` category.
+### Decision Framework for Node.js/Python + Message Broker (RabbitMQ, Kafka, AWS SNS/SQS)
 
-## What This Skill Does
+1. **Choose the right broker.** RabbitMQ: complex routing, dead-letter queues, good for job queues. Kafka: high throughput, event stream, ordered processing, good for audit logs. SNS/SQS: AWS-managed, simpler.
+2. **Event schema must be versioned.** Events evolve. Use Avro, JSON Schema, or Protobuf. Consumers must handle new fields gracefully (forward compatibility).
+3. **Idempotency is critical.** Event published twice? Consumer processes it safely twice. Use event ID + idempotency key.
+4. **Dead-letter queue for failures.** Event processing fails? Send to DLQ. Manual inspection and replay later.
+5. **Consumer groups for scalability.** In Kafka, multiple consumers in the same group partition the load. RabbitMQ uses competing consumers.
 
-Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation. Use when adopting queues, streams, outbox patterns, or domain events.
+### Anti-patterns to Avoid
 
-## Instructions
+- No event versioning. Add a field to an event; old consumers break.
+- Tight coupling between event publisher and subscribers. Publisher doesn't know who cares; subscribers subscribe to event topic, not a publisher-specific queue.
+- Processing events synchronously. Event handler blocks; slow handler = slow event propagation. Use async processing.
+- No idempotency. Event published twice = action taken twice. Use event ID to track processed events.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Make delivery semantics and failure assumptions visible.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/event-contracts.md`
-- `references/outbox-guide.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Event schema is defined and versioned (Avro, JSON Schema, or Protobuf)
+- [ ] Publisher doesn't know subscribers; publishes to a topic/exchange
+- [ ] Subscriber handles unknown fields (forward compatibility)
+- [ ] Event processing is idempotent (same event ID = same result)
+- [ ] Dead-letter queue captures unprocessable events
+- [ ] Failed event processing is logged and alerted
+- [ ] Consumer group or competing consumer pattern is used for scaling
+- [ ] Test: publish event, consumer fails, event is retried; verify it's safe
+- [ ] Monitor: event publishing latency, consumption lag, failure rate

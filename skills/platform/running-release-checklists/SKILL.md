@@ -1,66 +1,41 @@
 ---
 name: running-release-checklists
 description: Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification. Use when preparing staging or production releases.
-disable-model-invocation: true
-allowed-tools: "Read Grep Bash(git *)"
+when_to_use: release checklist, go live, rollback plan
+allowed-tools: Bash Read
 ---
 
-# Release Checklist Runner
+## Versioning, Changelogs, and Release Coordination
 
-## When to Use This Skill
+Releases are high-stakes events. Mistakes (missing migration, wrong version number) cause downtime. The skill is running checklists, automating where possible, and maintaining a clear changelog.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- release checklist
-- go live
-- rollback plan
-- launch readiness
+- Preparing a release (new version, multiple PRs)
+- Coordinating cross-team deployments
+- Documenting changes for users
 
-Use it for platform, back-end, full-stack workflows in the `platform` category.
+### Decision Framework for Semantic Versioning and Changelogs
 
-## What This Skill Does
+1. **Semantic Versioning (SemVer).** MAJOR.MINOR.PATCH. MAJOR for breaking changes, MINOR for features, PATCH for fixes. Users understand impact.
+2. **Changelog is manual effort.** Auto-generated from commits is noisy. Humans write clear, user-facing summary. Keep CHANGELOG.md.
+3. **Release checklist is explicit.** Version bump, changelog update, migrations, feature flags OFF, staged deploy, production deploy, rollback plan. Run in order.
+4. **Dry-run release in staging.** Deploy to staging, run smoke tests, verify no errors. Then confidently deploy to production.
+5. **Announce releases.** Slack notification, email, blog post. Users (customers, team) know what changed and why.
 
-Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification. Use when preparing staging or production releases.
+### Anti-patterns to Avoid
 
-## Instructions
+- Ad-hoc releases. "Let's just deploy" without checklist. Forgotten migration = downtime.
+- No changelog. Users don't know what changed. Support gets flooded with questions.
+- Version mismatch. Code is v2.1, deployed v2.0. Confusion and bugs.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Best as a workflow skill with explicit validator steps.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/release-checklist.md`
-- `templates/post-release-review.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Version number is bumped (SemVer)
+- [ ] CHANGELOG.md is updated with user-facing summary
+- [ ] All migrations are ready (if database changes)
+- [ ] Feature flags for new features are OFF by default
+- [ ] Staged deploy runs smoke tests (OK)
+- [ ] Production deploy plan is documented (steps, rollback)
+- [ ] Team is notified (Slack, email)
+- [ ] Rollback procedure is tested and ready

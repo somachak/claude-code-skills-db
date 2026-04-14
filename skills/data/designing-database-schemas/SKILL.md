@@ -1,65 +1,42 @@
 ---
 name: designing-database-schemas
 description: Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems. Use when creating new tables, domain models, or storage-backed product features.
+when_to_use: database schema, table design, foreign keys
+allowed-tools: Read Grep
 ---
 
-# Database Schema Designer
+## Normalization, Constraints, and Access Patterns
 
-## When to Use This Skill
+Database schema is architecture. Good schema enables fast queries, prevents data anomalies, and scales. Bad schema requires complex application logic and causes corruption. The skill is normalization (3NF or BCNF), constraint design, and access pattern optimization.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- database schema
-- table design
-- foreign keys
-- normalization
-- relational model
+- Designing a new database or table
+- Reviewing schema for normalization and performance
+- Refactoring due to data anomalies or slow queries
 
-Use it for back-end, data, full-stack workflows in the `data` category.
+### Decision Framework for PostgreSQL/MySQL + Node.js/Python
 
-## What This Skill Does
+1. **Normalize to 3NF by default.** Eliminate redundancy: no repeated columns (first names across rows), no transitive dependencies (city shouldn't depend on state via zipcode).
+2. **Constraints enforce data integrity.** NOT NULL, UNIQUE, FOREIGN KEY, CHECK. Let the database reject invalid states; don't rely on application logic.
+3. **Primary key is essential.** Every table needs a unique identifier. Use auto-incrementing INT or UUID. Avoid composite keys when a surrogate works.
+4. **Indexes for access patterns.** Profile the queries; index the columns used in WHERE, JOIN, ORDER BY. Too many indexes slow writes; too few slow reads.
+5. **Denormalize for performance, not by default.** Sometimes a user's email is stored on Order for fast lookups, avoiding a JOIN. Do it only when profiling shows it's worth it.
 
-Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems. Use when creating new tables, domain models, or storage-backed product features.
+### Anti-patterns to Avoid
 
-## Instructions
+- Storing JSON blobs instead of normalized tables. Queries become slow and unmaintainable.
+- No constraints. Application enforces NOT NULL, UNIQUE, FOREIGN KEY? That's fragile.
+- Composite primary keys instead of surrogates. Difficult to reference, slow to index.
+- Over-indexing. Every column is indexed = slow inserts, large storage.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep business invariants explicit in the schema guidance.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/schema-design-guide.md`
-- `examples/table-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Schema is normalized to 3NF (no redundancy, no transitive dependencies)
+- [ ] Every table has a primary key (surrogate ID preferred)
+- [ ] Constraints enforce data integrity (NOT NULL, UNIQUE, FOREIGN KEY, CHECK)
+- [ ] Indexes exist for common access patterns (WHERE, JOIN, ORDER BY columns)
+- [ ] Large tables have partitioning strategy (if >100GB or >1B rows)
+- [ ] Data types are appropriate (VARCHAR(255) vs TEXT, INT vs BIGINT)
+- [ ] Migrations are version-controlled and reversible
+- [ ] Test: insert invalid data (violate constraint); verify DB rejects it

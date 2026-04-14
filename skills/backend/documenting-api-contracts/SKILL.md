@@ -1,66 +1,41 @@
 ---
 name: documenting-api-contracts
 description: Produces concise API contract documentation, examples, and change notes that stay aligned with code. Use when shipping endpoints, SDKs, integrations, or internal platform surfaces.
+when_to_use: openapi, api docs, integration guide
+allowed-tools: Read Grep Bash
 ---
 
-# API Contract Documentation
+## OpenAPI, Changelog, and Client Generation
 
-## When to Use This Skill
+API documentation is a contract. OpenAPI 3.0 (Swagger) is the standard. Pair it with a changelog tracking breaking changes, deprecations, and new features. Generated clients (TypeScript, Python) reduce integration friction.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- openapi
-- api docs
-- integration guide
-- contract examples
-- sdk docs
+- Launching an API or new endpoints
+- Deprecating or breaking endpoints
+- Generating client SDKs
+- Onboarding consumers
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Node.js/Python
 
-## What This Skill Does
+1. **OpenAPI 3.0 is the standard.** FastAPI and NestJS auto-generate it. Express uses swagger-jsdoc. Use tools like Redocly to validate and lint.
+2. **Changelog documents intent.** OpenAPI documents the contract; changelog explains why. "Deprecated GET /users/{id}/friends, use GET /relationships/{id}" helps consumers migrate.
+3. **Client generation from OpenAPI.** Use OpenAPI Generator or similar to generate TypeScript, Python, etc. clients. Reduces integration bugs.
+4. **Deprecation has a runway.** Announce 6 months ahead. Support old and new versions. Provide migration guide.
 
-Produces concise API contract documentation, examples, and change notes that stay aligned with code. Use when shipping endpoints, SDKs, integrations, or internal platform surfaces.
+### Anti-patterns to Avoid
 
-## Instructions
+- No API versioning. Changes break old clients immediately.
+- OpenAPI out of date. Docs don't match implementation; trust erodes.
+- No deprecation policy. Yanking endpoints without notice breaks production.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Pair especially well with schema-first or OpenAPI-first teams.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/api-doc-style.md`
-- `templates/endpoint-template.md`
-- `examples/contract-examples.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] OpenAPI 3.0 spec is generated and published (Swagger UI or ReDoc)
+- [ ] Every endpoint has description, parameters, and example requests/responses
+- [ ] Error responses are documented (400, 401, 404, 500, etc.)
+- [ ] Changelog tracks breaking changes, deprecations, and new features
+- [ ] Deprecation notice includes sunset date and migration path
+- [ ] Client SDK is generated from OpenAPI and published (npm, PyPI)
+- [ ] API versioning strategy is defined (/v1/, /v2/ or header-based)
+- [ ] OpenAPI spec is linted (Redocly, spectral) and validated in CI

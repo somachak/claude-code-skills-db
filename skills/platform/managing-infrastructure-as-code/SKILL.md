@@ -1,66 +1,41 @@
 ---
 name: managing-infrastructure-as-code
 description: Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns. Use when working with Terraform, Pulumi, or cloud templates.
-disable-model-invocation: true
+when_to_use: terraform review, pulumi, iac
+allowed-tools: Bash Read
 ---
 
-# Infrastructure as Code Review
+## Terraform, Pulumi, or CloudFormation
 
-## When to Use This Skill
+Infrastructure as Code treats infrastructure like software: version-controlled, reviewed, tested. The skill is designing repeatable, safe infrastructure deployments.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- terraform review
-- pulumi
-- iac
-- infrastructure module
-- cloud deploy
+- Managing cloud resources (AWS, GCP, Azure)
+- Ensuring consistency across environments
+- Disaster recovery and scaling
 
-Use it for platform, back-end workflows in the `platform` category.
+### Decision Framework for Terraform
 
-## What This Skill Does
+1. **State is sacred.** Terraform state file knows what resources exist. Modify via Terraform, not by hand. Corruption = destroyed resources.
+2. **Modules for composition.** Reusable infrastructure components (networking, database, app service). Reduces duplication.
+3. **Plan before apply.** `terraform plan` shows changes. Review, approve, then `terraform apply`. Prevents accidents.
+4. **State is remote and locked.** Store in S3 (with backend locking), not locally. Multiple people can use same state safely.
+5. **Drift detection.** Periodically run `terraform plan`; if resources changed outside Terraform, alert. Keep code and reality in sync.
 
-Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns. Use when working with Terraform, Pulumi, or cloud templates.
+### Anti-patterns to Avoid
 
-## Instructions
+- Manual infrastructure changes. Infrastructure drifts from code. Can't reproduce.
+- No plan review. Apply directly to production. Oops, deleted database.
+- State in local Git. Multiple people modify; conflicts and corruption.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Encourage explicit change plans and state safety.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/iac-review-checklist.md`
-- `examples/environment-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Infrastructure is code (Terraform, Pulumi, or CloudFormation)
+- [ ] All resources are managed via IaC (no manual console changes)
+- [ ] Plan is reviewed before apply
+- [ ] State is stored remotely with locking (S3 + DynamoDB)
+- [ ] Environments (dev, staging, prod) use same code (different var files)
+- [ ] Secrets (API keys, passwords) are managed securely (not in code)
+- [ ] Drift detection runs regularly
+- [ ] Rollback procedure is tested

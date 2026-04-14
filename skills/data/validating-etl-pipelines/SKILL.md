@@ -1,66 +1,43 @@
 ---
 name: validating-etl-pipelines
 description: Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors. Use when building ingestion jobs, warehouse transforms, or sync systems.
+when_to_use: etl validation, schema drift, pipeline freshness
+allowed-tools: Read Grep
 ---
 
-# ETL Pipeline Validator
+## Data Pipeline Quality and Observability
 
-## When to Use This Skill
+ETL (Extract, Transform, Load) pipelines ingest data from sources, transform, and load to warehouse or database. Quality is paramount: bad data → bad decisions. The skill is validation, error handling, and recovery.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- etl validation
-- schema drift
-- pipeline freshness
-- reconciliation
-- warehouse
+- Building a data pipeline (analytics, reporting, sync)
+- Pipeline is failing or data is wrong
+- Scaling pipeline to handle more sources or volume
 
-Use it for data, back-end workflows in the `data` category.
+### Decision Framework for Apache Airflow, dbt, or custom Python/Node.js
 
-## What This Skill Does
+1. **Validate schema at every stage.** Source data, after extraction, after transformation. Reject invalid rows early; don't propagate garbage.
+2. **Idempotency is essential.** Same source data processed twice should result in same warehouse state. Use upsert (INSERT OR UPDATE) or deduplication.
+3. **Monitor data quality.** Record counts, schema drift, freshness. Alert on failures.
+4. **Backfill is common.** Pipeline fails for a day; backfill missing data. Pipeline must support rerunning for past dates.
+5. **Error handling is non-trivial.** Partial failure: 999 rows loaded, 1 fails. Quarantine failed rows; notify; resume.
 
-Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors. Use when building ingestion jobs, warehouse transforms, or sync systems.
+### Anti-patterns to Avoid
 
-## Instructions
+- No validation. Data loaded as-is; garbage in, garbage out.
+- Non-idempotent pipelines. Reruns produce duplicates or inconsistencies.
+- No monitoring. Pipeline fails silently; stale data in warehouse for weeks.
+- Tight coupling between stages. Transformation depends on specific source format; breaks on schema change.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Use machine-verifiable checks where possible and preserve sample failure diagnostics.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/pipeline-checklist.md`
-- `examples/data-reconciliation.md`
-- `scripts/validate-pipeline.py`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Source data schema is validated (required fields, types, ranges)
+- [ ] Transformation rules are tested on sample data
+- [ ] Pipeline is idempotent (can rerun; result is same)
+- [ ] Failed rows are logged and quarantined (not lost)
+- [ ] Record count validation (source count == loaded count after transformation)
+- [ ] Freshness monitoring (alert if data >24 hours old)
+- [ ] Backfill capability (can reprocess past dates)
+- [ ] Data quality metrics are tracked (completeness, uniqueness, timeliness)
+- [ ] Test: run pipeline twice; verify same warehouse state

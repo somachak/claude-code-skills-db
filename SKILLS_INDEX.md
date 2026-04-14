@@ -1,0 +1,184 @@
+# Skills Index
+
+_50 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+
+**Version:** `2026-04-14` · **Last generated:** `2026-04-14T16:39:58.135074+00:00`
+
+## Quick search
+
+| Skill | Category | Priority | Description |
+|---|---|---|---|
+| [`building-rag-ready-docs`](./skills/ai-productivity/building-rag-ready-docs/SKILL.md) | ai-productivity | core | Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology |
+| [`cataloging-codebase-patterns`](./skills/ai-productivity/cataloging-codebase-patterns/SKILL.md) | ai-productivity | core | Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior |
+| [`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md) | ai-productivity | core | Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills |
+| [`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md) | ai-productivity | core | Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden |
+| [`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md) | ai-productivity | core | Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas |
+| [`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md) | ai-productivity | core | Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability |
+| [`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md) | ai-productivity | core | Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows |
+| [`turning-runbooks-into-skills`](./skills/ai-productivity/turning-runbooks-into-skills/SKILL.md) | ai-productivity | core | Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls |
+| [`building-background-jobs`](./skills/backend/building-background-jobs/SKILL.md) | backend | core | Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling |
+| [`building-event-driven-services`](./skills/backend/building-event-driven-services/SKILL.md) | backend | core | Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation |
+| [`designing-graphql-apis`](./skills/backend/designing-graphql-apis/SKILL.md) | backend | core | Designs GraphQL schemas, resolver boundaries, batching, and authorization rules |
+| [`designing-rest-apis`](./skills/backend/designing-rest-apis/SKILL.md) | backend | core | Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts |
+| [`documenting-api-contracts`](./skills/backend/documenting-api-contracts/SKILL.md) | backend | core | Produces concise API contract documentation, examples, and change notes that stay aligned with code |
+| [`handling-webhooks`](./skills/backend/handling-webhooks/SKILL.md) | backend | core | Builds and reviews webhook consumers for signature verification, retries, deduplication, ordering issues, and replay safety |
+| [`hardening-file-uploads`](./skills/backend/hardening-file-uploads/SKILL.md) | backend | core | Secures file upload flows for validation, scanning, storage isolation, content-type trust, and post-processing safety |
+| [`implementing-auth-flows`](./skills/backend/implementing-auth-flows/SKILL.md) | backend | core | Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions |
+| [`reviewing-backend-concurrency`](./skills/backend/reviewing-backend-concurrency/SKILL.md) | backend | core | Reviews concurrent backend code for race conditions, deadlocks, ordering bugs, lock contention, and inconsistent side effects |
+| [`reviewing-caching-strategies`](./skills/backend/reviewing-caching-strategies/SKILL.md) | backend | core | Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks |
+| [`designing-database-schemas`](./skills/data/designing-database-schemas/SKILL.md) | data | core | Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems |
+| [`designing-search-and-indexes`](./skills/data/designing-search-and-indexes/SKILL.md) | data | core | Designs search schemas, indexing strategies, ranking tradeoffs, and query filters |
+| [`modeling-analytics-events`](./skills/data/modeling-analytics-events/SKILL.md) | data | core | Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis |
+| [`planning-data-migrations`](./skills/data/planning-data-migrations/SKILL.md) | data | core | Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks |
+| [`reviewing-sql-performance`](./skills/data/reviewing-sql-performance/SKILL.md) | data | core | Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans |
+| [`validating-etl-pipelines`](./skills/data/validating-etl-pipelines/SKILL.md) | data | core | Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors |
+| [`building-accessible-ui`](./skills/frontend/building-accessible-ui/SKILL.md) | frontend | core | Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks |
+| [`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md) | frontend | core | Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications |
+| [`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md) | frontend | core | Designs reusable UI component systems, prop APIs, composition rules, and state boundaries |
+| [`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md) | frontend | core | Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment |
+| [`modern-css-architecture`](./skills/frontend/modern-css-architecture/SKILL.md) | frontend | core | Improves CSS architecture, token usage, layout consistency, and responsive styling strategy |
+| [`optimizing-bundle-performance`](./skills/frontend/optimizing-bundle-performance/SKILL.md) | frontend | core | Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks |
+| [`reviewing-frontend-security`](./skills/frontend/reviewing-frontend-security/SKILL.md) | frontend | core | Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes |
+| [`verifying-responsive-layouts`](./skills/frontend/verifying-responsive-layouts/SKILL.md) | frontend | core | Checks breakpoint behavior, overflow, spacing collapse, and layout resilience across screen sizes |
+| [`hardening-ci-pipelines`](./skills/platform/hardening-ci-pipelines/SKILL.md) | platform | core | Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation |
+| [`improving-developer-experience`](./skills/platform/improving-developer-experience/SKILL.md) | platform | core | Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow |
+| [`maintaining-monorepos`](./skills/platform/maintaining-monorepos/SKILL.md) | platform | core | Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation |
+| [`managing-infrastructure-as-code`](./skills/platform/managing-infrastructure-as-code/SKILL.md) | platform | core | Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns |
+| [`running-release-checklists`](./skills/platform/running-release-checklists/SKILL.md) | platform | core | Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification |
+| [`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md) | platform | core | Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks |
+| [`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md) | security-reliability | core | Audits secret handling, environment configuration, rotation practices, and accidental exposure risks |
+| [`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md) | security-reliability | core | Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations |
+| [`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md) | security-reliability | core | Reviews how systems fail under dependency outages, partial writes, retries, and degraded states |
+| [`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md) | security-reliability | core | Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus |
+| [`threat-modeling-features`](./skills/security-reliability/threat-modeling-features/SKILL.md) | security-reliability | core | Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations |
+| [`validating-backup-and-restore`](./skills/security-reliability/validating-backup-and-restore/SKILL.md) | security-reliability | core | Validates backup scope, recovery steps, restore drills, and data integrity assumptions |
+| [`designing-integration-tests`](./skills/testing/designing-integration-tests/SKILL.md) | testing | core | Designs integration tests around service contracts, persistence, side effects, and environment setup |
+| [`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md) | testing | core | Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details |
+| [`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md) | testing | core | Turns logs, traces, and error reports into concrete reproduction steps and regression tests |
+| [`reviewing-test-coverage`](./skills/testing/reviewing-test-coverage/SKILL.md) | testing | core | Reviews what is not tested and prioritizes the highest-risk missing scenarios |
+| [`snapshot-regression-checks`](./skills/testing/snapshot-regression-checks/SKILL.md) | testing | core | Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization |
+| [`stabilizing-e2e-tests`](./skills/testing/stabilizing-e2e-tests/SKILL.md) | testing | core | Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes |
+
+## By category
+
+### ai-productivity
+
+- **[`building-rag-ready-docs`](./skills/ai-productivity/building-rag-ready-docs/SKILL.md)** — Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology. Use when preparing codebase docs, runbooks, or API guides for AI systems.
+  · triggers: `rag docs`, `retrieval`, `chunking`, `vector db docs`, `knowledge base`
+- **[`cataloging-codebase-patterns`](./skills/ai-productivity/cataloging-codebase-patterns/SKILL.md)** — Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior. Use when onboarding to large codebases or consolidating conventions.
+  · triggers: `codebase patterns`, `preferred patterns`, `repository conventions`, `architecture map`
+- **[`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md)** — Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills. Use when teams repeat style, design, or workflow guidance.
+  · triggers: `team conventions`, `engineering standards`, `best practices`, `coding guidelines`
+- **[`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md)** — Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.
+  · triggers: `tool comparison`, `library choice`, `framework evaluation`, `build vs buy`
+- **[`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md)** — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.
+  · triggers: `create a skill`, `extract workflow`, `reuse this process`, `codify this pattern`
+- **[`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md)** — Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability. Use when preparing PR feedback, self-reviewing changes, or training reviewers.
+  · triggers: `pr review`, `code review`, `diff review`, `merge risk`, `review comments`
+- **[`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md)** — Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.
+  · triggers: `subagents`, `parallel work`, `agent coordination`, `task decomposition`
+- **[`turning-runbooks-into-skills`](./skills/ai-productivity/turning-runbooks-into-skills/SKILL.md)** — Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls. Use when a manual checklist is repeated often enough to automate guidance.
+  · triggers: `runbook to skill`, `operational checklist`, `codify process`, `repeatable workflow`
+
+### backend
+
+- **[`building-background-jobs`](./skills/backend/building-background-jobs/SKILL.md)** — Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling. Use when adding workers, task queues, cron-style jobs, or async processing pipelines.
+  · triggers: `queue worker`, `retry logic`, `idempotency`, `scheduled job`, `background task`
+- **[`building-event-driven-services`](./skills/backend/building-event-driven-services/SKILL.md)** — Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation. Use when adopting queues, streams, outbox patterns, or domain events.
+  · triggers: `event driven`, `kafka`, `queue design`, `outbox pattern`, `consumer group`
+- **[`designing-graphql-apis`](./skills/backend/designing-graphql-apis/SKILL.md)** — Designs GraphQL schemas, resolver boundaries, batching, and authorization rules. Use when building graphs, federated services, or resolver-heavy integrations.
+  · triggers: `graphql schema`, `resolver performance`, `n+1`, `federation`, `graphql auth`
+- **[`designing-rest-apis`](./skills/backend/designing-rest-apis/SKILL.md)** — Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts. Use when creating or refactoring HTTP services and public or internal APIs.
+  · triggers: `rest api`, `http api`, `pagination`, `error contract`, `resource design`
+- **[`documenting-api-contracts`](./skills/backend/documenting-api-contracts/SKILL.md)** — Produces concise API contract documentation, examples, and change notes that stay aligned with code. Use when shipping endpoints, SDKs, integrations, or internal platform surfaces.
+  · triggers: `openapi`, `api docs`, `integration guide`, `contract examples`, `sdk docs`
+- **[`handling-webhooks`](./skills/backend/handling-webhooks/SKILL.md)** — Builds and reviews webhook consumers for signature verification, retries, deduplication, ordering issues, and replay safety. Use when integrating payment, messaging, or external event providers.
+  · triggers: `webhook`, `signature verification`, `replay attack`, `event dedupe`, `provider integration`
+- **[`hardening-file-uploads`](./skills/backend/hardening-file-uploads/SKILL.md)** — Secures file upload flows for validation, scanning, storage isolation, content-type trust, and post-processing safety. Use when handling avatars, attachments, imports, or user-generated media.
+  · triggers: `file upload`, `content type`, `virus scan`, `attachment`, `storage isolation`
+- **[`implementing-auth-flows`](./skills/backend/implementing-auth-flows/SKILL.md)** — Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions. Use when shipping login, SSO, OAuth, password reset, invitation, or RBAC features.
+  · triggers: `oauth`, `sso`, `session`, `jwt`, `rbac`, `password reset`
+- **[`reviewing-backend-concurrency`](./skills/backend/reviewing-backend-concurrency/SKILL.md)** — Reviews concurrent backend code for race conditions, deadlocks, ordering bugs, lock contention, and inconsistent side effects. Use when services coordinate shared state, workers, or high-throughput workloads.
+  · triggers: `race condition`, `deadlock`, `concurrency bug`, `parallel worker`, `lock contention`
+- **[`reviewing-caching-strategies`](./skills/backend/reviewing-caching-strategies/SKILL.md)** — Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks. Use when introducing Redis, CDN, query, or application-level caching.
+  · triggers: `cache invalidation`, `redis`, `ttl`, `stale data`, `cache key`
+
+### data
+
+- **[`designing-database-schemas`](./skills/data/designing-database-schemas/SKILL.md)** — Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems. Use when creating new tables, domain models, or storage-backed product features.
+  · triggers: `database schema`, `table design`, `foreign keys`, `normalization`, `relational model`
+- **[`designing-search-and-indexes`](./skills/data/designing-search-and-indexes/SKILL.md)** — Designs search schemas, indexing strategies, ranking tradeoffs, and query filters. Use when implementing application search, faceting, vector or lexical retrieval, or hybrid discovery features.
+  · triggers: `search index`, `elasticsearch`, `meilisearch`, `ranking`, `facets`, `vector search`
+- **[`modeling-analytics-events`](./skills/data/modeling-analytics-events/SKILL.md)** — Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis. Use when adding instrumentation to frontend or backend product flows.
+  · triggers: `tracking plan`, `analytics events`, `event naming`, `instrumentation`, `product analytics`
+- **[`planning-data-migrations`](./skills/data/planning-data-migrations/SKILL.md)** — Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks. Use when changing live data models or moving data between stores.
+  · triggers: `migration plan`, `backfill`, `zero downtime migration`, `rollout sequencing`, `data change`
+- **[`reviewing-sql-performance`](./skills/data/reviewing-sql-performance/SKILL.md)** — Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans. Use when queries slow down APIs, jobs, dashboards, or analytics pipelines.
+  · triggers: `slow query`, `sql tuning`, `index`, `query plan`, `postgres`, `mysql`
+- **[`validating-etl-pipelines`](./skills/data/validating-etl-pipelines/SKILL.md)** — Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors. Use when building ingestion jobs, warehouse transforms, or sync systems.
+  · triggers: `etl validation`, `schema drift`, `pipeline freshness`, `reconciliation`, `warehouse`
+
+### frontend
+
+- **[`building-accessible-ui`](./skills/frontend/building-accessible-ui/SKILL.md)** — Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks. Use when building or reviewing component libraries, forms, dialogs, navigation, and responsive interfaces.
+  · triggers: `accessibility audit`, `keyboard navigation`, `aria`, `screen reader`, `wcag`, `semantic html`
+- **[`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md)** — Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications. Use when UI feels slow, renders are noisy, or component updates are confusing.
+  · triggers: `rerender`, `useeffect bug`, `memoization`, `stale closure`, `react performance`
+- **[`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md)** — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
+  · triggers: `component library`, `design system`, `props api`, `slot patterns`, `headless ui`
+- **[`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md)** — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.
+  · triggers: `form validation`, `error states`, `submit flow`, `field validation`, `optimistic ui`
+- **[`modern-css-architecture`](./skills/frontend/modern-css-architecture/SKILL.md)** — Improves CSS architecture, token usage, layout consistency, and responsive styling strategy. Use when refactoring styling systems, Tailwind conventions, CSS modules, or shared UI foundations.
+  · triggers: `tailwind conventions`, `css architecture`, `design tokens`, `responsive layout`, `utility classes`
+- **[`optimizing-bundle-performance`](./skills/frontend/optimizing-bundle-performance/SKILL.md)** — Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks. Use when load time, bundle size, or interaction latency becomes a concern.
+  · triggers: `bundle size`, `code splitting`, `hydration`, `lazy loading`, `webpack analyze`, `vite`
+- **[`reviewing-frontend-security`](./skills/frontend/reviewing-frontend-security/SKILL.md)** — Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes. Use when handling user content, auth state, embeds, or rich text.
+  · triggers: `xss`, `unsafe html`, `token storage`, `content security`, `frontend auth`
+- **[`verifying-responsive-layouts`](./skills/frontend/verifying-responsive-layouts/SKILL.md)** — Checks breakpoint behavior, overflow, spacing collapse, and layout resilience across screen sizes. Use when shipping pages, dashboards, marketing sites, or mobile-heavy workflows.
+  · triggers: `responsive bug`, `breakpoints`, `mobile layout`, `overflow`, `tablet layout`
+
+### platform
+
+- **[`hardening-ci-pipelines`](./skills/platform/hardening-ci-pipelines/SKILL.md)** — Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation. Use when builds are slow, flaky, expensive, or hard to trust.
+  · triggers: `ci pipeline`, `github actions`, `flaky build`, `test matrix`, `build caching`
+- **[`improving-developer-experience`](./skills/platform/improving-developer-experience/SKILL.md)** — Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow. Use when repos are hard to bootstrap, inconsistent, or slow to work in.
+  · triggers: `developer experience`, `onboarding`, `dev setup`, `scripts cleanup`, `repo ergonomics`
+- **[`maintaining-monorepos`](./skills/platform/maintaining-monorepos/SKILL.md)** — Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation. Use when scaling packages, apps, services, and shared libraries together.
+  · triggers: `monorepo`, `workspace graph`, `nx`, `turbo`, `package boundaries`
+- **[`managing-infrastructure-as-code`](./skills/platform/managing-infrastructure-as-code/SKILL.md)** — Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns. Use when working with Terraform, Pulumi, or cloud templates.
+  · triggers: `terraform review`, `pulumi`, `iac`, `infrastructure module`, `cloud deploy`
+- **[`running-release-checklists`](./skills/platform/running-release-checklists/SKILL.md)** — Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification. Use when preparing staging or production releases.
+  · triggers: `release checklist`, `go live`, `rollback plan`, `launch readiness`
+- **[`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md)** — Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks. Use when containerizing APIs, workers, or internal tools.
+  · triggers: `dockerfile`, `container image`, `kubernetes deploy`, `runtime config`, `image size`
+
+### security-reliability
+
+- **[`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md)** — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
+  · triggers: `secrets audit`, `env vars`, `credential exposure`, `config hygiene`, `secret rotation`
+- **[`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md)** — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.
+  · triggers: `observability`, `tracing`, `structured logs`, `metrics`, `instrumentation`
+- **[`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md)** — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states. Use when services coordinate remote calls, queues, or critical transactions.
+  · triggers: `failure mode`, `partial outage`, `degraded mode`, `retry storm`, `fallback`
+- **[`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md)** — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus. Use when tuning monitoring for APIs, background systems, or customer-facing journeys.
+  · triggers: `slo`, `alert fatigue`, `slis`, `monitoring thresholds`, `incident response`
+- **[`threat-modeling-features`](./skills/security-reliability/threat-modeling-features/SKILL.md)** — Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations. Use when reviewing auth changes, payments, admin tools, integrations, or other sensitive workflows.
+  · triggers: `threat model`, `attack surface`, `security review`, `trust boundary`, `abuse case`
+- **[`validating-backup-and-restore`](./skills/security-reliability/validating-backup-and-restore/SKILL.md)** — Validates backup scope, recovery steps, restore drills, and data integrity assumptions. Use when services store critical operational or customer data.
+  · triggers: `backup restore`, `recovery drill`, `rpo rto`, `disaster recovery`, `restore test`
+
+### testing
+
+- **[`designing-integration-tests`](./skills/testing/designing-integration-tests/SKILL.md)** — Designs integration tests around service contracts, persistence, side effects, and environment setup. Use when changes cross module, network, storage, or framework boundaries.
+  · triggers: `integration test`, `service contract`, `testcontainers`, `db integration`, `api integration`
+- **[`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md)** — Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.
+  · triggers: `unit tests`, `edge case tests`, `regression test`, `branch coverage`
+- **[`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md)** — Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.
+  · triggers: `reproduce bug`, `logs to test`, `incident reproduction`, `trace analysis`
+- **[`reviewing-test-coverage`](./skills/testing/reviewing-test-coverage/SKILL.md)** — Reviews what is not tested and prioritizes the highest-risk missing scenarios. Use when shipping new code, after large refactors, or after incidents that revealed blind spots.
+  · triggers: `coverage gaps`, `missing tests`, `risk-based testing`, `test blind spots`
+- **[`snapshot-regression-checks`](./skills/testing/snapshot-regression-checks/SKILL.md)** — Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization. Use when outputs should remain consistent over time.
+  · triggers: `snapshot testing`, `golden file`, `approval testing`, `email snapshot`
+- **[`stabilizing-e2e-tests`](./skills/testing/stabilizing-e2e-tests/SKILL.md)** — Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes. Use when browser tests are brittle or slow.
+  · triggers: `playwright flake`, `cypress flake`, `e2e instability`, `retrying tests`, `waiting for ui`
+

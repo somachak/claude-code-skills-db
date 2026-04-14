@@ -1,65 +1,40 @@
 ---
 name: building-rag-ready-docs
 description: Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology. Use when preparing codebase docs, runbooks, or API guides for AI systems.
+when_to_use: rag docs, retrieval, chunking
 ---
 
-# RAG-Ready Documentation Builder
+## Documentation for AI Integration
 
-## When to Use This Skill
+RAG (Retrieval-Augmented Generation) systems fetch relevant docs to answer questions. Good RAG docs are searchable, structured, and comprehensive. The skill is organizing documentation so AI can retrieve and use it.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- rag docs
-- retrieval
-- chunking
-- vector db docs
-- knowledge base
+- Building a chatbot or AI assistant
+- Existing docs are disorganized or scattered
+- Need to enable AI to answer codebase questions
 
-Use it for ai, platform, full-stack workflows in the `ai-productivity` category.
+### Decision Framework
 
-## What This Skill Does
+1. **Structure for retrieval.** Docs are chunked by topic (API endpoints, configuration options). AI can retrieve relevant chunks.
+2. **Headings are descriptive.** "Authentication" is vague; "JWT Token Rotation and Expiry" is specific. Improves retrieval relevance.
+3. **Examples are concrete.** Code snippets, curl requests, expected responses. AI can extract and reuse.
+4. **Cross-references are links.** Markdown links to related docs. Helps AI navigate.
+5. **Metadata helps indexing.** Tags (frontend, backend, security) or categories. Narrows search space.
 
-Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology. Use when preparing codebase docs, runbooks, or API guides for AI systems.
+### Anti-patterns to Avoid
 
-## Instructions
+- Unstructured docs. Walls of text. Hard to retrieve relevant section.
+- No examples. AI doesn't know how to use API or config.
+- Scattered docs. README, wiki, Notion, wiki.js—docs everywhere. AI doesn't know where to look.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Focus on consistent headings, examples, and low-ambiguity naming.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/rag-doc-patterns.md`
-- `templates/doc-structure-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Docs are organized by topic (API, config, deployment, troubleshooting)
+- [ ] Each doc has descriptive headings (not generic)
+- [ ] Examples are included (code snippets, curl requests, expected output)
+- [ ] Docs are linked (cross-references via markdown)
+- [ ] Docs are searchable (indexed in RAG system)
+- [ ] Metadata (tags, categories) helps retrieval
+- [ ] Docs are up-to-date (reviewed quarterly)
+- [ ] AI can retrieve and accurately answer questions using docs

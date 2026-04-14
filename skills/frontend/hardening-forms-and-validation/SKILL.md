@@ -1,66 +1,46 @@
 ---
 name: hardening-forms-and-validation
 description: Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.
+when_to_use: form validation, error states, submit flow
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Form and Validation Hardening
+## Client and Server Form Validation
 
-## When to Use This Skill
+Forms are the gateway to user data and backend state. Validation happens twice: client-side for UX (instant feedback), server-side for security (untrusted input). In Next.js, use Server Actions with Zod; on the client, shadcn/ui components + react-hook-form.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- form validation
-- error states
-- submit flow
-- field validation
-- optimistic ui
+- Building or reviewing login, sign-up, payment, or data-entry forms
+- Adding cross-field validation (password confirmation, date ranges)
+- Hardening against XSS, CSRF, or input injection
+- Designing error messaging and recovery flows
 
-Use it for front-end, full-stack workflows in the `frontend` category.
+### Decision Framework for Next.js/React/TypeScript + Zod
 
-## What This Skill Does
+1. **Zod schema is the source of truth.** Define validation once in TypeScript (Zod or similar), use it client and server.
+2. **Server Actions are default.** In Next.js, forms should POST via Server Action (with CSRF protection built-in), not fetch(). This keeps secrets server-side.
+3. **Real-time validation is UX, not security.** Use `onBlur` or debounced `onChange` for instant feedback (e.g., "username already taken"), but don't trust it. Validate again on server.
+4. **Field-level error display.** Show errors under the field (via `aria-describedby`), not in a summary. shadcn/ui Form handles this cleanly with react-hook-form integration.
+5. **Sanitize HTML; don't strip it.** Use `DOMPurify` or a Zod preprocessor to allow safe markup (if needed), not a blacklist.
 
-Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.
+### Anti-patterns to Avoid
 
-## Instructions
+- Client-side validation only. No amount of JavaScript stops a curl request or a modified Network tab.
+- Storing passwords in state or local storage. Use browser password managers and secure cookies.
+- Rendering unescaped user input (`<div>{userComment}</div>`). Use `textContent` or sanitize with DOMPurify.
+- Double-posting (user clicks Submit, form submits twice). Disable the button or track a `pending` flag during submission.
+- Custom validation logic instead of Zod schemas. Maintenance nightmare; Zod is the standard.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Cover disabled states, loading states, retry paths, and schema parity with the backend.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/form-state-patterns.md`
-- `references/error-copy-checklist.md`
-- `examples/form-edge-cases.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Define Zod schema for all inputs; use it in both client and server
+- [ ] Bind form to react-hook-form; leverage built-in validation
+- [ ] Add real-time validation feedback on blur for UX (username, email, etc.)
+- [ ] Server Action: validate Zod schema; catch & return errors as form state
+- [ ] Display server errors under the respective field via error component
+- [ ] Disable Submit button while submission is pending
+- [ ] Test: submit form with missing fields, invalid email, XSS payloads (`<img onerror>`)
+- [ ] Ensure CSRF token is included (Next.js Server Actions handle this automatically)
+- [ ] Check that password fields don't appear in browser history or logs

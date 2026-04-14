@@ -1,66 +1,43 @@
 ---
 name: designing-search-and-indexes
 description: Designs search schemas, indexing strategies, ranking tradeoffs, and query filters. Use when implementing application search, faceting, vector or lexical retrieval, or hybrid discovery features.
+when_to_use: search index, elasticsearch, meilisearch
+allowed-tools: Read Grep
 ---
 
-# Search and Index Design
+## Full-Text Search, Elasticsearch, and Query Optimization
 
-## When to Use This Skill
+Keyword search ("find users by name or bio") requires specialized indexing. Traditional relational indexes don't work for substring or fuzzy matching. Use full-text search engines (Elasticsearch, Meilisearch, typesense) or PostgreSQL full-text search.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- search index
-- elasticsearch
-- meilisearch
-- ranking
-- facets
-- vector search
+- User-facing search (products, posts, people)
+- Autocomplete and suggestions
+- Filtering and faceted search
+- Analytics on search queries
 
-Use it for back-end, data, full-stack workflows in the `data` category.
+### Decision Framework for PostgreSQL Full-Text or Elasticsearch
 
-## What This Skill Does
+1. **PostgreSQL GIN index for full-text search.** `to_tsvector(column)` indexes, `plainto_tsquery(user_input)` queries. Good for small to medium datasets.
+2. **Elasticsearch for scale.** 100M+ documents, real-time updates, fuzzy matching, facets. Complexity is worth it at scale.
+3. **Meilisearch or Typesense for simplicity.** Better UX (typo tolerance, instant results). Easier ops than Elasticsearch. Good for products, blogs.
+4. **Autocomplete uses prefix indexing.** Store all prefixes of a term in index, or use trie structure. Blazing fast at scale.
+5. **Relevance tuning is iterative.** Measure: which results do users click? Adjust weights (title weight > description). Use learning-to-rank if available.
 
-Designs search schemas, indexing strategies, ranking tradeoffs, and query filters. Use when implementing application search, faceting, vector or lexical retrieval, or hybrid discovery features.
+### Anti-patterns to Avoid
 
-## Instructions
+- LIKE queries on large tables. LIKE '%keyword%' is a sequential scan. Use full-text indexing.
+- Ignoring relevance. 500 results, user wants the first 5. Ranking matters.
+- Reindexing on every write. Use background jobs to batch reindex.
+- No query analytics. Don't know what users search for; can't improve.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Cover query intent, recall, ranking, and freshness separately.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/search-design-guide.md`
-- `examples/filtering-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Full-text search index is configured (PostgreSQL GIN or Elasticsearch)
+- [ ] Queries use index (not LIKE), confirmed with EXPLAIN ANALYZE
+- [ ] Autocomplete is fast (<50ms response)
+- [ ] Search results are relevant (ranked by match score, not insertion order)
+- [ ] Query logging captures search terms; analyzed monthly
+- [ ] Misspellings are handled (fuzzy match or "did you mean")
+- [ ] Faceted search (filters) available if needed
+- [ ] Test: search for partial match, typo, synonym; verify results

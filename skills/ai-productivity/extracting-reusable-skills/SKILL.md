@@ -1,65 +1,40 @@
 ---
 name: extracting-reusable-skills
 description: Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.
+when_to_use: create a skill, extract workflow, reuse this process
 ---
 
-# Reusable Skill Extractor
+## From Task to Reusable Skill
 
-## When to Use This Skill
+Repeated tasks should become reusable skills. The skill is recognizing when to extract, designing skill interfaces, and authoring clear, stack-specific documentation.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- create a skill
-- extract workflow
-- reuse this process
-- codify this pattern
+- Task is repeated across projects or team members
+- Task is complex and domain-specific
+- Pattern emerges in multiple codebases
 
-Use it for full-stack, platform, ai workflows in the `ai-productivity` category.
+### Decision Framework for Claude Code Skills
 
-## What This Skill Does
+1. **Skill is self-contained and focused.** Not "do everything," but "generate SQL migration" or "audit component accessibility."
+2. **Skill interface is clear.** Input (code snippet, requirements), output (generated artifact, audit report). Use Claude's first-class integration: read files, run commands, return markdown.
+3. **Stack specificity.** Skill for React + TypeScript + Tailwind has different guidance than generic Vue. Reference specific patterns, libraries, tools.
+4. **Skill body is 400-2500 chars.** Substantive, not boilerplate. Include "when to use," "decision framework," "anti-patterns," "checklist."
+5. **Reference supporting files.** Complex checklists, examples, patterns → separate markdown files. Linked from skill body.
 
-Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.
+### Anti-patterns to Avoid
 
-## Instructions
+- Generic skill. "Help me code" + generic advice. Not useful.
+- Bloated skill. 5000 chars of examples. Split into supporting files.
+- No context. Skill doesn't mention React, Node, or databases. Sounds random.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- This is the meta-skill that should feed the database over time.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/skill-seed-template.md`
-- `references/skill-authoring-rules.md`
-- `templates/eval-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Skill solves a repeated problem (not one-off task)
+- [ ] Skill is focused (one primary action, not many)
+- [ ] Skill body is 400-2500 chars with decision framework and anti-patterns
+- [ ] Skill references specific tech (React, FastAPI, Tailwind, etc.)
+- [ ] Trigger phrases are natural (words engineers use)
+- [ ] Supporting files are separate, linked from body
+- [ ] Example usage is concrete (real code, not pseudocode)
+- [ ] Skill is tested by running it on real codebase

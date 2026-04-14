@@ -1,233 +1,216 @@
-from pathlib import Path
+#!/usr/bin/env python3
+"""
+Generate installable Claude Code skills from skills-database.json.
+
+This generator follows the official authoring rules at
+https://code.claude.com/docs/en/skills:
+
+  - SKILL.md = YAML frontmatter + real domain content only.
+  - No generic "Instructions" boilerplate Claude already knows.
+  - No "What This Skill Does" section that restates the description.
+  - No build metadata, no source URL lists in SKILL.md.
+  - Supporting files carry real content, never stubs.
+  - SKILL.md stays under 500 lines; detail lives in supporting files.
+
+Schema contract (skills-database.json skills[i]):
+
+  required:
+    name, title, category, audience, priority, description,
+    trigger_phrases, skill_body
+
+  optional:
+    frontmatter_overrides   -> extra YAML frontmatter fields
+    supporting_files        -> { "references/foo.md": "# real content..." }
+    legacy_notes            -> carried forward for hunter diffs, not rendered
+"""
+
+from __future__ import annotations
+
 import json
 import shutil
+import sys
 import zipfile
+from pathlib import Path
+from typing import Any, Dict, Iterable
 
-base = Path('/home/user/workspace/claude-code-skills-db')
-db = json.loads((base / 'skills-database.json').read_text())
+ROOT = Path(__file__).resolve().parent.parent
+DB_PATH = ROOT / "skills-database.json"
+SKILLS_ROOT = ROOT / "skills"
+BUNDLES_ROOT = ROOT / "bundles"
 
-skills_root = base / 'skills'
-bundles_root = base / 'bundles'
-if skills_root.exists():
-    shutil.rmtree(skills_root)
-if bundles_root.exists():
-    shutil.rmtree(bundles_root)
-skills_root.mkdir(parents=True, exist_ok=True)
-bundles_root.mkdir(parents=True, exist_ok=True)
-
-category_titles = {
-    'frontend': 'Frontend Skills',
-    'backend': 'Backend Skills',
-    'data': 'Data Skills',
-    'testing': 'Testing Skills',
-    'platform': 'Platform Skills',
-    'security-reliability': 'Security and Reliability Skills',
-    'ai-productivity': 'AI Productivity Skills'
+CATEGORY_TITLES = {
+    "frontend": "Frontend Skills",
+    "backend": "Backend Skills",
+    "data": "Data Skills",
+    "testing": "Testing Skills",
+    "platform": "Platform Skills",
+    "security-reliability": "Security and Reliability Skills",
+    "ai-productivity": "AI Productivity Skills",
 }
 
-category_intro = {
-    'frontend': 'Skills for UI architecture, accessibility, CSS systems, responsive behavior, bundle performance, and browser-facing security.',
-    'backend': 'Skills for APIs, auth, jobs, services, concurrency, webhooks, event-driven systems, and backend documentation.',
-    'data': 'Skills for schema design, SQL review, migrations, search/indexing, analytics instrumentation, and ETL validation.',
-    'testing': 'Skills for unit, integration, E2E, snapshot, coverage, and production-bug regression workflows.',
-    'platform': 'Skills for CI/CD, containers, infrastructure as code, monorepos, release workflows, and developer experience.',
-    'security-reliability': 'Skills for threat modeling, secrets/config audits, observability, SLOs, failure modes, and recovery readiness.',
-    'ai-productivity': 'Skills for extracting reusable skills, reviewing PRs, planning multi-agent work, building RAG-ready docs, and cataloging patterns.'
+CATEGORY_INTRO = {
+    "frontend": "React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, CSS architecture, responsive behavior, bundle performance, and browser-facing security.",
+    "backend": "Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhooks, event-driven systems, and backend documentation.",
+    "data": "Schema design, SQL review, migrations, search/indexing, analytics instrumentation, and ETL validation.",
+    "testing": "Unit, integration, E2E, snapshot, coverage, and production-bug regression workflows.",
+    "platform": "CI/CD, containers, infrastructure as code, monorepos, release workflows, and developer experience.",
+    "security-reliability": "Threat modeling, secrets/config audits, observability, SLOs, failure modes, and recovery readiness.",
+    "ai-productivity": "Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work, building RAG-ready docs, and cataloging patterns.",
 }
 
-by_category = {}
-for skill in db['skills']:
-    by_category.setdefault(skill['category'], []).append(skill)
 
-
-def md_bullets(items, code=False):
-    if code:
-        return '\n'.join(f'- `{item}`' for item in items)
-    return '\n'.join(f'- {item}' for item in items)
-
-
-def yaml_line(key, value):
+def yaml_scalar(value: Any) -> str:
+    """Emit a YAML scalar. Quote if the value contains YAML-significant chars."""
     if isinstance(value, bool):
-        return f'{key}: {'true' if value else 'false'}'
-    text = str(value).replace('\n', ' ')
-    if any(ch in text for ch in [':', '[', ']', '(', ')', '*', '"']):
-        text = text.replace('"', '\\"')
-        return f'{key}: "{text}"'
-    return f'{key}: {text}'
+        return "true" if value else "false"
+    if isinstance(value, (int, float)):
+        return str(value)
+    if isinstance(value, list):
+        return "[" + ", ".join(yaml_scalar(v) for v in value) + "]"
+    text = str(value).replace("\n", " ").strip()
+    needs_quote = any(c in text for c in ":#&*?|>!%@`") or text.startswith("-") or text in {"true", "false", "null", "yes", "no"}
+    if needs_quote:
+        escaped = text.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{escaped}"'
+    return text
 
 
-def write_zip_from_directory(source_dir: Path, zip_path: Path, prefix: str):
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-        for p in sorted(source_dir.rglob('*')):
+def render_frontmatter(skill: Dict[str, Any]) -> str:
+    fields: Dict[str, Any] = {
+        "name": skill["name"],
+        "description": skill["description"],
+    }
+    fields.update(skill.get("frontmatter_overrides", {}))
+    lines = ["---"]
+    for key, value in fields.items():
+        lines.append(f"{key}: {yaml_scalar(value)}")
+    lines.append("---")
+    return "\n".join(lines)
+
+
+def render_skill(skill: Dict[str, Any]) -> str:
+    """Render SKILL.md: frontmatter + skill_body. That's it."""
+    if "skill_body" not in skill or not skill["skill_body"].strip():
+        raise ValueError(f"Skill '{skill['name']}' is missing required 'skill_body'")
+    body = skill["skill_body"].rstrip() + "\n"
+    return f"{render_frontmatter(skill)}\n\n{body}"
+
+
+def render_plain_readme(skill: Dict[str, Any]) -> str:
+    """Human-friendly README.md that sits beside SKILL.md for humans browsing the repo."""
+    triggers = skill.get("trigger_phrases", [])
+    trigger_text = ", ".join(f"`{t}`" for t in triggers) if triggers else "N/A"
+    audience = ", ".join(skill.get("audience", []))
+    return f"""# {skill['title']}
+
+**Category:** {skill['category']} · **Priority:** {skill.get('priority', 'normal')} · **Audience:** {audience}
+
+{skill['description']}
+
+## When Claude should reach for this
+
+Trigger phrases: {trigger_text}
+
+## What you get
+
+Open [`SKILL.md`](SKILL.md) for the full instructions Claude loads.
+"""
+
+
+def write_supporting_files(skill: Dict[str, Any], skill_dir: Path) -> Iterable[Path]:
+    """Write any supporting files declared in `supporting_files`. Refuse empty stubs."""
+    supporting = skill.get("supporting_files", {}) or {}
+    written: list[Path] = []
+    for rel_path, content in supporting.items():
+        if not content or not content.strip():
+            raise ValueError(
+                f"Skill '{skill['name']}' supporting file '{rel_path}' is empty. "
+                "Remove the entry or provide real content."
+            )
+        target = skill_dir / rel_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content.rstrip() + "\n")
+        written.append(target)
+    return written
+
+
+def write_category_readme(category: str, skills: list[Dict[str, Any]], cat_dir: Path) -> None:
+    lines = [
+        f"# {CATEGORY_TITLES.get(category, category.title())}",
+        "",
+        CATEGORY_INTRO.get(category, ""),
+        "",
+        "## Included skills",
+        "",
+    ]
+    for s in sorted(skills, key=lambda s: s["name"]):
+        lines.append(f"- [`{s['name']}/`](./{s['name']}/) — {s['description'].split('.')[0]}.")
+    cat_dir.mkdir(parents=True, exist_ok=True)
+    (cat_dir / "README.md").write_text("\n".join(lines) + "\n")
+
+
+def write_root_readme(by_category: Dict[str, list[Dict[str, Any]]]) -> None:
+    lines = [
+        "# Skills Library",
+        "",
+        "Installable Claude Code skills grouped by category. Every skill is a directory with a `SKILL.md` (what Claude reads) and a `README.md` (what humans read).",
+        "",
+        "## Categories",
+        "",
+    ]
+    for category in sorted(by_category):
+        intro = CATEGORY_INTRO.get(category, "")
+        count = len(by_category[category])
+        lines.append(f"- [`{category}/`](./{category}/) — {count} skills. {intro}")
+    (SKILLS_ROOT / "README.md").write_text("\n".join(lines) + "\n")
+
+
+def write_bundle(source_dir: Path, zip_path: Path, prefix: str) -> None:
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for p in sorted(source_dir.rglob("*")):
             if p.is_file():
                 zf.write(p, arcname=str(Path(prefix) / p.relative_to(source_dir)))
 
 
-def render_skill(skill):
-    frontmatter = {
-        'name': skill['name'],
-        'description': skill['description'],
-    }
-    frontmatter.update(skill.get('suggested_frontmatter', {}))
+def main() -> int:
+    if not DB_PATH.exists():
+        print(f"ERROR: {DB_PATH} not found", file=sys.stderr)
+        return 2
+    db = json.loads(DB_PATH.read_text())
+    skills = db["skills"]
 
-    lines = ['---']
-    for k, v in frontmatter.items():
-        lines.append(yaml_line(k, v))
-    lines.extend([
-        '---',
-        '',
-        f"# {skill['title']}",
-        '',
-        '## When to Use This Skill',
-        '',
-        'Use this skill when the task matches these patterns:',
-        '',
-        md_bullets(skill['trigger_phrases']),
-        '',
-        f"Use it for {', '.join(skill['audience'])} workflows in the `{skill['category']}` category.",
-        '',
-        '## What This Skill Does',
-        '',
-        skill['description'],
-        '',
-        '## Instructions',
-        '',
-        '1. Read the relevant files, routes, modules, or configuration before making recommendations.',
-        '2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.',
-        '3. Apply the category-specific review and implementation notes in this skill.',
-        '4. Use the supporting files in this directory only when they are relevant to the task at hand.',
-        '5. Prefer minimal, verifiable changes over broad rewrites.',
-        '6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.',
-        '7. If the task is high risk, summarize assumptions and failure modes before finalizing.',
-        '',
-        '## Category-Specific Guidance',
-        '',
-        md_bullets(skill['implementation_notes']),
-        '',
-        '## Supporting Files',
-        '',
-        'Recommended files to keep with this skill:',
-        '',
-        md_bullets(skill['recommended_supporting_files'], code=True),
-        '',
-        '## Build Guidance',
-        '',
-        '- Keep SKILL.md concise and move larger detail into one-level-deep support files.',
-        '- Keep descriptions discoverable and written in third person.',
-        '- Prefer deterministic scripts for validation and repeatable checks.',
-        '- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.',
-        '',
-        '## Source Basis',
-        '',
-        'This generated seed skill is based on the following references:',
-        '',
-        md_bullets(skill['source_urls']),
-        ''
-    ])
-    return '\n'.join(lines)
+    if SKILLS_ROOT.exists():
+        shutil.rmtree(SKILLS_ROOT)
+    if BUNDLES_ROOT.exists():
+        shutil.rmtree(BUNDLES_ROOT)
+    SKILLS_ROOT.mkdir(parents=True, exist_ok=True)
+    BUNDLES_ROOT.mkdir(parents=True, exist_ok=True)
 
-# root skills index
-root_lines = [
-    '# Skills Library',
-    '',
-    'This folder contains installable Claude Code skills grouped by category.',
-    '',
-    '## Categories',
-    ''
-]
-for category in sorted(by_category):
-    root_lines.append(f'- `{category}/` — {category_intro.get(category, "")}')
-(skills_root / 'README.md').write_text('\n'.join(root_lines) + '\n')
+    by_category: Dict[str, list[Dict[str, Any]]] = {}
+    for skill in skills:
+        by_category.setdefault(skill["category"], []).append(skill)
 
-for category, items in by_category.items():
-    cat_dir = skills_root / category
-    cat_dir.mkdir(parents=True, exist_ok=True)
-    lines = [
-        f'# {category_titles.get(category, category.title())}',
-        '',
-        category_intro.get(category, ''),
-        '',
-        '## Included skills',
-        ''
-    ]
-    for skill in sorted(items, key=lambda s: s['name']):
-        lines.append(f'- `{skill["name"]}` — {skill["description"]}')
-    (cat_dir / 'README.md').write_text('\n'.join(lines) + '\n')
+    total = 0
+    for category, items in by_category.items():
+        cat_dir = SKILLS_ROOT / category
+        write_category_readme(category, items, cat_dir)
+        for skill in items:
+            skill_dir = cat_dir / skill["name"]
+            skill_dir.mkdir(parents=True, exist_ok=True)
+            (skill_dir / "SKILL.md").write_text(render_skill(skill))
+            (skill_dir / "README.md").write_text(render_plain_readme(skill))
+            write_supporting_files(skill, skill_dir)
+            total += 1
+        # per-category bundle
+        write_bundle(cat_dir, BUNDLES_ROOT / f"{category}-skills.zip", prefix=category)
 
-    for skill in sorted(items, key=lambda s: s['name']):
-        skill_dir = cat_dir / skill['name']
-        skill_dir.mkdir(parents=True, exist_ok=True)
-        (skill_dir / 'references').mkdir(parents=True, exist_ok=True)
-        if any(p.startswith('scripts/') for p in skill['recommended_supporting_files']):
-            (skill_dir / 'scripts').mkdir(parents=True, exist_ok=True)
-        if any(p.startswith('templates/') for p in skill['recommended_supporting_files']):
-            (skill_dir / 'templates').mkdir(parents=True, exist_ok=True)
-        if any(p.startswith('examples/') for p in skill['recommended_supporting_files']):
-            (skill_dir / 'examples').mkdir(parents=True, exist_ok=True)
+    write_root_readme(by_category)
+    # mega-bundle
+    write_bundle(SKILLS_ROOT, BUNDLES_ROOT / "all-skills.zip", prefix="skills")
 
-        (skill_dir / 'SKILL.md').write_text(render_skill(skill) + '\n')
+    print(f"Rendered {total} skills across {len(by_category)} categories.")
+    return 0
 
-        for rel in skill['recommended_supporting_files']:
-            p = skill_dir / rel
-            p.parent.mkdir(parents=True, exist_ok=True)
-            title = Path(rel).stem.replace('-', ' ').replace('_', ' ').title()
-            if rel.startswith('scripts/'):
-                p.write_text('#!/usr/bin/env bash\n# Placeholder helper script for this skill. Replace with project-specific deterministic checks.\necho "Implement project-specific helper for this skill."\n')
-                p.chmod(0o755)
-            else:
-                p.write_text(
-                    f'# {title}\n\n'
-                    f'This is a starter support file for `{skill["name"]}`.\n\n'
-                    '## Purpose\n\n'
-                    'Add project-specific guidance here to keep `SKILL.md` concise.\n\n'
-                    '## Suggested content\n\n'
-                    '- Decision rules\n'
-                    '- Checklists\n'
-                    '- Project conventions\n'
-                    '- Examples\n'
-                    '- Validator instructions\n'
-                )
 
-for category in sorted(by_category):
-    cat_dir = skills_root / category
-    write_zip_from_directory(cat_dir, bundles_root / f'{category}-skills.zip', category)
-
-write_zip_from_directory(skills_root, bundles_root / 'all-skills.zip', 'skills')
-
-sections = []
-for category in sorted(by_category):
-    sections.append(f'### {category_titles.get(category, category.title())}')
-    sections.append('')
-    sections.append(category_intro.get(category, ''))
-    sections.append('')
-    for skill in sorted(by_category[category], key=lambda s: s['name']):
-        sections.append(f'- `{skill["name"]}` — {skill["description"]}')
-    sections.append('')
-
-readme = (
-    '# Claude Code Skills DB\n\n'
-    'A user-friendly, installable skill library for developers using Claude Code, backed by a source-based skills database and organized into real category folders with `SKILL.md` files.\n\n'
-    '## Repo structure\n\n'
-    '- `skills/` — installable skill folders grouped by category\n'
-    '- `bundles/` — zip downloads for each category plus one full library bundle\n'
-    '- `skills-database.json` — source-backed database used to generate the library\n'
-    '- `skills-schema.json` — schema for the database\n'
-    '- `daily-update-playbook.md` — guidance for recurring updates\n'
-    '- `scripts/` — validation and Git sync helpers\n\n'
-    '## How to use\n\n'
-    '### Browse in GitHub\n\n'
-    'Open the `skills/` folder and then choose a category such as `frontend`, `backend`, or `testing`.\n\n'
-    '### Install manually\n\n'
-    'Copy any skill folder into one of these Claude Code skill locations:\n\n'
-    '- `~/.claude/skills/<skill-name>/SKILL.md` for personal use\n'
-    '- `.claude/skills/<skill-name>/SKILL.md` for project use\n\n'
-    'These locations and the `SKILL.md` entrypoint follow the official Claude Code skill structure [Claude Code Docs](https://code.claude.com/docs/en/skills).\n\n'
-    '### Download bundles\n\n'
-    'Use the zip files in `bundles/` if you want a grouped pack instead of copying one folder at a time.\n\n'
-    '## Skill categories\n\n' + '\n'.join(sections) + '\n'
-    '## Notes\n\n'
-    'The repository uses official Claude Code skill guidance for skill structure, metadata, and discovery [Claude Code Docs](https://code.claude.com/docs/en/skills). The naming, description style, supporting-file structure, and iterative authoring approach are also aligned with Anthropic\'s best-practices guide [Claude API Docs](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).\n'
-)
-(base / 'README.md').write_text(readme)
-
-print(f'Generated {len(db["skills"])} skills across {len(by_category)} categories')
+if __name__ == "__main__":
+    sys.exit(main())

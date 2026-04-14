@@ -1,65 +1,46 @@
 ---
 name: designing-graphql-apis
 description: Designs GraphQL schemas, resolver boundaries, batching, and authorization rules. Use when building graphs, federated services, or resolver-heavy integrations.
+when_to_use: graphql schema, resolver performance, n+1
+allowed-tools: Read Grep Bash
 ---
 
-# GraphQL API Design
+## GraphQL Schema & Query Optimization
 
-## When to Use This Skill
+GraphQL gives clients exactly what they ask for. The trade-off: schema design is critical, and without discipline, N+1 queries and overfetching happen. In Node.js (Apollo), Python (Strawberry, Graphene), and TypeScript, the skill is schema organization, resolvers, and preventing common pitfalls.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- graphql schema
-- resolver performance
-- n+1
-- federation
-- graphql auth
+- Designing a new GraphQL schema or endpoint
+- Optimizing slow GraphQL queries or field resolvers
+- Reviewing schema for naming, nesting, and performance
+- Migrating from REST or adding a GraphQL layer
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Node.js/TypeScript + Apollo or Python Strawberry
 
-## What This Skill Does
+1. **Flat schema, nested queries.** Don't nest types deeply (User > Post > Comment > Author > Profile). Query shape allows nesting; schema stays flat.
+2. **Single responsibility per field.** A User.posts field should only return posts, not posts with comments and comments with authors all loaded. Let the client query what it needs.
+3. **Resolver should be fast or cached.** If a resolver makes a DB call per field, you have N+1. Use dataloader (Node) or select_related/prefetch_related (Django) to batch queries.
+4. **Union and Interface for polymorphism.** Use them sparingly; they add complexity. A `SearchResult` union of User | Post | Comment makes sense; nesting unions inside unions doesn't.
+5. **Subscription and mutation design.** Mutations return the mutated object (plus errors) so the client can update cache. Subscriptions push changes to subscribed clients.
 
-Designs GraphQL schemas, resolver boundaries, batching, and authorization rules. Use when building graphs, federated services, or resolver-heavy integrations.
+### Anti-patterns to Avoid
 
-## Instructions
+- Deep nesting: query User > Posts > Comments > Replies > Author > Profile. Makes schema complex and resolution slow.
+- N+1 resolver problem: User field loads user, then each Post resolver loads the User again. Use dataloader.
+- Over-nesting arguments: `user(id: ID!, filter: Filter!, sort: Sort!, pagination: Pagination!)`. Use input types.
+- No error handling in resolvers. Exceptions propagate; use a consistent error type or error wrapper.
+- Serving sensitive data in schema. An unauthorized user shouldn't be able to query admin fields. Use resolver middleware.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Include explicit notes on batching, caching, and schema evolution.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/graphql-schema-guide.md`
-- `references/resolver-checklist.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Schema is flat; types are standalone (User, Post, Comment—not nested)
+- [ ] Resolver for each field is documented (which DB queries it makes)
+- [ ] Dataloader is used for batch-loading related entities
+- [ ] Slow resolvers are cached or optimized (profile first)
+- [ ] Error handling is consistent (typed errors, clear messages)
+- [ ] Mutations return the mutated object + errors in a consistent shape
+- [ ] Subscriptions are tested (if used) with real clients
+- [ ] Authorization middleware applies to sensitive fields
+- [ ] Query complexity is limited (pagination, depth limit) to prevent DoS
+- [ ] API documentation or schema comments explain when to use which query

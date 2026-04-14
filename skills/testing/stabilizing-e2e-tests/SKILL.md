@@ -1,65 +1,43 @@
 ---
 name: stabilizing-e2e-tests
 description: Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes. Use when browser tests are brittle or slow.
+when_to_use: playwright flake, cypress flake, e2e instability
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# E2E Test Stabilizer
+## End-to-End Testing Without Flakiness
 
-## When to Use This Skill
+E2E tests verify the full user flow (login → browse → checkout) using a real browser. They're slow and flaky if not designed well. The skill is fixing flakiness, managing state, and ensuring tests run reliably in CI.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- playwright flake
-- cypress flake
-- e2e instability
-- retrying tests
-- waiting for ui
+- Critical user flows (login, payment, checkout)
+- Post-deployment verification
+- Regression detection
 
-Use it for front-end, full-stack, qa workflows in the `testing` category.
+### Decision Framework for Playwright or Cypress
 
-## What This Skill Does
+1. **Wait for state, not time.** `await page.click()` then `await page.waitForSelector('.success')`. Don't sleep. Flakiness is 95% impatience.
+2. **Isolate test data.** Each test creates its own user, data. No shared state. Parallel tests don't interfere.
+3. **Retry flaky steps.** Network hiccup = retry. `await retry(() => page.click('.button'))` with exponential backoff.
+4. **Headless + headed for debugging.** CI runs headless (fast). Local dev runs headed (debug visually).
+5. **Screenshots on failure.** Capture screenshot when test fails. Invaluable for debugging.
 
-Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes. Use when browser tests are brittle or slow.
+### Anti-patterns to Avoid
 
-## Instructions
+- Sleeping. `await page.goto(url); sleep(2000); expect()`. Flaky and slow. Wait for state instead.
+- Shared test data. Test1 creates user; Test2 logs in with Test1's user. Tests can't run in parallel.
+- No retry logic. Transient network error = test failure. Add retry wrapper.
+- Sensitive data in tests. Hardcoded passwords. Use test accounts, not real production data.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Lean on deterministic selectors, network awareness, and state setup shortcuts.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/e2e-stability-guide.md`
-- `examples/flaky-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] No sleep() statements; wait for state (waitForSelector, waitForNavigation)
+- [ ] Test data is isolated per test (no shared users, products)
+- [ ] Tests run in parallel without conflicts
+- [ ] Retry logic for network-dependent steps
+- [ ] Screenshots captured on failure
+- [ ] Timeouts are reasonable (page navigation <10s)
+- [ ] Run in headless mode in CI, headed locally
+- [ ] Test sensitive flows (login, payment) without real credentials
+- [ ] CI runs all tests; failure is loud and clear

@@ -1,65 +1,42 @@
 ---
 name: designing-integration-tests
 description: Designs integration tests around service contracts, persistence, side effects, and environment setup. Use when changes cross module, network, storage, or framework boundaries.
+when_to_use: integration test, service contract, testcontainers
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# Integration Test Designer
+## Multi-Unit Testing and Contract Validation
 
-## When to Use This Skill
+Integration tests verify multiple units working together (API endpoint + database, authentication + authorization). The skill is setting up test databases, coordinating state, and validating contracts.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- integration test
-- service contract
-- testcontainers
-- db integration
-- api integration
+- Testing API endpoints (request → database → response)
+- Verifying database transactions and constraints
+- Testing background jobs and async flows
 
-Use it for back-end, full-stack workflows in the `testing` category.
+### Decision Framework for Jest, Pytest, or testcontainers
 
-## What This Skill Does
+1. **Test database is real database.** Use testcontainers (Docker) to spin up PostgreSQL, Redis, etc. for each test suite. Clean and fast.
+2. **Fixtures seed data.** beforeAll seeds users, products; afterAll truncates. Reproducible state.
+3. **Test API via HTTP client.** Don't call app.get() directly. Use supertest (Node) or httpx (Python). Tests the real request cycle.
+4. **Assertions on side effects.** API creates invoice → assert it's in database, email is queued, webhook is sent.
+5. **Timeouts are real.** Integration tests are slower; adjust timeouts. 5s vs. 100ms for unit.
 
-Designs integration tests around service contracts, persistence, side effects, and environment setup. Use when changes cross module, network, storage, or framework boundaries.
+### Anti-patterns to Avoid
 
-## Instructions
+- Sharing database across tests. One test's data leaks to others.
+- Mocking the database. Defeats purpose of integration test.
+- Non-deterministic tests. Random data, time-dependent logic. Tests pass once, fail next time.
+- Not cleaning up. Test creates file or database entry; next test fails due to leftover state.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Use realistic dependencies but keep setup repeatable and observable.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/integration-test-guide.md`
-- `examples/environment-fixtures.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Test database is isolated per test suite (Docker testcontainers)
+- [ ] Fixtures seed known data (beforeAll/afterAll)
+- [ ] API is tested via HTTP, not direct app.get()
+- [ ] Assertions verify database state after request
+- [ ] Background jobs or async flows are awaited
+- [ ] Tests are deterministic (no random data, fixed timestamps)
+- [ ] Cleanup is automatic (afterAll truncates database)
+- [ ] Timeouts are appropriate for integration (5s, not 100ms)

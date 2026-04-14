@@ -1,65 +1,43 @@
 ---
 name: modeling-analytics-events
 description: Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis. Use when adding instrumentation to frontend or backend product flows.
+when_to_use: tracking plan, analytics events, event naming
+allowed-tools: Read Grep
 ---
 
-# Analytics Event Modeling
+## Event Schema, Collection, and Attribution
 
-## When to Use This Skill
+Analytics events tell you how users interact with your app. Good event schema enables product insights; bad schema is noise. The skill is designing event payloads, sampling strategies, and attribution models.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- tracking plan
-- analytics events
-- event naming
-- instrumentation
-- product analytics
+- Designing analytics for a new feature or product
+- Auditing event quality (too noisy, missing context)
+- Attribution and user journey tracking
 
-Use it for data, full-stack, product workflows in the `data` category.
+### Decision Framework for Analytics Platform (Mixpanel, Amplitude, custom)
 
-## What This Skill Does
+1. **Event schema must be versioned and validated.** Define event name, required properties (user_id, timestamp), optional properties (metadata). Use JSON Schema or similar.
+2. **User context is critical.** Every event includes user_id, session_id, timestamp, OS, browser, country. Context enables segmentation.
+3. **Avoid event explosion.** Don't emit PageView for every page. Use a standardized schema (page_title, page_category) instead of per-page events.
+4. **Sampling for scale.** If events are 1M/day, sample to 10%; store full resolution for top features. Instrumentation cost vs. insight tradeoff.
+5. **Attribution model for multi-touch.** First-touch, last-touch, or multi-touch? Choose early; it affects ROI calculations and budget allocation.
 
-Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis. Use when adding instrumentation to frontend or backend product flows.
+### Anti-patterns to Avoid
 
-## Instructions
+- No event schema. "Send whatever properties feel useful." Result: inconsistent data, hard to analyze.
+- Event explosion. One event per button click, per input change. Massive cardinality; storage blows up.
+- No user context. Events are orphaned; can't attribute to users.
+- Sampling not documented. Analysis assumes full resolution; results are wrong.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Stress consistency, versioning, and privacy-aware field selection.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/event-taxonomy.md`
-- `templates/tracking-plan-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Event schema is defined and versioned (JSON Schema or similar)
+- [ ] Every event includes user_id, session_id, timestamp, OS, browser
+- [ ] Event names follow naming convention (object_action: user_clicked, invoice_paid)
+- [ ] Property names are consistent (user_id, not userId or uid)
+- [ ] Sampling strategy is defined and documented
+- [ ] PII is not logged (no email, password, credit card)
+- [ ] Event delivery is reliable (retry, queue, confirmation)
+- [ ] Analytics events are validated on client or server (schema check)
+- [ ] Monthly audit: unused events removed, schema validated

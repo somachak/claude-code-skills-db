@@ -1,65 +1,41 @@
 ---
 name: hardening-ci-pipelines
 description: Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation. Use when builds are slow, flaky, expensive, or hard to trust.
+when_to_use: ci pipeline, github actions, flaky build
+allowed-tools: Bash Read
 ---
 
-# CI Pipeline Hardening
+## Build, Test, Deploy Safety
 
-## When to Use This Skill
+CI/CD pipelines are the blast radius for code changes. A compromised pipeline = compromised app. The skill is designing pipelines for reliability, security, and fast feedback.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- ci pipeline
-- github actions
-- flaky build
-- test matrix
-- build caching
+- Setting up CI/CD for a new project
+- Auditing pipeline for security and reliability
+- Reducing pipeline failures or duration
 
-Use it for platform, full-stack, back-end workflows in the `platform` category.
+### Decision Framework for GitHub Actions, GitLab CI, or CircleCI
 
-## What This Skill Does
+1. **Secrets are not in code.** Use secret management (AWS Secrets Manager, HashiCorp Vault). CI/CD system (GitHub Actions) provides secret injection.
+2. **Artifact integrity.** Build artifact should be reproducible. Dockerfile fingerprint doesn't change unless code or dependencies change.
+3. **Test gates before deploy.** Unit tests → integration tests → staging deploy → smoke tests → production deploy. Each gate must pass.
+4. **Permissions are minimal.** Deploy step requires manual approval. Automated rollback on error.
+5. **Status checks are visible.** Every PR shows CI status. Can't merge without passing tests.
 
-Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation. Use when builds are slow, flaky, expensive, or hard to trust.
+### Anti-patterns to Avoid
 
-## Instructions
+- Secrets in code or config files. CI/CD logs are often visible.
+- Non-deterministic builds. Build same code twice, get different artifact. Hard to debug.
+- No tests before deploy. Tests run after merge. If test fails, bug is in production.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Push for fast feedback loops and clear quality gates.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/ci-checklist.md`
-- `examples/workflow-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Secrets are injected via CI/CD secret management
+- [ ] Build is deterministic (same code = same artifact)
+- [ ] Dockerfile or build script is version-controlled
+- [ ] Unit and integration tests run before merge
+- [ ] Staging deploy runs smoke tests
+- [ ] Deploy to production requires approval
+- [ ] Deployment is logged (who, when, what changed)
+- [ ] Rollback procedure is automated and tested

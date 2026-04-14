@@ -1,64 +1,40 @@
 ---
 name: planning-multi-agent-work
 description: Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.
+when_to_use: subagents, parallel work, agent coordination
 ---
 
-# Multi-Agent Work Planner
+## Delegation and Async Coordination
 
-## When to Use This Skill
+Multi-agent systems (multiple Claude instances or team members working simultaneously) require clear specs, ownership, and sync points. The skill is decomposing tasks so agents can work in parallel.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- subagents
-- parallel work
-- agent coordination
-- task decomposition
+- Large codebase changes requiring multiple agents/people
+- Parallel work streams (API + web + database)
+- Urgent tasks needing rapid execution
 
-Use it for platform, ai, full-stack workflows in the `ai-productivity` category.
+### Decision Framework for Claude Code Skills and Agents
 
-## What This Skill Does
+1. **Spec is written first.** Agent reads spec; executes independently. No back-and-forth.
+2. **Ownership is clear.** Agent A builds API endpoints; Agent B builds UI; Agent C integrates. No overlap or duplication.
+3. **Interfaces are stable.** Agent B needs to know API contract (endpoint, request/response shape). Defined in spec, not emergent.
+4. **Async by default.** Agents work on different files/systems; no waiting. Reduces coordination overhead.
+5. **Sync points are explicit.** After API is built, Agent B starts UI. Spec defines these dependencies.
 
-Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.
+### Anti-patterns to Avoid
 
-## Instructions
+- Vague spec. "Build something." Agent wastes time guessing intent.
+- Overlapping ownership. Two agents build same component; merge conflict.
+- Synchronous work. Agent A builds API, Agent B waits. Serialize work unnecessarily.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep sub-tasks independent and route large evidence into files.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/multi-agent-patterns.md`
-- `templates/parallel-plan-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Spec is written and shared (clear intent, requirements)
+- [ ] Ownership is assigned (Agent A: API, Agent B: UI)
+- [ ] Interfaces are defined (API contract, data format)
+- [ ] Dependencies are documented (A finishes before B starts)
+- [ ] Agents work on different files/systems (no conflicts)
+- [ ] Sync points are scheduled (integration check-in)
+- [ ] Progress is tracked (status updates)
+- [ ] Integration testing is planned (all components together)

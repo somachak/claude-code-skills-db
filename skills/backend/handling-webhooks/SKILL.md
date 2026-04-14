@@ -1,65 +1,45 @@
 ---
 name: handling-webhooks
 description: Builds and reviews webhook consumers for signature verification, retries, deduplication, ordering issues, and replay safety. Use when integrating payment, messaging, or external event providers.
+when_to_use: webhook, signature verification, replay attack
+allowed-tools: Read Grep Bash
 ---
 
-# Webhook Integration Hardening
+## Receiving and Processing Webhooks Securely
 
-## When to Use This Skill
+Webhooks are callbacks: external services POST to your endpoint when an event occurs. The challenge: verifying the sender, handling retries, idempotency, and failure scenarios.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- webhook
-- signature verification
-- replay attack
-- event dedupe
-- provider integration
+- Integrating Stripe, GitHub, Slack, or other event sources
+- Designing an event notification system for your own platform
+- Debugging webhook delivery failures or replay scenarios
 
-Use it for back-end, full-stack workflows in the `backend` category.
+### Decision Framework for Express/FastAPI + Node.js or Python
 
-## What This Skill Does
+1. **Verify webhook signature.** Stripe, GitHub, etc. send a signature (HMAC-SHA256). Verify it before trusting the payload. Prevents spoofing.
+2. **Idempotency is essential.** Webhook sent twice? Process it safely twice. Use an idempotency key (event ID) to detect duplicates.
+3. **Respond 2xx immediately.** Queue the work; don't block the sender waiting for processing. Respond 200 OK, then process asynchronously.
+4. **Handle retries gracefully.** Sender will retry. Exponential backoff, dead-letter queue, and manual replay tools.
+5. **Log and monitor.** Track webhook URL, signature verification, processing success, failures. Set up alerts for failure spikes.
 
-Builds and reviews webhook consumers for signature verification, retries, deduplication, ordering issues, and replay safety. Use when integrating payment, messaging, or external event providers.
+### Anti-patterns to Avoid
 
-## Instructions
+- Not verifying signatures. Attacker posts to your webhook endpoint posing as Stripe.
+- Synchronous processing. Webhook sender times out waiting for you to finish work.
+- Storing webhook payloads without verification. Unverified payload = possible poisoned state.
+- No logging. Can't debug delivery failures or replay scenarios.
+- Tight coupling to webhook provider's schema. Schema changes break processing. Validate and normalize early.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Center the skill on authenticity, retries, and safe reprocessing.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/webhook-checklist.md`
-- `examples/provider-failure-modes.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Webhook endpoint validates HMAC signature before processing
+- [ ] Payload is queued for async processing (don't block the sender)
+- [ ] Response is 200 OK immediately; processing happens in background job
+- [ ] Idempotency key (event ID) prevents double-processing
+- [ ] Failed processing is retried with exponential backoff
+- [ ] Webhook logs include timestamp, signature validation result, success/failure
+- [ ] Manual replay tool exists for re-processing missed or failed webhooks
+- [ ] Monitoring/alerting on webhook failure rate and latency
+- [ ] Test: send webhook twice with same event ID; verify it's only processed once
+- [ ] Test: send webhook from attacker with wrong signature; verify it's rejected

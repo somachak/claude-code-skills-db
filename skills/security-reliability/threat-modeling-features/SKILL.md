@@ -1,65 +1,41 @@
 ---
 name: threat-modeling-features
 description: Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations. Use when reviewing auth changes, payments, admin tools, integrations, or other sensitive workflows.
+when_to_use: threat model, attack surface, security review
+allowed-tools: Read Grep
 ---
 
-# Feature Threat Modeling
+## Identifying and Mitigating Threats
 
-## When to Use This Skill
+Threat modeling anticipates attacks before code is written. The skill is identifying attack vectors (data breach, DoS, privilege escalation) and mitigating them early.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- threat model
-- attack surface
-- security review
-- trust boundary
-- abuse case
+- Designing new features (payment, auth, admin panel)
+- Security review before launch
+- Incident post-mortem: "How do we prevent this?"
 
-Use it for security, back-end, front-end, full-stack workflows in the `security-reliability` category.
+### Decision Framework
 
-## What This Skill Does
+1. **STRIDE framework.** Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege. Ask: which threats apply?
+2. **Trust boundaries.** Data crossing boundary = potential attack. User input → database: sanitize. User upload → storage: scan. External API → app: validate.
+3. **Least privilege.** User has only permissions they need. Payment service doesn't need to delete users. Limits blast radius.
+4. **Defense in depth.** Multiple layers. Firewall + authentication + rate limiting + encryption. One layer fails, others protect.
+5. **Assume breach.** What if attacker is inside? Encryption at rest, audit logs, alerting on anomalies.
 
-Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations. Use when reviewing auth changes, payments, admin tools, integrations, or other sensitive workflows.
+### Anti-patterns to Avoid
 
-## Instructions
+- Security as afterthought. Design without threat modeling; fix vulnerabilities after launch.
+- Trusting user input. "Users are good" or "We validate on frontend." Backend must validate.
+- Single point of failure. Authentication only via password. MFA is secondary.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep the method lightweight enough for regular use but concrete enough to drive mitigations.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/threat-model-template.md`
-- `references/common-web-threats.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] STRIDE threats for feature are identified (Spoofing, Tampering, etc.)
+- [ ] Trust boundaries are drawn; data crossing them is validated
+- [ ] Least privilege is applied (user has minimal permissions)
+- [ ] Authentication and authorization are enforced server-side
+- [ ] Sensitive data is encrypted (at rest and in transit)
+- [ ] Rate limiting prevents brute force and DoS
+- [ ] Audit logs record sensitive actions
+- [ ] Incident response plan exists (if breach detected, what's the playbook?)

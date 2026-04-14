@@ -1,65 +1,47 @@
 ---
 name: reviewing-frontend-security
 description: Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes. Use when handling user content, auth state, embeds, or rich text.
+when_to_use: xss, unsafe html, token storage
+paths: "**/*.tsx, **/*.ts, **/*.jsx, **/*.js"
+allowed-tools: Read Grep
 ---
 
-# Frontend Security Review
+## Client-Side Security Hardening
 
-## When to Use This Skill
+XSS, CSRF, supply-chain attacks, and insecure data handling live in the client. The skill is knowing where to sanitize, where to use HTTPS, where to trust (and where not to), and how to protect user data in storage.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- xss
-- unsafe html
-- token storage
-- content security
-- frontend auth
+- Reviewing a new feature or public-facing page
+- Integrating third-party code (analytics, ads, embeds)
+- Handling sensitive data (PII, tokens, payment info)
+- Preparing for security audit or penetration testing
 
-Use it for front-end, full-stack workflows in the `frontend` category.
+### Decision Framework for React/Next.js/TypeScript
 
-## What This Skill Does
+1. **Always sanitize user input before rendering.** React escapes by default (`textContent`), but dangerouslySetInnerHTML is... dangerous. Use DOMPurify if you must render HTML.
+2. **Don't store secrets in localStorage.** Tokens, API keys, user PII: store in httpOnly cookies (set by server) or sessionStorage (cleared on tab close). Never localStorage.
+3. **Content Security Policy (CSP) is your shield.** Set `Content-Security-Policy` headers to block inline scripts, restrict script sources, prevent clickjacking.
+4. **CSRF tokens on forms.** Next.js Server Actions include CSRF protection automatically. Fetch-based forms need explicit tokens.
+5. **Dependency audit monthly.** Run `npm audit` and `npm outdated`. A compromised package in node_modules compromises the app.
 
-Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes. Use when handling user content, auth state, embeds, or rich text.
+### Anti-patterns to Avoid
 
-## Instructions
+- Using `dangerouslySetInnerHTML` without sanitization. Every user comment, user bio, etc. is an XSS vector.
+- Storing tokens in localStorage and accessing them client-side. Tokens belong in httpOnly cookies, set by the server.
+- Trusting user input for calculations (price, discount). Prices calculated server-side, never client-side.
+- Embedding third-party scripts without CSP or subresource integrity (SRI). Ad/analytics SDKs are privilege escalation vectors.
+- Not checking `Referer` or origin on form submissions. CSRF: attacker submits form from their domain on your user's behalf.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Keep security guidance concrete and tied to actual UI code paths.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/frontend-threats.md`
-- `examples/rendering-risks.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Check all user input rendering: text via textContent, HTML via DOMPurify
+- [ ] Verify sensitive data (tokens) is in httpOnly cookies, not localStorage
+- [ ] Test CSRF: submit a form from a different origin; it should fail
+- [ ] Review third-party scripts (analytics, ads); consider CSP restrictions
+- [ ] Ensure all external requests use HTTPS (no mixed content)
+- [ ] Set CSP header: block inline scripts, restrict script sources
+- [ ] Run `npm audit` and fix high/critical vulnerabilities
+- [ ] Test XSS: try `<img src=x onerror="alert('xss')">` in any user input field; should be escaped
+- [ ] Verify no secrets in source code (check git history, env files)
+- [ ] Use SRI (Subresource Integrity) for external scripts

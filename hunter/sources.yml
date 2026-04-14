@@ -1,0 +1,86 @@
+# Sources the daily hunter crawls.
+# Each source yields candidates that are then scored against quality_rubric.md.
+#
+# Tagging: every source is tagged with one or more stack tokens. The runner
+# filters candidates so they only compete for slots that match the user's
+# stack (--stack flag).
+
+github_search_queries:
+  # GitHub Code/Repo search. Top-starred + recently updated wins.
+  - query: "claude code skill in:readme stars:>20 pushed:>2025-01-01"
+    tags: [general, claude-code]
+  - query: "SKILL.md path:/ in:file stars:>10"
+    tags: [claude-code]
+  - query: "claude skills react typescript stars:>10"
+    tags: [react, nextjs, typescript, frontend]
+  - query: "claude skills nextjs stars:>10"
+    tags: [nextjs, react, frontend]
+  - query: "claude skills tailwind shadcn stars:>5"
+    tags: [tailwind, shadcn, frontend]
+  - query: "claude skills node express nestjs stars:>10"
+    tags: [node, backend]
+  - query: "claude skills fastapi stars:>5"
+    tags: [python, fastapi, backend]
+  - query: "claude skills django stars:>5"
+    tags: [python, django, backend]
+  - query: "claude skills prisma drizzle stars:>5"
+    tags: [node, orm, data]
+  - query: "claude code playbook testing in:readme stars:>10"
+    tags: [testing]
+
+curated_github_repos:
+  # Seed repos known to publish high-quality skills.
+  # The hunter pulls their SKILL.md files directly and treats each as a candidate.
+  - owner: anthropics
+    name: skills
+    branch: main
+    tags: [official, reference]
+  - owner: trailofbits
+    name: skills
+    branch: main
+    tags: [security]
+  - owner: alirezarezvani
+    name: claude-skills
+    branch: main
+    tags: [general]
+  - owner: slavingia
+    name: skills
+    branch: main
+    tags: [general]
+
+rss_feeds:
+  # Medium / blog RSS for long-form Claude Code content.
+  - url: https://medium.com/feed/tag/claude-code
+    tags: [blog, claude-code]
+  - url: https://medium.com/feed/tag/anthropic
+    tags: [blog, claude-code]
+  - url: https://www.anthropic.com/news/rss.xml
+    tags: [official, blog]
+
+web_search_queries:
+  # Run via Exa / web search. Results feed the scorer.
+  - "best Claude Code skills 2026 frontend"
+    # trailing-string form; runner handles both styles
+  - "Claude Code SKILL.md examples backend"
+  - "Claude Code agent skills best practices"
+
+x_queries:
+  # X (formerly Twitter) search. Requires X_BEARER_TOKEN env var; skipped if absent.
+  - query: "claude code skill min_faves:50 -is:retweet"
+    tags: [x, general]
+  - query: '"SKILL.md" min_retweets:20 -is:retweet'
+    tags: [x, claude-code]
+
+linkedin_queries:
+  # LinkedIn lacks a public API — runner logs these as manual-review suggestions
+  # that land in hunter/CHANGELOG.md under "needs human review".
+  - "Claude Code skills developer productivity"
+  - "Anthropic Claude Code shared skills"
+
+quality_floors:
+  github_min_stars: 20
+  github_min_forks: 5
+  max_age_days_unmaintained: 365
+  min_body_chars: 600
+  similarity_threshold_dedup: 0.80
+  overwrite_improvement_ratio: 1.15

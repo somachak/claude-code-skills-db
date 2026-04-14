@@ -1,64 +1,40 @@
 ---
 name: turning-runbooks-into-skills
 description: Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls. Use when a manual checklist is repeated often enough to automate guidance.
+when_to_use: runbook to skill, operational checklist, codify process
 ---
 
-# Runbook to Skill Converter
+## Automation from Manual Procedures
 
-## When to Use This Skill
+Runbooks are procedures (incident response, deployment, backups). Skills automate them. The skill is identifying automation opportunities and building reliable automation.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- runbook to skill
-- operational checklist
-- codify process
-- repeatable workflow
+- Runbook is followed >1x/month
+- Runbook is error-prone (forgotten steps, manual mistakes)
+- Runbook is long (>10 steps)
 
-Use it for platform, full-stack workflows in the `ai-productivity` category.
+### Decision Framework
 
-## What This Skill Does
+1. **Runbook step → skill command.** Manual: "SSH to server, check logs, restart." Skill: "Check logs for errors, alert if restart needed."
+2. **Idempotency is essential.** Skill runs twice (accidental re-trigger)? Same result. No side effects.
+3. **Observability is built-in.** Skill logs actions taken (what was done, why, result). On-call can see what happened.
+4. **Fallback is manual.** Skill automates happy path. If something's wrong, escalate to human. Don't blindly execute.
+5. **Skill is tested in staging first.** Before trusting automation in production, test on staging.
 
-Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls. Use when a manual checklist is repeated often enough to automate guidance.
+### Anti-patterns to Avoid
 
-## Instructions
+- Blind automation. Skill executes without validation. Corrupt state = disaster.
+- Non-idempotent automation. Skill runs twice; creates duplicate entries or state conflict.
+- No visibility. Skill silently fails. Team doesn't know until user complains.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Strong fit for deployment, incident, and compliance workflows.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `templates/runbook-conversion-template.md`
-- `references/workflow-skill-guidelines.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Runbook is well-documented (each step is clear)
+- [ ] Runbook is error-prone (manual steps, easy to forget)
+- [ ] Skill implements key steps (not all—keep human in loop for validation)
+- [ ] Skill is idempotent (safe to run twice)
+- [ ] Skill logs actions taken
+- [ ] Skill validates state before acting (no blindly executing)
+- [ ] Skill has fallback to manual (escalates if something's wrong)
+- [ ] Skill is tested in staging before production

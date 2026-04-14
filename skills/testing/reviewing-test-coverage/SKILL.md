@@ -1,64 +1,41 @@
 ---
 name: reviewing-test-coverage
 description: Reviews what is not tested and prioritizes the highest-risk missing scenarios. Use when shipping new code, after large refactors, or after incidents that revealed blind spots.
+when_to_use: coverage gaps, missing tests, risk-based testing
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# Coverage Gap Reviewer
+## Coverage Metrics and Gap Analysis
 
-## When to Use This Skill
+Coverage (% of code executed by tests) is a metric, not a goal. 80% coverage is useful; 100% is often not. The skill is interpreting coverage reports, identifying gaps, and prioritizing.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- coverage gaps
-- missing tests
-- risk-based testing
-- test blind spots
+- Code review: "Is this change tested?"
+- Audit: overall coverage %, trends
+- Risk assessment: untested critical paths
 
-Use it for front-end, back-end, full-stack workflows in the `testing` category.
+### Decision Framework for Codecov, Istanbul, Pytest, or Coverage.py
 
-## What This Skill Does
+1. **Focus on critical paths.** Authentication, payments, data validation: high priority. UI polish: lower priority.
+2. **Branch coverage > line coverage.** Line coverage misses branches. "if (x) { a() } else { b() }" with only "if" branch covered = gap. Use branch coverage.
+3. **Integration tests count.** Unit test doesn't have to cover every line if integration tests do.
+4. **Untested is technical debt.** 80% coverage + untested critical path = risk. 100% coverage + untested edge case = less risk.
+5. **Coverage trends matter.** Coverage declined 5% last month = bad. Investigate and require tests for new code.
 
-Reviews what is not tested and prioritizes the highest-risk missing scenarios. Use when shipping new code, after large refactors, or after incidents that revealed blind spots.
+### Anti-patterns to Avoid
 
-## Instructions
+- Obsessing over 100% coverage. Diminishing returns; time better spent on risky features.
+- Ignoring low-coverage files. If something's important, it should be tested.
+- Generating tests only to hit coverage targets. Meaningless tests.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Focus on business risk and failure probability, not raw percentages alone.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/coverage-prioritization.md`
-- `templates/gap-review-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Coverage report generated and tracked (Codecov)
+- [ ] Overall coverage ≥80%
+- [ ] Critical paths (auth, payments, validation) have ≥90% coverage
+- [ ] Branch coverage is reported (not just line coverage)
+- [ ] Low-coverage files are reviewed (untested critical code)
+- [ ] Coverage trends are monitored (month-over-month)
+- [ ] New code requires tests before merge
+- [ ] Flaky tests are removed or fixed (they mask real issues)

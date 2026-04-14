@@ -1,65 +1,46 @@
 ---
 name: building-background-jobs
 description: Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling. Use when adding workers, task queues, cron-style jobs, or async processing pipelines.
+when_to_use: queue worker, retry logic, idempotency
+allowed-tools: Read Grep Bash
 ---
 
-# Background Job Builder
+## Async Jobs, Workers, and Queues
 
-## When to Use This Skill
+Not all work happens in a request-response cycle. Sending emails, generating reports, processing files: these belong in background jobs. Use job queues (Bull/BullMQ in Node, Celery in Python) to decouple work from HTTP responses.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- queue worker
-- retry logic
-- idempotency
-- scheduled job
-- background task
+- Long-running tasks (report generation, file processing, ML pipelines)
+- Retryable work (email delivery, webhooks, data syncs)
+- Scheduled work (cron jobs, daily reports, cleanup)
+- Rate-limited external APIs (YouTube uploads, Slack posts)
 
-Use it for back-end workflows in the `backend` category.
+### Decision Framework for Node.js (Bull/BullMQ) or Python (Celery/APScheduler)
 
-## What This Skill Does
+1. **Queue name = job type.** Separate `email-queue`, `report-queue`, `cleanup-queue`. Monitor each independently.
+2. **Job data is payload only.** Pass IDs, not huge objects. Job fetches fresh data when it runs (safer, smaller queue).
+3. **Exponential backoff for retries.** Fail once, retry in 1s; fail again, retry in 2s, then 4s, then 8s (max). Avoids thundering herd.
+4. **Idempotency is required.** Same job running twice should be safe. Use idempotency keys or check "already done" state before side effects.
+5. **Monitor and alert.** Track queue depth, failure rate, processing time. Dead-letter queue for jobs that fail N times.
 
-Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling. Use when adding workers, task queues, cron-style jobs, or async processing pipelines.
+### Anti-patterns to Avoid
 
-## Instructions
+- Spawning child processes or threads in request handlers instead of queueing. Kills request timeout and resets on deploy.
+- Serializing huge objects into job payload. Pass an ID; fetch fresh data in the job.
+- No retry logic. Fire-and-forget emails = lost emails. Use exponential backoff.
+- Mixing sync and async work in one job. A job should be idempotent and restartable.
+- Not logging job state. No way to debug a failed job.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Push for explicit retry classes, deduplication, and observability hooks.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/job-reliability-guide.md`
-- `examples/idempotency-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Jobs are queued, not spawned in request handlers
+- [ ] Job payload is small (IDs only); data is fetched inside the job
+- [ ] Retry logic with exponential backoff is implemented
+- [ ] Each job type has its own queue and worker
+- [ ] Dead-letter queue captures jobs that fail N times
+- [ ] Job success and failure are logged with context
+- [ ] Idempotency: same job running twice has no harmful side effects
+- [ ] Scheduled jobs (cron) have clear purpose and SLA
+- [ ] Queue monitoring is set up (depth, failure rate, processing time)
+- [ ] Test: run job, run again—verify it's safe

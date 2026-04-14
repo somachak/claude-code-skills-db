@@ -1,66 +1,42 @@
 ---
 name: reviewing-sql-performance
 description: Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans. Use when queries slow down APIs, jobs, dashboards, or analytics pipelines.
+when_to_use: slow query, sql tuning, index
+allowed-tools: Read Grep
 ---
 
-# SQL Performance Review
+## Query Optimization and Execution Plans
 
-## When to Use This Skill
+Slow queries are the #1 database performance killer. The skill is reading execution plans, identifying index misses, and rewriting queries to be efficient.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- slow query
-- sql tuning
-- index
-- query plan
-- postgres
-- mysql
+- Query runs in >100ms; need to optimize
+- Database CPU or disk I/O is high
+- Analyzing slow query logs
+- Indexing strategy for a new feature
 
-Use it for back-end, data workflows in the `data` category.
+### Decision Framework for PostgreSQL/MySQL
 
-## What This Skill Does
+1. **EXPLAIN PLAN is your friend.** Run EXPLAIN ANALYZE SELECT ... to see execution plan. Sequential scans = missing index. Nested loops with high loop count = missing JOIN condition.
+2. **Index selectivity matters.** Index on is_active (two values) has low selectivity; index on user_id (many values) has high selectivity. Optimize high-selectivity columns.
+3. **JOIN order affects performance.** Smaller table first, then join to larger. Database optimizer usually gets this right, but not always.
+4. **Aggregation can be expensive.** COUNT(*) is slow on 1B-row table without index. Use approximate COUNT (APPROX_COUNT) if exact is unnecessary.
+5. **Pagination without offset.** `OFFSET 1000 LIMIT 10` scans 1000 rows. Use keyset pagination (WHERE id > last_id LIMIT 10) instead.
 
-Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans. Use when queries slow down APIs, jobs, dashboards, or analytics pipelines.
+### Anti-patterns to Avoid
 
-## Instructions
+- N+1 queries: select user, then for each user select posts. Use JOIN or batch load.
+- Full table scans. Missing index on WHERE column = sequential scan on 1M rows.
+- Sorting in application code. Offload ORDER BY to database; it uses indexes.
+- Subqueries in SELECT. `SELECT id, (SELECT COUNT...) FROM users` = loop over all users + subquery. Use JOIN + GROUP BY.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Require explain-plan thinking and measurable before-after checks.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/sql-review-checklist.md`
-- `examples/index-patterns.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] EXPLAIN ANALYZE shows index scans, not sequential scans (for large tables)
+- [ ] No N+1 queries; use JOIN or batch load
+- [ ] Slow query log is configured; queries >100ms are logged
+- [ ] Indexes exist for WHERE, JOIN, and ORDER BY columns
+- [ ] Query rewrite: replace subqueries with JOINs
+- [ ] Pagination uses keyset, not offset
+- [ ] Test: monitor query time before and after optimization; verify improvement

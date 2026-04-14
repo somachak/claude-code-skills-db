@@ -1,64 +1,43 @@
 ---
 name: reproducing-bugs-from-logs
 description: Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.
+when_to_use: reproduce bug, logs to test, incident reproduction
+allowed-tools: "Read Bash(npm run test*) Bash(pytest*)"
 ---
 
-# Bug Reproduction From Logs
+## Log Analysis and Error Reproduction
 
-## When to Use This Skill
+Production bugs are hard to debug without logs. The skill is structuring logs so you can reproduce (or understand) issues from error traces, request IDs, and user context.
 
-Use this skill when the task matches these patterns:
+### When to Use
 
-- reproduce bug
-- logs to test
-- incident reproduction
-- trace analysis
+- Production incident: user reports "checkout failed"
+- Error spike: hundreds of 500s, need to understand why
+- Flaky issue: happens once a week, need to reproduce
 
-Use it for back-end, full-stack, qa workflows in the `testing` category.
+### Decision Framework for Structured Logging (Winston, Pino, Python logging)
 
-## What This Skill Does
+1. **Structured logging, not printf.** `logger.error({ userId, orderId, error: err.message, stack: err.stack })` → JSON → searchable. Not "Error occurred".
+2. **Request IDs link events.** Every request gets unique ID (UUID). All logs for that request include ID. Trace full request → database → API call → response.
+3. **Error context is crucial.** Don't just log error message. Include variables at time of error (user ID, order ID, payment status). Why did it fail, not just that it failed.
+4. **Log levels are meaningful.** DEBUG (development), INFO (expected events), WARN (recoverable problems), ERROR (failures), FATAL (process crash).
+5. **Sampling for high-volume logs.** If logging every request and you're 1M req/day, storage is expensive. Sample: log 1 in 100 requests, all errors.
 
-Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.
+### Anti-patterns to Avoid
 
-## Instructions
+- Unstructured logs. "Error occurred" with no context. Can't reproduce or understand.
+- No request ID. Logs from user request mixed with logs from other requests. Can't follow request.
+- Logging sensitive data. Passwords, credit cards in logs = breach when logs are leaked.
+- No timestamp or timezone. When did error occur? Hard to correlate with other events.
 
-1. Read the relevant files, routes, modules, or configuration before making recommendations.
-2. Identify the highest-risk decisions, edge cases, regressions, or architectural constraints first.
-3. Apply the category-specific review and implementation notes in this skill.
-4. Use the supporting files in this directory only when they are relevant to the task at hand.
-5. Prefer minimal, verifiable changes over broad rewrites.
-6. When the task changes behavior, recommend or produce a validation loop such as tests, checks, manual verification, or a review checklist.
-7. If the task is high risk, summarize assumptions and failure modes before finalizing.
+### Checklist
 
-## Category-Specific Guidance
-
-- Start from raw evidence and preserve the minimal failing case.
-
-## Supporting Files
-
-Recommended files to keep with this skill:
-
-- `references/bug-reproduction-flow.md`
-- `templates/regression-test-template.md`
-
-## Build Guidance
-
-- Keep SKILL.md concise and move larger detail into one-level-deep support files.
-- Keep descriptions discoverable and written in third person.
-- Prefer deterministic scripts for validation and repeatable checks.
-- Evolve this skill through real usage and add examples only when they improve success on repeated tasks.
-
-## Source Basis
-
-This generated seed skill is based on the following references:
-
-- https://code.claude.com/docs/en/skills
-- https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices
-- https://github.com/trailofbits/skills
-- https://github.com/Aaronontheweb/dotnet-skills
-- https://github.com/alirezarezvani/claude-skills
-- https://github.com/slavingia/skills
-- https://x.com/CodevolutionWeb/status/2034683638382506063
-- https://x.com/JJEnglert/status/2038639244038521068
-- https://x.com/ghumare64/status/2014246449593176406
-
+- [ ] Logs are structured (JSON), not printf format
+- [ ] Every request has unique ID (UUID); included in all logs
+- [ ] Error logs include context (user ID, resource ID, variables at time of error)
+- [ ] Log levels are used correctly (DEBUG, INFO, WARN, ERROR, FATAL)
+- [ ] No sensitive data logged (passwords, credit cards, PII)
+- [ ] Timestamp and timezone are included
+- [ ] Error stack traces are logged in full
+- [ ] Log aggregation tool (ELK, DataDog) is set up; searchable by request ID
+- [ ] Test: generate error, search logs by request ID, can reproduce path

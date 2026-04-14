@@ -1,6 +1,6 @@
 {
   "version": "2026-04-14",
-  "generated_at": "2026-04-14T15:01:00+01:00",
+  "generated_at": "2026-04-14T16:39:58.135074+00:00",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -63,30 +63,12 @@
         "wcag",
         "semantic html"
       ],
-      "recommended_supporting_files": [
-        "references/accessibility-checklist.md",
-        "references/component-a11y-patterns.md",
-        "scripts/ui-a11y-audit.sh"
-      ],
-      "implementation_notes": [
-        "Prefer deterministic checks where possible, then finish with manual interaction review.",
-        "Pair well with browser-based verification and component-level examples."
-      ],
-      "suggested_frontmatter": {
-        "allowed-tools": "Read Grep Bash(npm run *)",
-        "when_to_use": "Use for React, Vue, HTML, CSS, form, modal, menu, table, and design-system tasks."
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Making Interfaces Usable for Everyone\n\nAccessibility isn't an afterthought\u2014it's part of the component contract. A11y shifts from \"will screen readers work?\" to \"does the keyboard navigation flow match the UI intent?\" and \"are interactive states semantically clear?\"\n\n### When to Use\n\n- Auditing component libraries (shadcn/ui, custom React components)\n- Building forms, modals, dialogs, tables, or navigation menus\n- Reviewing keyboard trap bugs or focus-loss issues\n- Implementing ARIA labels, roles, landmarks for complex UIs\n\n### Decision Framework for React/TypeScript\n\n1. **Semantic HTML first.** Prefer `<button>` over `<div role=\"button\">`. Use `<label>` for form fields, `<nav>` for navigation. Check shadcn/ui component source\u2014it often includes ARIA patterns out of the box.\n2. **Focus management.** React doesn't restore focus automatically when content unmounts. Use `useRef` to trap focus in modals; restore it on close. Test with Tab, Shift+Tab, and Escape.\n3. **ARIA only when semantic HTML isn't enough.** Don't add `aria-label` to a properly labeled `<input>`. Do use `aria-live` for toast notifications, `aria-expanded` for accordion toggles.\n4. **Contrast and spacing.** Tailwind defaults (text-foreground on bg-background) usually meet WCAG AA. Verify color contrast in tools like WebAIM. Ensure touch targets are \u226544\u00d744 CSS pixels.\n\n### Anti-patterns to Avoid\n\n- Using `<div onClick>` for buttons without role, ARIA, or keyboard handlers\u2014screen readers see it as text.\n- Hiding focus rings with `outline: none` in CSS without replacing them visually.\n- Forgetting `htmlFor` on `<label>` or wrapping unassociated inputs in fieldset/legend.\n- Relying solely on color to indicate state (error red, success green) without text or icon.\n- Nesting interactive elements (`<button>` inside `<a>`) which confuse keyboard and screen reader users.\n\n### Checklist\n\n- [ ] Inspect semantic structure: headings, landmarks, form groups, list hierarchy\n- [ ] Tab through the entire interface; verify focus order matches visual flow\n- [ ] Test with a screen reader (NVDA, JAWS, or Mac VoiceOver)\n- [ ] Check color contrast (WCAG AA minimum 4.5:1 for text)\n- [ ] Verify all interactive elements are keyboard accessible (Enter, Space, Arrow keys as appropriate)\n- [ ] Ensure form error messages are associated with inputs via `aria-describedby`\n- [ ] Run axe DevTools or Lighthouse a11y audit; fix critical violations\n\n### Worked Example: Accessible Dropdown in React + shadcn/ui\n\n```tsx\n// Bad: no keyboard handling, no semantics\n<div onClick={() => setOpen(!open)}>\n  Menu\n  {open && <div>Option 1</div>}\n</div>\n\n// Good: uses shadcn Select (which includes ARIA and keyboard)\n<Select value={value} onValueChange={setValue}>\n  <SelectTrigger aria-label=\"Choose an option\">\n    <SelectValue placeholder=\"Select...\" />\n  </SelectTrigger>\n  <SelectContent>\n    <SelectItem value=\"opt1\">Option 1</SelectItem>\n  </SelectContent>\n</Select>\n```\n",
+      "frontmatter_overrides": {
+        "when_to_use": "accessibility audit, keyboard navigation, aria",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "designing-component-systems",
@@ -106,27 +88,12 @@
         "slot patterns",
         "headless ui"
       ],
-      "recommended_supporting_files": [
-        "references/component-api-guidelines.md",
-        "references/token-strategy.md",
-        "examples/component-patterns.md"
-      ],
-      "implementation_notes": [
-        "Keep rules opinionated and consistent across frameworks.",
-        "Include anti-patterns such as prop explosion and style leakage."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Building Scalable UI Foundations\n\nA component system is a contract: props define behavior, composition rules prevent prop drilling, and documentation ensures consistency. In React with TypeScript and shadcn/ui, the system lives in your component library, not scattered across pages.\n\n### When to Use\n\n- Building or auditing a design system / component library\n- Designing new foundational components (Button, Input, Card, Layout)\n- Establishing naming, composition, and variant patterns\n- Planning a transition from ad-hoc components to a system\n\n### Decision Framework for React/TypeScript + Tailwind\n\n1. **Composition over inheritance.** Prefer smaller, focused components (Button, Badge, Icon) that combine via layout primitives (Flex, Stack, Grid via Tailwind) rather than bloated \"Card\" with many optional props.\n2. **Variant-driven props.** Use TypeScript unions for size, color, intent (e.g., `variant: 'primary' | 'secondary' | 'danger'`). shadcn/ui uses the `class-variance-authority` library to manage this cleanly.\n3. **Controlled vs. uncontrolled.** Form inputs should support both; checkboxes can be uncontrolled unless part of a form group. Be explicit in JSDoc.\n4. **Limit prop explosion.** If a component has >5 conditional props, it's doing too much. Split it or introduce a compound component pattern.\n5. **Accessibility by default.** shadcn/ui includes ARIA. Don't bypass it. Document required props (e.g., `aria-label` on IconButton).\n\n### Anti-patterns to Avoid\n\n- Deeply nested component APIs (Button within Wrapper within Container). Keep it flat.\n- Props like `isLoading`, `isError`, `isSuccess`\u2014use a single `state` prop or data-driven rendering.\n- Mixing styling concerns: don't accept `className` for every element inside a component. Use composition instead.\n- Exporting internal styles or themes as the public API. Separate styling logic from component code.\n- Creating a \"God Component\" that tries to handle all use cases; instead, provide primitives and document patterns.\n\n### Checklist\n\n- [ ] Define component hierarchy and naming conventions (e.g., `Button`, `ButtonGroup`, `ButtonIcon`)\n- [ ] Document all props with TypeScript types and JSDoc examples\n- [ ] Create Storybook stories or a component gallery showing each variant\n- [ ] Test composition: buttons in forms, dropdowns in toolbars, etc.\n- [ ] Define color palette (via Tailwind), spacing scale, typography rules\n- [ ] Ensure consistent sizing (Button height, padding, line-height) across variants\n- [ ] Document accessibility requirements (aria-label, role, keyboard handlers)\n- [ ] Version the system; plan deprecation for breaking changes\n",
+      "frontmatter_overrides": {
+        "when_to_use": "component library, design system, props api",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "debugging-react-rendering",
@@ -144,25 +111,12 @@
         "stale closure",
         "react performance"
       ],
-      "recommended_supporting_files": [
-        "references/react-rendering-checklist.md",
-        "examples/common-render-bugs.md"
-      ],
-      "implementation_notes": [
-        "Focus on render cause tracing, dependency analysis, and before-after verification."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Optimizing React Render Cycles\n\nReact's declarative nature means rendering is frequent. The skill is knowing *why* a component renders, *what* it renders, and *when* to memoize. Tools: React DevTools Profiler, React.memo, useMemo, useCallback, Server Components in Next.js.\n\n### When to Use\n\n- App slows down after state updates; you need to identify the render culprit\n- Parent re-renders child even though props didn't change\n- Next.js pages are slow to load or Server Components re-fetch data on every request\n- Testing or optimizing bundle or runtime performance\n\n### Decision Framework for React/Next.js/TypeScript\n\n1. **Render is not expensive; reconciliation is.** React can render 1000s of times/sec in dev mode. Profile with DevTools Profiler to find bottlenecks, not guesses.\n2. **Server vs. Client.** In Next.js, render on the server (default) to reduce JS on the client. Use `'use client'` only where interactivity is needed (forms, state, hooks).\n3. **Memoization is tactical, not universal.** Use `React.memo` on leaf components that receive expensive props; use `useMemo` and `useCallback` only if Profiler shows a bottleneck.\n4. **Dependencies matter.** `useMemo(fn, [obj])` with a new object every render defeats the purpose. Use primitive values, stable references, or useMemo the dependency.\n5. **Profiler metrics.** \"Render duration\" is fast; \"commit\" is what matters. If a component renders 10ms but commits instantly, it's fine. Focus on high-commit times or frequent re-renders.\n\n### Anti-patterns to Avoid\n\n- Wrapping every component in `React.memo` without profiling. It adds overhead and doesn't help if the parent always passes new props.\n- Creating callbacks or derived state without `useCallback` or `useMemo`, then passing them to memoized children\u2014defeats memoization.\n- Using inline functions or object literals in props; they create new references every render.\n- Over-splitting components. A component that only re-renders when its own state changes is already optimized; splitting it adds indirection.\n- Server Components fetching data in a loop instead of batch-loading; causes waterfalls in Next.js.\n\n### Checklist\n\n- [ ] Open React DevTools Profiler; record a typical user interaction (scroll, form input, navigation)\n- [ ] Identify components with high render counts or long commit times\n- [ ] Check if parent is passing new props (inline functions, object literals) each render\n- [ ] If needed, wrap the leaf component in `React.memo` and verify Profiler shows fewer renders\n- [ ] For expensive computations, add `useMemo` with stable dependency arrays\n- [ ] Test in production mode (Next.js: `npm run build && npm start`), not dev\n- [ ] For Next.js: verify data fetching happens in Server Components, not `useEffect` in Client Components\n- [ ] Measure: before optimization, profile result, verify improvement\n\n### Worked Example: Memoizing a List Item\n\n```tsx\n// Bad: ListItem re-renders on every parent state change, even if item data is identical\nfunction List({ items, onSelect }) {\n  return items.map(item => (\n    <ListItem key={item.id} data={item} onSelect={onSelect} />\n  ));\n}\n\n// Better: memoize ListItem and pass a stable callback\nconst ListItem = React.memo(({ data, onSelect }) => (\n  <button onClick={() => onSelect(data.id)}>{data.name}</button>\n));\n\nfunction List({ items, onSelect }) {\n  const memoizedSelect = useCallback(onSelect, [onSelect]);\n  return items.map(item => (\n    <ListItem key={item.id} data={item} onSelect={memoizedSelect} />\n  ));\n}\n```\n",
+      "frontmatter_overrides": {
+        "when_to_use": "rerender, useeffect bug, memoization",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "hardening-forms-and-validation",
@@ -181,26 +135,12 @@
         "field validation",
         "optimistic ui"
       ],
-      "recommended_supporting_files": [
-        "references/form-state-patterns.md",
-        "references/error-copy-checklist.md",
-        "examples/form-edge-cases.md"
-      ],
-      "implementation_notes": [
-        "Cover disabled states, loading states, retry paths, and schema parity with the backend."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Client and Server Form Validation\n\nForms are the gateway to user data and backend state. Validation happens twice: client-side for UX (instant feedback), server-side for security (untrusted input). In Next.js, use Server Actions with Zod; on the client, shadcn/ui components + react-hook-form.\n\n### When to Use\n\n- Building or reviewing login, sign-up, payment, or data-entry forms\n- Adding cross-field validation (password confirmation, date ranges)\n- Hardening against XSS, CSRF, or input injection\n- Designing error messaging and recovery flows\n\n### Decision Framework for Next.js/React/TypeScript + Zod\n\n1. **Zod schema is the source of truth.** Define validation once in TypeScript (Zod or similar), use it client and server.\n2. **Server Actions are default.** In Next.js, forms should POST via Server Action (with CSRF protection built-in), not fetch(). This keeps secrets server-side.\n3. **Real-time validation is UX, not security.** Use `onBlur` or debounced `onChange` for instant feedback (e.g., \"username already taken\"), but don't trust it. Validate again on server.\n4. **Field-level error display.** Show errors under the field (via `aria-describedby`), not in a summary. shadcn/ui Form handles this cleanly with react-hook-form integration.\n5. **Sanitize HTML; don't strip it.** Use `DOMPurify` or a Zod preprocessor to allow safe markup (if needed), not a blacklist.\n\n### Anti-patterns to Avoid\n\n- Client-side validation only. No amount of JavaScript stops a curl request or a modified Network tab.\n- Storing passwords in state or local storage. Use browser password managers and secure cookies.\n- Rendering unescaped user input (`<div>{userComment}</div>`). Use `textContent` or sanitize with DOMPurify.\n- Double-posting (user clicks Submit, form submits twice). Disable the button or track a `pending` flag during submission.\n- Custom validation logic instead of Zod schemas. Maintenance nightmare; Zod is the standard.\n\n### Checklist\n\n- [ ] Define Zod schema for all inputs; use it in both client and server\n- [ ] Bind form to react-hook-form; leverage built-in validation\n- [ ] Add real-time validation feedback on blur for UX (username, email, etc.)\n- [ ] Server Action: validate Zod schema; catch & return errors as form state\n- [ ] Display server errors under the respective field via error component\n- [ ] Disable Submit button while submission is pending\n- [ ] Test: submit form with missing fields, invalid email, XSS payloads (`<img onerror>`)\n- [ ] Ensure CSRF token is included (Next.js Server Actions handle this automatically)\n- [ ] Check that password fields don't appear in browser history or logs\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "form validation, error states, submit flow",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "modern-css-architecture",
@@ -218,26 +158,12 @@
         "responsive layout",
         "utility classes"
       ],
-      "recommended_supporting_files": [
-        "references/css-architecture-guide.md",
-        "references/token-usage.md",
-        "examples/layout-patterns.md"
-      ],
-      "implementation_notes": [
-        "Keep naming, spacing, and token rules short enough to load reliably."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Tailwind + Component Architecture\n\nCSS architecture in 2026 is about utility-first design systems. Tailwind + shadcn/ui eliminates the need for BEM, OOCSS, or CSS-in-JS for most projects. The skill is knowing when to reach for class-variance-authority (cva), when to use CSS custom properties, and when semantic HTML eliminates the need for classes.\n\n### When to Use\n\n- Setting up Tailwind config for a new project\n- Designing a color palette, spacing scale, or type scale\n- Reviewing component CSS in React or Next.js\n- Migrating from CSS Modules or styled-components to Tailwind\n- Hardening responsive and dark-mode behavior\n\n### Decision Framework for Tailwind + shadcn/ui + TypeScript\n\n1. **Tailwind config is the API.** Define colors, spacing, fonts, and breakpoints in `tailwind.config.js`. Don't use hardcoded values in JSX. Use CSS variables for runtime theming (dark mode, user preferences).\n2. **cva for variants.** Use class-variance-authority to manage Button sizes, colors, states. It's cleaner than ternary classNames.\n3. **Semantic HTML first.** A `<heading>` doesn't need `text-2xl font-bold`; use CSS to style headings globally or via a utility class. Grid layouts prefer CSS Grid, not Tailwind padding hacks.\n4. **Dark mode via css variables.** Tailwind supports `dark:` prefix, but use CSS custom properties for custom colors so dark mode works everywhere.\n5. **Responsive design is mobile-first.** Tailwind's default breakpoints (sm, md, lg) flow naturally. Test on real devices, not just browser resize.\n\n### Anti-patterns to Avoid\n\n- Hardcoding colors in JSX (`bg-[#FF5733]`). Use semantic tokens from Tailwind config.\n- Layering custom CSS selectors on top of Tailwind utilities. Use `@layer` or refactor into a component.\n- Abusing `!important` to override Tailwind classes. If you need to override, it's a config problem, not a priority problem.\n- Ignoring breakpoints in QA. Responsive means it works at 375px, 768px, 1920px\u2014not just the designer's MacBook.\n- Custom CSS-in-JS for simple styles. Tailwind + CSS custom properties handle 95% of use cases without complexity.\n\n### Checklist\n\n- [ ] Tailwind config includes project colors, spacing, fonts, and breakpoints\n- [ ] Component Button uses cva for variants (size, color, state); not nested ternaries\n- [ ] Dark mode works: toggle theme and check colors adapt via css variables or dark: prefix\n- [ ] No hardcoded hex colors in components; all colors reference Tailwind config\n- [ ] Responsive: test at 375px (mobile), 768px (tablet), 1440px (desktop)\n- [ ] Review a component's className: no bloated utility strings; use composition or extract a utility class\n- [ ] Ensure accessibility: focus states visible, text contrast \u22654.5:1, touch targets \u226544\u00d744px\n- [ ] Check that print styles work (if needed) via @media print or Tailwind print: utilities\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "tailwind conventions, css architecture, design tokens",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "optimizing-bundle-performance",
@@ -257,26 +183,12 @@
         "webpack analyze",
         "vite"
       ],
-      "recommended_supporting_files": [
-        "references/bundle-budget-guide.md",
-        "examples/dependency-triage.md",
-        "scripts/analyze-bundle.sh"
-      ],
-      "implementation_notes": [
-        "Prefer measurable budgets and build output analysis over generic advice."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Reducing JavaScript to Ship Faster\n\nBundle size directly impacts First Contentful Paint. The strategy: code-split by route, defer non-critical JS, use dynamic imports, and audit dependencies. Next.js handles much of this, but you need to verify.\n\n### When to Use\n\n- Lighthouse reports slow LCP or large JS\n- Adding a new package; need to weigh cost vs. benefit\n- Post-launch: monitoring JS bundle growth\n- App feels slow on 3G or older devices\n\n### Decision Framework for Next.js/React\n\n1. **Route-level code splitting is default in Next.js.** Each page is its own chunk. Don't use one giant bundle.\n2. **dynamic() imports defer non-critical components.** Use `dynamic(() => import('./Heavy'), { ssr: false })` for modals, tabs, or below-the-fold content.\n3. **Audit node_modules.** Run `npm ls` or tools like `bundlesize` or `esbuild` analyzer. A single dependency can bloat the bundle by 100KB.\n4. **Server Components reduce JS.** In Next.js, fetch data on the server; send HTML, not JSON + JS. Only use `'use client'` where interactivity is needed.\n5. **Tree-shaking requires ES modules.** CommonJS dependencies don't tree-shake. Prefer ES module packages or use bundler plugins.\n\n### Anti-patterns to Avoid\n\n- Importing unused dependencies (e.g., `import moment from 'moment'` for one date; use native Date or date-fns with tree-shaking).\n- Sending entire libraries for minor utilities. Lodash: 70KB. A few native methods: 0KB.\n- Not using dynamic imports for route-dependent code. Every page loads every modal, form, etc.\n- Server Rendering and Client Rendering the same component twice (duplication).\n- Forgetting to build and measure in production mode. Dev mode includes source maps and unminified code.\n\n### Checklist\n\n- [ ] Run `npm run build; npm run start`; measure Final JS size in DevTools Network tab\n- [ ] Use Next.js built-in bundle analyzer (`@next/bundle-analyzer`)\n- [ ] Check each top-level dependency: is it necessary? Can a smaller alternative replace it?\n- [ ] Verify dynamic imports for non-critical routes (modals, settings, etc.)\n- [ ] Test on slow 3G in DevTools; confirm LCP is <2.5s\n- [ ] Ensure all routes use Server Components by default; mark only interactive parts with `'use client'`\n- [ ] Run Lighthouse; check JS size metric specifically\n- [ ] Monitor bundle size in CI/CD (e.g., via bundlesize package)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "bundle size, code splitting, hydration",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "verifying-responsive-layouts",
@@ -294,25 +206,12 @@
         "overflow",
         "tablet layout"
       ],
-      "recommended_supporting_files": [
-        "references/responsive-checklist.md",
-        "examples/common-layout-failures.md"
-      ],
-      "implementation_notes": [
-        "Combine CSS inspection with browser-based viewport checks."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Testing Multi-Device Layouts\n\nResponsive design isn't CSS media queries alone\u2014it's testing real devices and viewports, ensuring text is readable, touch targets are large enough, and layouts reflow without breaking. Use Chrome DevTools, real phones, and automated testing.\n\n### When to Use\n\n- After shipping a new page or feature; verify on iOS and Android\n- Desktop site works fine but mobile breaks\n- Auditing existing responsive behavior\n- Planning breakpoint strategy for new components\n\n### Decision Framework for Tailwind + React Components\n\n1. **Test at actual breakpoints.** Tailwind's defaults: sm (640px), md (768px), lg (1024px), xl (1280px). But also test 375px (iPhone SE), 667px (iPhone), 1440px (desktop). Real device sizes, not just designer breakpoints.\n2. **Touch targets: \u226544\u00d744 CSS pixels.** Mobile users have fingers, not cursors. Buttons, links, form inputs must be large enough.\n3. **Text readability.** Font size should be \u226516px on mobile (prevents zoom on focus). Line-height \u22651.5 for readability.\n4. **Reflow, don't hide.** Responsive means content adapts, not disappears. Use `hidden md:block` judiciously; don't hide navigation entirely on mobile.\n5. **Container-based responsive.** Newer approach: use container queries (CSS) instead of viewport queries for components that adapt to parent width, not screen width.\n\n### Anti-patterns to Avoid\n\n- Testing only in Chrome DevTools emulator. Real phones behave differently (scroll, reflow, pinch-zoom).\n- Using `display: none` for mobile without providing alternative. Users on mobile can still need that content.\n- Hard-coding pixel values instead of Tailwind breakpoints. `w-1/2 md:w-1/3 lg:w-1/4` is more maintainable than `width: 50%` + media query.\n- Forgetting font size on mobile. `text-sm md:text-base lg:text-lg` ensures readability at all sizes.\n- Testing only portrait. Landscape orientation on tablets and phones behaves differently.\n\n### Checklist\n\n- [ ] Test on actual devices: iPhone (portrait & landscape), Android phone, iPad, desktop\n- [ ] Verify text is readable without pinch-zoom (font \u226516px, line-height \u22651.5)\n- [ ] Check touch targets: buttons, links \u226544\u00d744px\n- [ ] Viewport meta tag is set: `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">`\n- [ ] Use Tailwind breakpoints consistently (not custom media queries)\n- [ ] Test all breakpoints: 375px, 640px, 768px, 1024px, 1440px\n- [ ] Verify images scale appropriately (no pixelation on retina, no overflow on mobile)\n- [ ] Ensure navigation is usable on mobile (not hidden, not too crowded)\n- [ ] Check dark mode + responsive (if applicable)\n- [ ] Lighthouse Mobile score \u226590\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "responsive bug, breakpoints, mobile layout",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "reviewing-frontend-security",
@@ -331,25 +230,12 @@
         "content security",
         "frontend auth"
       ],
-      "recommended_supporting_files": [
-        "references/frontend-threats.md",
-        "examples/rendering-risks.md"
-      ],
-      "implementation_notes": [
-        "Keep security guidance concrete and tied to actual UI code paths."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Client-Side Security Hardening\n\nXSS, CSRF, supply-chain attacks, and insecure data handling live in the client. The skill is knowing where to sanitize, where to use HTTPS, where to trust (and where not to), and how to protect user data in storage.\n\n### When to Use\n\n- Reviewing a new feature or public-facing page\n- Integrating third-party code (analytics, ads, embeds)\n- Handling sensitive data (PII, tokens, payment info)\n- Preparing for security audit or penetration testing\n\n### Decision Framework for React/Next.js/TypeScript\n\n1. **Always sanitize user input before rendering.** React escapes by default (`textContent`), but dangerouslySetInnerHTML is... dangerous. Use DOMPurify if you must render HTML.\n2. **Don't store secrets in localStorage.** Tokens, API keys, user PII: store in httpOnly cookies (set by server) or sessionStorage (cleared on tab close). Never localStorage.\n3. **Content Security Policy (CSP) is your shield.** Set `Content-Security-Policy` headers to block inline scripts, restrict script sources, prevent clickjacking.\n4. **CSRF tokens on forms.** Next.js Server Actions include CSRF protection automatically. Fetch-based forms need explicit tokens.\n5. **Dependency audit monthly.** Run `npm audit` and `npm outdated`. A compromised package in node_modules compromises the app.\n\n### Anti-patterns to Avoid\n\n- Using `dangerouslySetInnerHTML` without sanitization. Every user comment, user bio, etc. is an XSS vector.\n- Storing tokens in localStorage and accessing them client-side. Tokens belong in httpOnly cookies, set by the server.\n- Trusting user input for calculations (price, discount). Prices calculated server-side, never client-side.\n- Embedding third-party scripts without CSP or subresource integrity (SRI). Ad/analytics SDKs are privilege escalation vectors.\n- Not checking `Referer` or origin on form submissions. CSRF: attacker submits form from their domain on your user's behalf.\n\n### Checklist\n\n- [ ] Check all user input rendering: text via textContent, HTML via DOMPurify\n- [ ] Verify sensitive data (tokens) is in httpOnly cookies, not localStorage\n- [ ] Test CSRF: submit a form from a different origin; it should fail\n- [ ] Review third-party scripts (analytics, ads); consider CSP restrictions\n- [ ] Ensure all external requests use HTTPS (no mixed content)\n- [ ] Set CSP header: block inline scripts, restrict script sources\n- [ ] Run `npm audit` and fix high/critical vulnerabilities\n- [ ] Test XSS: try `<img src=x onerror=\"alert('xss')\">` in any user input field; should be escaped\n- [ ] Verify no secrets in source code (check git history, env files)\n- [ ] Use SRI (Subresource Integrity) for external scripts\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "xss, unsafe html, token storage",
+        "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "designing-rest-apis",
@@ -368,26 +254,11 @@
         "error contract",
         "resource design"
       ],
-      "recommended_supporting_files": [
-        "references/rest-api-checklist.md",
-        "examples/error-response-patterns.md",
-        "examples/pagination-patterns.md"
-      ],
-      "implementation_notes": [
-        "Emphasize contract stability and smallest safe change."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## RESTful API Design Patterns\n\nREST APIs are contracts: clear endpoints, consistent methods, predictable status codes. In Node.js (Express/NestJS) and Python (FastAPI/Django), the skill is modeling resources, versioning, error handling, and documentation.\n\n### When to Use\n\n- Designing new API endpoints or revamping existing ones\n- Reviewing API consistency (method usage, URL structure, status codes)\n- Planning versioning strategy\n- Writing OpenAPI/Swagger documentation\n\n### Decision Framework for Express/NestJS/FastAPI\n\n1. **Resources, not actions.** Endpoint: `GET /users/:id`, `POST /users`, `PATCH /users/:id`, `DELETE /users/:id`\u2014not `GET /getUser` or `POST /createUser`.\n2. **Methods match semantics.** GET (safe, idempotent), POST (create), PUT (replace), PATCH (partial update), DELETE (remove). Use correct methods for caching, idempotency, and client libraries to work.\n3. **Status codes are precise.** 200 (success), 201 (created), 204 (no content), 400 (bad request), 401 (unauthorized), 403 (forbidden), 404 (not found), 409 (conflict), 500 (server error). Wrong status codes break client logic.\n4. **Consistent error format.** `{ error: \"...\", code: \"...\", details: {...} }`. Clients parse and display errors reliably.\n5. **Pagination, filtering, sorting via query params.** `GET /users?page=1&limit=10&sort=name&status=active`. Accept operator syntax (e.g., `filter[age][gt]=25`) for complex queries, but keep it simple.\n6. **API documentation is required.** Use OpenAPI 3.0 (Swagger). FastAPI and NestJS auto-generate it; Express needs `swagger-jsdoc`.\n\n### Anti-patterns to Avoid\n\n- RPC-style endpoints: `/api/getUserById/:id` instead of `GET /users/:id`. RESTful clients and frameworks rely on standard methods.\n- Inconsistent status codes: 200 for errors, 400 for server issues. Breaks error handling.\n- Embedding actions in verbs: `POST /users/sendEmail` instead of `POST /users/:id/emails` or `POST /emails` (with userId in body).\n- Ignoring versioning until it's a crisis. Plan for `/v1/`, `/v2/` or header versioning from day one.\n- Large response payloads. Paginate, allow sparse fieldsets (`?fields=id,name`), or split into separate endpoints.\n\n### Checklist\n\n- [ ] Every resource has standard CRUD endpoints (GET, POST, PATCH, DELETE)\n- [ ] Status codes are accurate (201 for creation, 204 for no-content, 409 for conflict)\n- [ ] Error responses follow consistent format (shape, field names, error codes)\n- [ ] Pagination works: `?page=1&limit=20`; includes total count and next/prev links\n- [ ] API is documented in OpenAPI 3.0 (auto-generated or hand-written)\n- [ ] Filtering and sorting are query params, not path params\n- [ ] Authentication (Bearer token, API key) is consistent across all endpoints\n- [ ] Versioning strategy is defined and implemented (path, header, or query)\n- [ ] Rate limiting headers are sent (`X-RateLimit-Limit`, `X-RateLimit-Remaining`)\n- [ ] No sensitive data in URLs (use POST with body for PII)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "rest api, http api, pagination",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "designing-graphql-apis",
@@ -406,25 +277,11 @@
         "federation",
         "graphql auth"
       ],
-      "recommended_supporting_files": [
-        "references/graphql-schema-guide.md",
-        "references/resolver-checklist.md"
-      ],
-      "implementation_notes": [
-        "Include explicit notes on batching, caching, and schema evolution."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## GraphQL Schema & Query Optimization\n\nGraphQL gives clients exactly what they ask for. The trade-off: schema design is critical, and without discipline, N+1 queries and overfetching happen. In Node.js (Apollo), Python (Strawberry, Graphene), and TypeScript, the skill is schema organization, resolvers, and preventing common pitfalls.\n\n### When to Use\n\n- Designing a new GraphQL schema or endpoint\n- Optimizing slow GraphQL queries or field resolvers\n- Reviewing schema for naming, nesting, and performance\n- Migrating from REST or adding a GraphQL layer\n\n### Decision Framework for Node.js/TypeScript + Apollo or Python Strawberry\n\n1. **Flat schema, nested queries.** Don't nest types deeply (User > Post > Comment > Author > Profile). Query shape allows nesting; schema stays flat.\n2. **Single responsibility per field.** A User.posts field should only return posts, not posts with comments and comments with authors all loaded. Let the client query what it needs.\n3. **Resolver should be fast or cached.** If a resolver makes a DB call per field, you have N+1. Use dataloader (Node) or select_related/prefetch_related (Django) to batch queries.\n4. **Union and Interface for polymorphism.** Use them sparingly; they add complexity. A `SearchResult` union of User | Post | Comment makes sense; nesting unions inside unions doesn't.\n5. **Subscription and mutation design.** Mutations return the mutated object (plus errors) so the client can update cache. Subscriptions push changes to subscribed clients.\n\n### Anti-patterns to Avoid\n\n- Deep nesting: query User > Posts > Comments > Replies > Author > Profile. Makes schema complex and resolution slow.\n- N+1 resolver problem: User field loads user, then each Post resolver loads the User again. Use dataloader.\n- Over-nesting arguments: `user(id: ID!, filter: Filter!, sort: Sort!, pagination: Pagination!)`. Use input types.\n- No error handling in resolvers. Exceptions propagate; use a consistent error type or error wrapper.\n- Serving sensitive data in schema. An unauthorized user shouldn't be able to query admin fields. Use resolver middleware.\n\n### Checklist\n\n- [ ] Schema is flat; types are standalone (User, Post, Comment\u2014not nested)\n- [ ] Resolver for each field is documented (which DB queries it makes)\n- [ ] Dataloader is used for batch-loading related entities\n- [ ] Slow resolvers are cached or optimized (profile first)\n- [ ] Error handling is consistent (typed errors, clear messages)\n- [ ] Mutations return the mutated object + errors in a consistent shape\n- [ ] Subscriptions are tested (if used) with real clients\n- [ ] Authorization middleware applies to sensitive fields\n- [ ] Query complexity is limited (pagination, depth limit) to prevent DoS\n- [ ] API documentation or schema comments explain when to use which query\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "graphql schema, resolver performance, n+1",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "building-background-jobs",
@@ -442,25 +299,11 @@
         "scheduled job",
         "background task"
       ],
-      "recommended_supporting_files": [
-        "references/job-reliability-guide.md",
-        "examples/idempotency-patterns.md"
-      ],
-      "implementation_notes": [
-        "Push for explicit retry classes, deduplication, and observability hooks."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Async Jobs, Workers, and Queues\n\nNot all work happens in a request-response cycle. Sending emails, generating reports, processing files: these belong in background jobs. Use job queues (Bull/BullMQ in Node, Celery in Python) to decouple work from HTTP responses.\n\n### When to Use\n\n- Long-running tasks (report generation, file processing, ML pipelines)\n- Retryable work (email delivery, webhooks, data syncs)\n- Scheduled work (cron jobs, daily reports, cleanup)\n- Rate-limited external APIs (YouTube uploads, Slack posts)\n\n### Decision Framework for Node.js (Bull/BullMQ) or Python (Celery/APScheduler)\n\n1. **Queue name = job type.** Separate `email-queue`, `report-queue`, `cleanup-queue`. Monitor each independently.\n2. **Job data is payload only.** Pass IDs, not huge objects. Job fetches fresh data when it runs (safer, smaller queue).\n3. **Exponential backoff for retries.** Fail once, retry in 1s; fail again, retry in 2s, then 4s, then 8s (max). Avoids thundering herd.\n4. **Idempotency is required.** Same job running twice should be safe. Use idempotency keys or check \"already done\" state before side effects.\n5. **Monitor and alert.** Track queue depth, failure rate, processing time. Dead-letter queue for jobs that fail N times.\n\n### Anti-patterns to Avoid\n\n- Spawning child processes or threads in request handlers instead of queueing. Kills request timeout and resets on deploy.\n- Serializing huge objects into job payload. Pass an ID; fetch fresh data in the job.\n- No retry logic. Fire-and-forget emails = lost emails. Use exponential backoff.\n- Mixing sync and async work in one job. A job should be idempotent and restartable.\n- Not logging job state. No way to debug a failed job.\n\n### Checklist\n\n- [ ] Jobs are queued, not spawned in request handlers\n- [ ] Job payload is small (IDs only); data is fetched inside the job\n- [ ] Retry logic with exponential backoff is implemented\n- [ ] Each job type has its own queue and worker\n- [ ] Dead-letter queue captures jobs that fail N times\n- [ ] Job success and failure are logged with context\n- [ ] Idempotency: same job running twice has no harmful side effects\n- [ ] Scheduled jobs (cron) have clear purpose and SLA\n- [ ] Queue monitoring is set up (depth, failure rate, processing time)\n- [ ] Test: run job, run again\u2014verify it's safe\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "queue worker, retry logic, idempotency",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "implementing-auth-flows",
@@ -480,29 +323,11 @@
         "rbac",
         "password reset"
       ],
-      "recommended_supporting_files": [
-        "references/auth-flow-maps.md",
-        "references/authorization-checklist.md",
-        "examples/auth-edge-cases.md"
-      ],
-      "implementation_notes": [
-        "Treat auth changes as high-risk and recommend validator loops and threat review."
-      ],
-      "suggested_frontmatter": {
-        "disable-model-invocation": true,
-        "allowed-tools": "Read Grep Bash(pytest *) Bash(npm test *)"
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Authentication and Authorization Patterns\n\nAuthentication (who are you?) and authorization (what can you do?) are bedrock. Implement once, carefully. Use industry-standard flows: OAuth2, OpenID Connect, JWTs or sessions. Don't invent your own crypto.\n\n### When to Use\n\n- Designing login, sign-up, MFA, or logout flows\n- Adding OAuth (GitHub, Google, social login)\n- Reviewing token generation, storage, and validation\n- Planning authorization rules (roles, permissions, ACLs)\n\n### Decision Framework for Node.js/Python + Next.js Server Actions\n\n1. **Use Next.js Auth.js (formerly NextAuth).** It handles OAuth, credentials, sessions, MFA\u2014all vetted, maintained. Don't roll your own.\n2. **Sessions vs. JWTs.** Sessions (encrypted httpOnly cookies) are simpler for monoliths. JWTs for distributed systems (microservices, mobile). Both can work in Next.js.\n3. **Password hashing must use bcrypt or Argon2.** Never store plaintext. Never hash with SHA-256 without salt.\n4. **Tokens have short lifespans.** Access token: 15-30 minutes. Refresh token: days or weeks, stored in httpOnly cookie. Rotate on each use.\n5. **MFA is opt-in security.** TOTP (Google Authenticator) or WebAuthn. Store secret in secure storage, not plaintext.\n\n### Anti-patterns to Avoid\n\n- Storing passwords in plaintext or with weak hashing (MD5, even with salt).\n- JWTs in localStorage (susceptible to XSS). Use httpOnly cookies for JWTs too.\n- No refresh token rotation. Stolen refresh token = infinite session.\n- Hardcoding OAuth secrets in source code. Use environment variables, never commit.\n- Authorization checks in frontend only. Backend must validate every permission.\n\n### Checklist\n\n- [ ] Use Auth.js or similar framework; don't implement crypto yourself\n- [ ] Password hashing uses bcrypt or Argon2 with salt\n- [ ] Login session is httpOnly cookie or httpOnly JWT in cookie\n- [ ] Tokens have short lifespan (access \u226430min, refresh \u22641 week)\n- [ ] Refresh tokens are rotated on use or after set expiry\n- [ ] Logout clears token and session server-side\n- [ ] OAuth (if used) is implemented via Auth.js or certified SDK\n- [ ] MFA (if required) uses TOTP or WebAuthn, not custom schemes\n- [ ] Authorization: every endpoint checks user permission server-side\n- [ ] CSRF token is validated (Next.js Server Actions handle this)\n- [ ] Password reset is secure (token sent via email, expires in 1 hour)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "oauth, sso, session",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "handling-webhooks",
@@ -521,25 +346,11 @@
         "event dedupe",
         "provider integration"
       ],
-      "recommended_supporting_files": [
-        "references/webhook-checklist.md",
-        "examples/provider-failure-modes.md"
-      ],
-      "implementation_notes": [
-        "Center the skill on authenticity, retries, and safe reprocessing."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Receiving and Processing Webhooks Securely\n\nWebhooks are callbacks: external services POST to your endpoint when an event occurs. The challenge: verifying the sender, handling retries, idempotency, and failure scenarios.\n\n### When to Use\n\n- Integrating Stripe, GitHub, Slack, or other event sources\n- Designing an event notification system for your own platform\n- Debugging webhook delivery failures or replay scenarios\n\n### Decision Framework for Express/FastAPI + Node.js or Python\n\n1. **Verify webhook signature.** Stripe, GitHub, etc. send a signature (HMAC-SHA256). Verify it before trusting the payload. Prevents spoofing.\n2. **Idempotency is essential.** Webhook sent twice? Process it safely twice. Use an idempotency key (event ID) to detect duplicates.\n3. **Respond 2xx immediately.** Queue the work; don't block the sender waiting for processing. Respond 200 OK, then process asynchronously.\n4. **Handle retries gracefully.** Sender will retry. Exponential backoff, dead-letter queue, and manual replay tools.\n5. **Log and monitor.** Track webhook URL, signature verification, processing success, failures. Set up alerts for failure spikes.\n\n### Anti-patterns to Avoid\n\n- Not verifying signatures. Attacker posts to your webhook endpoint posing as Stripe.\n- Synchronous processing. Webhook sender times out waiting for you to finish work.\n- Storing webhook payloads without verification. Unverified payload = possible poisoned state.\n- No logging. Can't debug delivery failures or replay scenarios.\n- Tight coupling to webhook provider's schema. Schema changes break processing. Validate and normalize early.\n\n### Checklist\n\n- [ ] Webhook endpoint validates HMAC signature before processing\n- [ ] Payload is queued for async processing (don't block the sender)\n- [ ] Response is 200 OK immediately; processing happens in background job\n- [ ] Idempotency key (event ID) prevents double-processing\n- [ ] Failed processing is retried with exponential backoff\n- [ ] Webhook logs include timestamp, signature validation result, success/failure\n- [ ] Manual replay tool exists for re-processing missed or failed webhooks\n- [ ] Monitoring/alerting on webhook failure rate and latency\n- [ ] Test: send webhook twice with same event ID; verify it's only processed once\n- [ ] Test: send webhook from attacker with wrong signature; verify it's rejected\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "webhook, signature verification, replay attack",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "reviewing-backend-concurrency",
@@ -557,25 +368,11 @@
         "parallel worker",
         "lock contention"
       ],
-      "recommended_supporting_files": [
-        "references/concurrency-review-checklist.md",
-        "examples/common-races.md"
-      ],
-      "implementation_notes": [
-        "Good fit for Go, Java, Python, .NET, and Node worker systems."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Concurrency Patterns and Data Races\n\nConcurrency is hard: race conditions, deadlocks, and data corruption lurk in multi-threaded or async code. In Node.js (async/await), Python (asyncio, threading), and databases, the skill is understanding isolation levels, locks, and atomic operations.\n\n### When to Use\n\n- Reviewing multi-threaded or async code for race conditions\n- Designing concurrent request handling (thousands of simultaneous users)\n- Analyzing database deadlocks or lock contention\n- Ensuring atomicity in critical sections (payments, inventory, user creation)\n\n### Decision Framework for Node.js (async/await) or Python (asyncio)\n\n1. **Single-threaded concurrency (async/await) scales better than threads.** Node.js and Python asyncio avoid OS thread overhead. Use threads only for CPU-bound work (Node.js worker threads, Python multiprocessing).\n2. **Database transactions ensure atomicity.** Wrap multi-step operations (debit account A, credit account B) in a transaction with appropriate isolation level (READ COMMITTED for most cases, SERIALIZABLE for financial).\n3. **Optimistic locking for high-concurrency scenarios.** Instead of row locks, use a version field (optimistic_lock_version). Retry on conflict.\n4. **Message queues decouple writes.** If many processes write to the same resource, use a queue to serialize writes.\n5. **Immutable state is safer.** Immutable objects don't suffer race conditions. In mutable languages, use immutable data structures or functional patterns.\n\n### Anti-patterns to Avoid\n\n- Race condition: read-check-write without a lock. `if (user.balance >= amount) { user.balance -= amount; }` is unsafe in concurrent code.\n- Deadlock: two processes lock A, then wait for lock B, while the other has B and waits for A. Use consistent lock ordering.\n- No isolation: database reads uncommitted changes from other transactions. Use appropriate isolation level.\n- Unbounded concurrency. If you allow 10,000 concurrent requests, your database connection pool is exhausted. Use a queue or backpressure.\n\n### Checklist\n\n- [ ] Critical sections (payments, inventory) are wrapped in database transactions\n- [ ] Transaction isolation level matches the need (READ COMMITTED is default; use SERIALIZABLE for high-value operations)\n- [ ] Optimistic or pessimistic locking is used where contention is expected\n- [ ] No read-check-write patterns without locks\n- [ ] Async code doesn't share mutable state without synchronization\n- [ ] Concurrency testing: multiple processes write same resource; verify no data loss\n- [ ] Deadlock testing: confirm lock ordering is consistent, no circular dependencies\n- [ ] Monitor database lock wait times; alert on spikes\n- [ ] Backpressure is implemented (queue depth, connection pool saturation)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "race condition, deadlock, concurrency bug",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "building-event-driven-services",
@@ -593,25 +390,11 @@
         "outbox pattern",
         "consumer group"
       ],
-      "recommended_supporting_files": [
-        "references/event-contracts.md",
-        "references/outbox-guide.md"
-      ],
-      "implementation_notes": [
-        "Make delivery semantics and failure assumptions visible."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Event-Driven Architecture and Messaging\n\nEvent-driven decouples services. One service publishes \"OrderCreated\"; others subscribe and react asynchronously. Common in microservices, real-time systems, and event sourcing.\n\n### When to Use\n\n- Designing a multi-service system (order \u2192 payment \u2192 notification \u2192 analytics)\n- Building real-time features (notifications, live updates)\n- Event sourcing or audit logs\n- Decoupling services to improve resilience\n\n### Decision Framework for Node.js/Python + Message Broker (RabbitMQ, Kafka, AWS SNS/SQS)\n\n1. **Choose the right broker.** RabbitMQ: complex routing, dead-letter queues, good for job queues. Kafka: high throughput, event stream, ordered processing, good for audit logs. SNS/SQS: AWS-managed, simpler.\n2. **Event schema must be versioned.** Events evolve. Use Avro, JSON Schema, or Protobuf. Consumers must handle new fields gracefully (forward compatibility).\n3. **Idempotency is critical.** Event published twice? Consumer processes it safely twice. Use event ID + idempotency key.\n4. **Dead-letter queue for failures.** Event processing fails? Send to DLQ. Manual inspection and replay later.\n5. **Consumer groups for scalability.** In Kafka, multiple consumers in the same group partition the load. RabbitMQ uses competing consumers.\n\n### Anti-patterns to Avoid\n\n- No event versioning. Add a field to an event; old consumers break.\n- Tight coupling between event publisher and subscribers. Publisher doesn't know who cares; subscribers subscribe to event topic, not a publisher-specific queue.\n- Processing events synchronously. Event handler blocks; slow handler = slow event propagation. Use async processing.\n- No idempotency. Event published twice = action taken twice. Use event ID to track processed events.\n\n### Checklist\n\n- [ ] Event schema is defined and versioned (Avro, JSON Schema, or Protobuf)\n- [ ] Publisher doesn't know subscribers; publishes to a topic/exchange\n- [ ] Subscriber handles unknown fields (forward compatibility)\n- [ ] Event processing is idempotent (same event ID = same result)\n- [ ] Dead-letter queue captures unprocessable events\n- [ ] Failed event processing is logged and alerted\n- [ ] Consumer group or competing consumer pattern is used for scaling\n- [ ] Test: publish event, consumer fails, event is retried; verify it's safe\n- [ ] Monitor: event publishing latency, consumption lag, failure rate\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "event driven, kafka, queue design",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "reviewing-caching-strategies",
@@ -630,25 +413,11 @@
         "stale data",
         "cache key"
       ],
-      "recommended_supporting_files": [
-        "references/cache-patterns.md",
-        "examples/invalidation-strategies.md"
-      ],
-      "implementation_notes": [
-        "Prefer workload-specific guidance over generic caching advice."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Cache Invalidation and Performance\n\nCaching is the cheapest optimization until it's wrong. The challenge: invalidation. Use appropriate strategies: TTL, write-through, event-based, or cache-aside. In Node.js/Python with Redis, the skill is knowing when to cache and when not to.\n\n### When to Use\n\n- Performance troubleshooting: DB queries are slow\n- Designing read-heavy systems (dashboards, reports)\n- Reducing load on expensive resources (external APIs, complex calculations)\n\n### Decision Framework for Redis, Memcached, or In-Memory Cache\n\n1. **Cache-Aside (Lazy Loaded).** Check cache; miss = load from DB, update cache, return. Simple, but cache miss is slow. Use for non-critical data.\n2. **Write-Through.** Write to cache and DB together. Ensures cache is always fresh, but slightly slower writes.\n3. **TTL (Time-To-Live) for simplicity.** Cache expires after N seconds. Reloads on next miss. Use for data that changes infrequently.\n4. **Event-based invalidation for consistency.** Data changes \u2192 publish event \u2192 invalidate cache. Used in event-driven systems.\n5. **Cache warming for hot data.** Pre-load cache at startup or on schedule. Avoids cold starts.\n\n### Anti-patterns to Avoid\n\n- Caching mutable objects in-process (Node.js or Python). Next deploy resets cache. Use external cache (Redis).\n- Cache stampede: multiple processes miss cache simultaneously, all hit DB together. Use locks or probabilistic TTL.\n- Stale cache due to no invalidation. Object updated in DB; cache still serves old data. Use TTL or event-based invalidation.\n- Caching sensitive data without encryption. Cache breach = data breach.\n\n### Checklist\n\n- [ ] Cache strategy is defined (cache-aside, write-through, TTL, event-based)\n- [ ] Cache misses are logged and monitored (hit ratio \u226570% is good)\n- [ ] TTL is set appropriately (short for fast-changing data, long for static)\n- [ ] Invalidation is triggered on writes (event, explicit, or TTL expiry)\n- [ ] Cache is external (Redis, not in-memory in app process)\n- [ ] Sensitive data in cache is encrypted or expires quickly\n- [ ] Cache warming is implemented for hot data (pre-load at startup)\n- [ ] Cache stampede is prevented (locks or probabilistic expiry)\n- [ ] Test: update data in DB, verify cache is invalidated and reloaded\n- [ ] Monitor: cache hit ratio, memory usage, eviction rate\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "cache invalidation, redis, ttl",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "hardening-file-uploads",
@@ -667,25 +436,11 @@
         "attachment",
         "storage isolation"
       ],
-      "recommended_supporting_files": [
-        "references/upload-security-checklist.md",
-        "examples/upload-edge-cases.md"
-      ],
-      "implementation_notes": [
-        "Treat parser execution and storage exposure as first-class concerns."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Secure File Handling\n\nFile uploads are vectors for RCE, XXE, path traversal, and storage attacks. The skill is validating MIME types, scanning for malware, storing securely, and serving safely.\n\n### When to Use\n\n- Building file upload features (avatars, documents, exports)\n- Reviewing upload endpoints for security\n- Designing a file storage service\n\n### Decision Framework for Node.js/Python + S3 or Local Storage\n\n1. **MIME type validation on server, not client.** Check file extension and magic bytes (first few bytes). Don't trust `Content-Type` header.\n2. **Sanitize filenames.** Uploaded file \"../../etc/passwd\"? Sanitize to remove directory traversal. Use UUIDs instead of original names.\n3. **Virus scanning is essential.** Use ClamAV, VirusTotal, or cloud-native scanning (AWS GuardDuty). Scan before storing.\n4. **Store files outside the web root.** Never serve uploads directly from `public/` where they're executable. Stream from storage, serving as attachments.\n5. **Enforce size limits.** 5GB upload = DoS. Set max file size; reject oversized uploads.\n\n### Anti-patterns to Avoid\n\n- Trusting MIME type header. Attacker uploads .exe with type=image/png.\n- Storing files in web root with original name. User uploads shell.php; it's executable.\n- No malware scanning. Uploaded file is a trojan; distributed to other users.\n- Path traversal: filename \"../../etc/passwd\" stored as-is.\n\n### Checklist\n\n- [ ] Filename is sanitized (remove .., /, special chars)\n- [ ] File extension is validated (whitelist: jpg, png, pdf, etc.)\n- [ ] MIME type is validated server-side (magic bytes, not just header)\n- [ ] File is scanned for malware before storage\n- [ ] Max file size is enforced\n- [ ] Files are stored outside web root (S3, cloud storage, or protected directory)\n- [ ] Files are served with `Content-Disposition: attachment` (download, not execute)\n- [ ] Test: upload .php file with image MIME type; verify it's rejected or served as attachment, not executed\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "file upload, content type, virus scan",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "documenting-api-contracts",
@@ -704,26 +459,11 @@
         "contract examples",
         "sdk docs"
       ],
-      "recommended_supporting_files": [
-        "references/api-doc-style.md",
-        "templates/endpoint-template.md",
-        "examples/contract-examples.md"
-      ],
-      "implementation_notes": [
-        "Pair especially well with schema-first or OpenAPI-first teams."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## OpenAPI, Changelog, and Client Generation\n\nAPI documentation is a contract. OpenAPI 3.0 (Swagger) is the standard. Pair it with a changelog tracking breaking changes, deprecations, and new features. Generated clients (TypeScript, Python) reduce integration friction.\n\n### When to Use\n\n- Launching an API or new endpoints\n- Deprecating or breaking endpoints\n- Generating client SDKs\n- Onboarding consumers\n\n### Decision Framework for Node.js/Python\n\n1. **OpenAPI 3.0 is the standard.** FastAPI and NestJS auto-generate it. Express uses swagger-jsdoc. Use tools like Redocly to validate and lint.\n2. **Changelog documents intent.** OpenAPI documents the contract; changelog explains why. \"Deprecated GET /users/{id}/friends, use GET /relationships/{id}\" helps consumers migrate.\n3. **Client generation from OpenAPI.** Use OpenAPI Generator or similar to generate TypeScript, Python, etc. clients. Reduces integration bugs.\n4. **Deprecation has a runway.** Announce 6 months ahead. Support old and new versions. Provide migration guide.\n\n### Anti-patterns to Avoid\n\n- No API versioning. Changes break old clients immediately.\n- OpenAPI out of date. Docs don't match implementation; trust erodes.\n- No deprecation policy. Yanking endpoints without notice breaks production.\n\n### Checklist\n\n- [ ] OpenAPI 3.0 spec is generated and published (Swagger UI or ReDoc)\n- [ ] Every endpoint has description, parameters, and example requests/responses\n- [ ] Error responses are documented (400, 401, 404, 500, etc.)\n- [ ] Changelog tracks breaking changes, deprecations, and new features\n- [ ] Deprecation notice includes sunset date and migration path\n- [ ] Client SDK is generated from OpenAPI and published (npm, PyPI)\n- [ ] API versioning strategy is defined (/v1/, /v2/ or header-based)\n- [ ] OpenAPI spec is linted (Redocly, spectral) and validated in CI\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "openapi, api docs, integration guide",
+        "allowed-tools": "Read Grep Bash"
+      }
     },
     {
       "name": "designing-database-schemas",
@@ -743,25 +483,11 @@
         "normalization",
         "relational model"
       ],
-      "recommended_supporting_files": [
-        "references/schema-design-guide.md",
-        "examples/table-patterns.md"
-      ],
-      "implementation_notes": [
-        "Keep business invariants explicit in the schema guidance."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Normalization, Constraints, and Access Patterns\n\nDatabase schema is architecture. Good schema enables fast queries, prevents data anomalies, and scales. Bad schema requires complex application logic and causes corruption. The skill is normalization (3NF or BCNF), constraint design, and access pattern optimization.\n\n### When to Use\n\n- Designing a new database or table\n- Reviewing schema for normalization and performance\n- Refactoring due to data anomalies or slow queries\n\n### Decision Framework for PostgreSQL/MySQL + Node.js/Python\n\n1. **Normalize to 3NF by default.** Eliminate redundancy: no repeated columns (first names across rows), no transitive dependencies (city shouldn't depend on state via zipcode).\n2. **Constraints enforce data integrity.** NOT NULL, UNIQUE, FOREIGN KEY, CHECK. Let the database reject invalid states; don't rely on application logic.\n3. **Primary key is essential.** Every table needs a unique identifier. Use auto-incrementing INT or UUID. Avoid composite keys when a surrogate works.\n4. **Indexes for access patterns.** Profile the queries; index the columns used in WHERE, JOIN, ORDER BY. Too many indexes slow writes; too few slow reads.\n5. **Denormalize for performance, not by default.** Sometimes a user's email is stored on Order for fast lookups, avoiding a JOIN. Do it only when profiling shows it's worth it.\n\n### Anti-patterns to Avoid\n\n- Storing JSON blobs instead of normalized tables. Queries become slow and unmaintainable.\n- No constraints. Application enforces NOT NULL, UNIQUE, FOREIGN KEY? That's fragile.\n- Composite primary keys instead of surrogates. Difficult to reference, slow to index.\n- Over-indexing. Every column is indexed = slow inserts, large storage.\n\n### Checklist\n\n- [ ] Schema is normalized to 3NF (no redundancy, no transitive dependencies)\n- [ ] Every table has a primary key (surrogate ID preferred)\n- [ ] Constraints enforce data integrity (NOT NULL, UNIQUE, FOREIGN KEY, CHECK)\n- [ ] Indexes exist for common access patterns (WHERE, JOIN, ORDER BY columns)\n- [ ] Large tables have partitioning strategy (if >100GB or >1B rows)\n- [ ] Data types are appropriate (VARCHAR(255) vs TEXT, INT vs BIGINT)\n- [ ] Migrations are version-controlled and reversible\n- [ ] Test: insert invalid data (violate constraint); verify DB rejects it\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "database schema, table design, foreign keys",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "reviewing-sql-performance",
@@ -781,25 +507,11 @@
         "postgres",
         "mysql"
       ],
-      "recommended_supporting_files": [
-        "references/sql-review-checklist.md",
-        "examples/index-patterns.md"
-      ],
-      "implementation_notes": [
-        "Require explain-plan thinking and measurable before-after checks."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Query Optimization and Execution Plans\n\nSlow queries are the #1 database performance killer. The skill is reading execution plans, identifying index misses, and rewriting queries to be efficient.\n\n### When to Use\n\n- Query runs in >100ms; need to optimize\n- Database CPU or disk I/O is high\n- Analyzing slow query logs\n- Indexing strategy for a new feature\n\n### Decision Framework for PostgreSQL/MySQL\n\n1. **EXPLAIN PLAN is your friend.** Run EXPLAIN ANALYZE SELECT ... to see execution plan. Sequential scans = missing index. Nested loops with high loop count = missing JOIN condition.\n2. **Index selectivity matters.** Index on is_active (two values) has low selectivity; index on user_id (many values) has high selectivity. Optimize high-selectivity columns.\n3. **JOIN order affects performance.** Smaller table first, then join to larger. Database optimizer usually gets this right, but not always.\n4. **Aggregation can be expensive.** COUNT(*) is slow on 1B-row table without index. Use approximate COUNT (APPROX_COUNT) if exact is unnecessary.\n5. **Pagination without offset.** `OFFSET 1000 LIMIT 10` scans 1000 rows. Use keyset pagination (WHERE id > last_id LIMIT 10) instead.\n\n### Anti-patterns to Avoid\n\n- N+1 queries: select user, then for each user select posts. Use JOIN or batch load.\n- Full table scans. Missing index on WHERE column = sequential scan on 1M rows.\n- Sorting in application code. Offload ORDER BY to database; it uses indexes.\n- Subqueries in SELECT. `SELECT id, (SELECT COUNT...) FROM users` = loop over all users + subquery. Use JOIN + GROUP BY.\n\n### Checklist\n\n- [ ] EXPLAIN ANALYZE shows index scans, not sequential scans (for large tables)\n- [ ] No N+1 queries; use JOIN or batch load\n- [ ] Slow query log is configured; queries >100ms are logged\n- [ ] Indexes exist for WHERE, JOIN, and ORDER BY columns\n- [ ] Query rewrite: replace subqueries with JOINs\n- [ ] Pagination uses keyset, not offset\n- [ ] Test: monitor query time before and after optimization; verify improvement\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "slow query, sql tuning, index",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "planning-data-migrations",
@@ -818,27 +530,11 @@
         "rollout sequencing",
         "data change"
       ],
-      "recommended_supporting_files": [
-        "references/migration-checklist.md",
-        "templates/migration-plan-template.md"
-      ],
-      "implementation_notes": [
-        "Favor plan-validate-execute workflows and explicit rollback points."
-      ],
-      "suggested_frontmatter": {
-        "disable-model-invocation": true
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Safe, Reversible Database Changes\n\nMigrations change production schema without downtime. The skill is writing safe migrations, testing them, and coordinating with application deploys to avoid conflicts.\n\n### When to Use\n\n- Adding, removing, or renaming columns\n- Changing column types or constraints\n- Creating or dropping indexes\n- Large data backfills\n\n### Decision Framework for Knex, Alembic, or Django Migrations\n\n1. **Migrations must be reversible.** UP (add column), DOWN (remove column). Test both directions.\n2. **Backfill data in separate migration.** Add column (NOT NULL): add column (nullable), backfill, add constraint. Avoids long locks.\n3. **Coordinate with app deploy.** If removing column, app must stop using it first. Deploy app \u2192 remove column (next deploy).\n4. **Large tables need special care.** Add index on 1B-row table = hours of locking. Use CONCURRENTLY (PostgreSQL) or online DDL (MySQL 8+).\n5. **Test migrations on staging first.** Run migration, verify schema, measure downtime, revert. Repeat on production.\n\n### Anti-patterns to Avoid\n\n- No rollback testing. Assume DOWN works? It doesn't. Test both directions.\n- Data loss migration without backup. Always backup before major migrations.\n- Long-running migrations during peak traffic. Schedule for maintenance window or use online DDL.\n- Mixing structural and data migrations. Keep them separate for clarity and rollback.\n\n### Checklist\n\n- [ ] Migration is reversible (UP and DOWN both tested)\n- [ ] Migration doesn't remove data without backup\n- [ ] Large data changes use backfill migration (separate step)\n- [ ] Adds constraints only after data is backfilled\n- [ ] Tests on staging environment first (full schema, data size, downtime)\n- [ ] Downtime is acceptable or uses online DDL (CONCURRENTLY, MySQL 8+)\n- [ ] Rollback procedure is documented and tested\n- [ ] Coordination with app deploy: app doesn't use removed/renamed columns\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "migration plan, backfill, zero downtime migration",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "designing-search-and-indexes",
@@ -859,25 +555,11 @@
         "facets",
         "vector search"
       ],
-      "recommended_supporting_files": [
-        "references/search-design-guide.md",
-        "examples/filtering-patterns.md"
-      ],
-      "implementation_notes": [
-        "Cover query intent, recall, ranking, and freshness separately."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Full-Text Search, Elasticsearch, and Query Optimization\n\nKeyword search (\"find users by name or bio\") requires specialized indexing. Traditional relational indexes don't work for substring or fuzzy matching. Use full-text search engines (Elasticsearch, Meilisearch, typesense) or PostgreSQL full-text search.\n\n### When to Use\n\n- User-facing search (products, posts, people)\n- Autocomplete and suggestions\n- Filtering and faceted search\n- Analytics on search queries\n\n### Decision Framework for PostgreSQL Full-Text or Elasticsearch\n\n1. **PostgreSQL GIN index for full-text search.** `to_tsvector(column)` indexes, `plainto_tsquery(user_input)` queries. Good for small to medium datasets.\n2. **Elasticsearch for scale.** 100M+ documents, real-time updates, fuzzy matching, facets. Complexity is worth it at scale.\n3. **Meilisearch or Typesense for simplicity.** Better UX (typo tolerance, instant results). Easier ops than Elasticsearch. Good for products, blogs.\n4. **Autocomplete uses prefix indexing.** Store all prefixes of a term in index, or use trie structure. Blazing fast at scale.\n5. **Relevance tuning is iterative.** Measure: which results do users click? Adjust weights (title weight > description). Use learning-to-rank if available.\n\n### Anti-patterns to Avoid\n\n- LIKE queries on large tables. LIKE '%keyword%' is a sequential scan. Use full-text indexing.\n- Ignoring relevance. 500 results, user wants the first 5. Ranking matters.\n- Reindexing on every write. Use background jobs to batch reindex.\n- No query analytics. Don't know what users search for; can't improve.\n\n### Checklist\n\n- [ ] Full-text search index is configured (PostgreSQL GIN or Elasticsearch)\n- [ ] Queries use index (not LIKE), confirmed with EXPLAIN ANALYZE\n- [ ] Autocomplete is fast (<50ms response)\n- [ ] Search results are relevant (ranked by match score, not insertion order)\n- [ ] Query logging captures search terms; analyzed monthly\n- [ ] Misspellings are handled (fuzzy match or \"did you mean\")\n- [ ] Faceted search (filters) available if needed\n- [ ] Test: search for partial match, typo, synonym; verify results\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "search index, elasticsearch, meilisearch",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "modeling-analytics-events",
@@ -897,25 +579,11 @@
         "instrumentation",
         "product analytics"
       ],
-      "recommended_supporting_files": [
-        "references/event-taxonomy.md",
-        "templates/tracking-plan-template.md"
-      ],
-      "implementation_notes": [
-        "Stress consistency, versioning, and privacy-aware field selection."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Event Schema, Collection, and Attribution\n\nAnalytics events tell you how users interact with your app. Good event schema enables product insights; bad schema is noise. The skill is designing event payloads, sampling strategies, and attribution models.\n\n### When to Use\n\n- Designing analytics for a new feature or product\n- Auditing event quality (too noisy, missing context)\n- Attribution and user journey tracking\n\n### Decision Framework for Analytics Platform (Mixpanel, Amplitude, custom)\n\n1. **Event schema must be versioned and validated.** Define event name, required properties (user_id, timestamp), optional properties (metadata). Use JSON Schema or similar.\n2. **User context is critical.** Every event includes user_id, session_id, timestamp, OS, browser, country. Context enables segmentation.\n3. **Avoid event explosion.** Don't emit PageView for every page. Use a standardized schema (page_title, page_category) instead of per-page events.\n4. **Sampling for scale.** If events are 1M/day, sample to 10%; store full resolution for top features. Instrumentation cost vs. insight tradeoff.\n5. **Attribution model for multi-touch.** First-touch, last-touch, or multi-touch? Choose early; it affects ROI calculations and budget allocation.\n\n### Anti-patterns to Avoid\n\n- No event schema. \"Send whatever properties feel useful.\" Result: inconsistent data, hard to analyze.\n- Event explosion. One event per button click, per input change. Massive cardinality; storage blows up.\n- No user context. Events are orphaned; can't attribute to users.\n- Sampling not documented. Analysis assumes full resolution; results are wrong.\n\n### Checklist\n\n- [ ] Event schema is defined and versioned (JSON Schema or similar)\n- [ ] Every event includes user_id, session_id, timestamp, OS, browser\n- [ ] Event names follow naming convention (object_action: user_clicked, invoice_paid)\n- [ ] Property names are consistent (user_id, not userId or uid)\n- [ ] Sampling strategy is defined and documented\n- [ ] PII is not logged (no email, password, credit card)\n- [ ] Event delivery is reliable (retry, queue, confirmation)\n- [ ] Analytics events are validated on client or server (schema check)\n- [ ] Monthly audit: unused events removed, schema validated\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "tracking plan, analytics events, event naming",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "validating-etl-pipelines",
@@ -934,26 +602,11 @@
         "reconciliation",
         "warehouse"
       ],
-      "recommended_supporting_files": [
-        "references/pipeline-checklist.md",
-        "examples/data-reconciliation.md",
-        "scripts/validate-pipeline.py"
-      ],
-      "implementation_notes": [
-        "Use machine-verifiable checks where possible and preserve sample failure diagnostics."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Data Pipeline Quality and Observability\n\nETL (Extract, Transform, Load) pipelines ingest data from sources, transform, and load to warehouse or database. Quality is paramount: bad data \u2192 bad decisions. The skill is validation, error handling, and recovery.\n\n### When to Use\n\n- Building a data pipeline (analytics, reporting, sync)\n- Pipeline is failing or data is wrong\n- Scaling pipeline to handle more sources or volume\n\n### Decision Framework for Apache Airflow, dbt, or custom Python/Node.js\n\n1. **Validate schema at every stage.** Source data, after extraction, after transformation. Reject invalid rows early; don't propagate garbage.\n2. **Idempotency is essential.** Same source data processed twice should result in same warehouse state. Use upsert (INSERT OR UPDATE) or deduplication.\n3. **Monitor data quality.** Record counts, schema drift, freshness. Alert on failures.\n4. **Backfill is common.** Pipeline fails for a day; backfill missing data. Pipeline must support rerunning for past dates.\n5. **Error handling is non-trivial.** Partial failure: 999 rows loaded, 1 fails. Quarantine failed rows; notify; resume.\n\n### Anti-patterns to Avoid\n\n- No validation. Data loaded as-is; garbage in, garbage out.\n- Non-idempotent pipelines. Reruns produce duplicates or inconsistencies.\n- No monitoring. Pipeline fails silently; stale data in warehouse for weeks.\n- Tight coupling between stages. Transformation depends on specific source format; breaks on schema change.\n\n### Checklist\n\n- [ ] Source data schema is validated (required fields, types, ranges)\n- [ ] Transformation rules are tested on sample data\n- [ ] Pipeline is idempotent (can rerun; result is same)\n- [ ] Failed rows are logged and quarantined (not lost)\n- [ ] Record count validation (source count == loaded count after transformation)\n- [ ] Freshness monitoring (alert if data >24 hours old)\n- [ ] Backfill capability (can reprocess past dates)\n- [ ] Data quality metrics are tracked (completeness, uniqueness, timeliness)\n- [ ] Test: run pipeline twice; verify same warehouse state\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "etl validation, schema drift, pipeline freshness",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "generating-unit-tests",
@@ -972,25 +625,11 @@
         "regression test",
         "branch coverage"
       ],
-      "recommended_supporting_files": [
-        "references/unit-test-checklist.md",
-        "examples/test-case-matrix.md"
-      ],
-      "implementation_notes": [
-        "Bias toward behavior-focused tests and small deterministic fixtures."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Unit Test Design and Coverage\n\nUnit tests verify single functions in isolation. The skill is writing fast, focused tests that catch regressions without being brittle.\n\n### When to Use\n\n- Writing new functions or components\n- Reviewing untested code\n- Coverage audit (target >80%)\n\n### Decision Framework for Jest, Pytest, or Vitest\n\n1. **One assertion per test.** Test name says what it verifies. test('sum returns 5 when given 2 and 3'). Multiple assertions = one fails, rest skipped.\n2. **Mock external dependencies.** Database, API, filesystem: mock them. Unit test should not hit network or disk.\n3. **Fixtures for setup.** beforeEach initializes test data. Cleaner than inline setup.\n4. **Coverage, not completeness.** 80% coverage catches most bugs. 100% is tedious; diminishing returns. Focus on complex logic, edge cases.\n5. **Test behavior, not implementation.** Test that sum(2, 3) === 5, not the internal algorithm.\n\n### Anti-patterns to Avoid\n\n- Testing private implementation details. If method is private, test via public API.\n- No mocks. Unit test calls real database = slow, flaky.\n- Multiple assertions per test. One fails, others skip.\n- Brittle assertions. test('array has 3 items') fails if data changes. Prefer assertions on structure.\n\n### Checklist\n\n- [ ] One assertion per test (or logically related assertions)\n- [ ] Mocks for I/O (database, API, filesystem)\n- [ ] Fixtures for common setup\n- [ ] Test name describes what it verifies\n- [ ] Coverage is \u226580% (Codecov, istanbul)\n- [ ] Flaky tests are investigated and fixed\n- [ ] Test runs in <1s (not waiting on mocks)\n- [ ] Edge cases are tested (null, empty, very large values)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "unit tests, edge case tests, regression test",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "designing-integration-tests",
@@ -1009,25 +648,11 @@
         "db integration",
         "api integration"
       ],
-      "recommended_supporting_files": [
-        "references/integration-test-guide.md",
-        "examples/environment-fixtures.md"
-      ],
-      "implementation_notes": [
-        "Use realistic dependencies but keep setup repeatable and observable."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Multi-Unit Testing and Contract Validation\n\nIntegration tests verify multiple units working together (API endpoint + database, authentication + authorization). The skill is setting up test databases, coordinating state, and validating contracts.\n\n### When to Use\n\n- Testing API endpoints (request \u2192 database \u2192 response)\n- Verifying database transactions and constraints\n- Testing background jobs and async flows\n\n### Decision Framework for Jest, Pytest, or testcontainers\n\n1. **Test database is real database.** Use testcontainers (Docker) to spin up PostgreSQL, Redis, etc. for each test suite. Clean and fast.\n2. **Fixtures seed data.** beforeAll seeds users, products; afterAll truncates. Reproducible state.\n3. **Test API via HTTP client.** Don't call app.get() directly. Use supertest (Node) or httpx (Python). Tests the real request cycle.\n4. **Assertions on side effects.** API creates invoice \u2192 assert it's in database, email is queued, webhook is sent.\n5. **Timeouts are real.** Integration tests are slower; adjust timeouts. 5s vs. 100ms for unit.\n\n### Anti-patterns to Avoid\n\n- Sharing database across tests. One test's data leaks to others.\n- Mocking the database. Defeats purpose of integration test.\n- Non-deterministic tests. Random data, time-dependent logic. Tests pass once, fail next time.\n- Not cleaning up. Test creates file or database entry; next test fails due to leftover state.\n\n### Checklist\n\n- [ ] Test database is isolated per test suite (Docker testcontainers)\n- [ ] Fixtures seed known data (beforeAll/afterAll)\n- [ ] API is tested via HTTP, not direct app.get()\n- [ ] Assertions verify database state after request\n- [ ] Background jobs or async flows are awaited\n- [ ] Tests are deterministic (no random data, fixed timestamps)\n- [ ] Cleanup is automatic (afterAll truncates database)\n- [ ] Timeouts are appropriate for integration (5s, not 100ms)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "integration test, service contract, testcontainers",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "stabilizing-e2e-tests",
@@ -1047,25 +672,11 @@
         "retrying tests",
         "waiting for ui"
       ],
-      "recommended_supporting_files": [
-        "references/e2e-stability-guide.md",
-        "examples/flaky-patterns.md"
-      ],
-      "implementation_notes": [
-        "Lean on deterministic selectors, network awareness, and state setup shortcuts."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## End-to-End Testing Without Flakiness\n\nE2E tests verify the full user flow (login \u2192 browse \u2192 checkout) using a real browser. They're slow and flaky if not designed well. The skill is fixing flakiness, managing state, and ensuring tests run reliably in CI.\n\n### When to Use\n\n- Critical user flows (login, payment, checkout)\n- Post-deployment verification\n- Regression detection\n\n### Decision Framework for Playwright or Cypress\n\n1. **Wait for state, not time.** `await page.click()` then `await page.waitForSelector('.success')`. Don't sleep. Flakiness is 95% impatience.\n2. **Isolate test data.** Each test creates its own user, data. No shared state. Parallel tests don't interfere.\n3. **Retry flaky steps.** Network hiccup = retry. `await retry(() => page.click('.button'))` with exponential backoff.\n4. **Headless + headed for debugging.** CI runs headless (fast). Local dev runs headed (debug visually).\n5. **Screenshots on failure.** Capture screenshot when test fails. Invaluable for debugging.\n\n### Anti-patterns to Avoid\n\n- Sleeping. `await page.goto(url); sleep(2000); expect()`. Flaky and slow. Wait for state instead.\n- Shared test data. Test1 creates user; Test2 logs in with Test1's user. Tests can't run in parallel.\n- No retry logic. Transient network error = test failure. Add retry wrapper.\n- Sensitive data in tests. Hardcoded passwords. Use test accounts, not real production data.\n\n### Checklist\n\n- [ ] No sleep() statements; wait for state (waitForSelector, waitForNavigation)\n- [ ] Test data is isolated per test (no shared users, products)\n- [ ] Tests run in parallel without conflicts\n- [ ] Retry logic for network-dependent steps\n- [ ] Screenshots captured on failure\n- [ ] Timeouts are reasonable (page navigation <10s)\n- [ ] Run in headless mode in CI, headed locally\n- [ ] Test sensitive flows (login, payment) without real credentials\n- [ ] CI runs all tests; failure is loud and clear\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "playwright flake, cypress flake, e2e instability",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "reviewing-test-coverage",
@@ -1084,25 +695,11 @@
         "risk-based testing",
         "test blind spots"
       ],
-      "recommended_supporting_files": [
-        "references/coverage-prioritization.md",
-        "templates/gap-review-template.md"
-      ],
-      "implementation_notes": [
-        "Focus on business risk and failure probability, not raw percentages alone."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Coverage Metrics and Gap Analysis\n\nCoverage (% of code executed by tests) is a metric, not a goal. 80% coverage is useful; 100% is often not. The skill is interpreting coverage reports, identifying gaps, and prioritizing.\n\n### When to Use\n\n- Code review: \"Is this change tested?\"\n- Audit: overall coverage %, trends\n- Risk assessment: untested critical paths\n\n### Decision Framework for Codecov, Istanbul, Pytest, or Coverage.py\n\n1. **Focus on critical paths.** Authentication, payments, data validation: high priority. UI polish: lower priority.\n2. **Branch coverage > line coverage.** Line coverage misses branches. \"if (x) { a() } else { b() }\" with only \"if\" branch covered = gap. Use branch coverage.\n3. **Integration tests count.** Unit test doesn't have to cover every line if integration tests do.\n4. **Untested is technical debt.** 80% coverage + untested critical path = risk. 100% coverage + untested edge case = less risk.\n5. **Coverage trends matter.** Coverage declined 5% last month = bad. Investigate and require tests for new code.\n\n### Anti-patterns to Avoid\n\n- Obsessing over 100% coverage. Diminishing returns; time better spent on risky features.\n- Ignoring low-coverage files. If something's important, it should be tested.\n- Generating tests only to hit coverage targets. Meaningless tests.\n\n### Checklist\n\n- [ ] Coverage report generated and tracked (Codecov)\n- [ ] Overall coverage \u226580%\n- [ ] Critical paths (auth, payments, validation) have \u226590% coverage\n- [ ] Branch coverage is reported (not just line coverage)\n- [ ] Low-coverage files are reviewed (untested critical code)\n- [ ] Coverage trends are monitored (month-over-month)\n- [ ] New code requires tests before merge\n- [ ] Flaky tests are removed or fixed (they mask real issues)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "coverage gaps, missing tests, risk-based testing",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "snapshot-regression-checks",
@@ -1120,25 +717,11 @@
         "approval testing",
         "email snapshot"
       ],
-      "recommended_supporting_files": [
-        "references/snapshot-guidelines.md",
-        "examples/stable-output-patterns.md"
-      ],
-      "implementation_notes": [
-        "Include criteria for when snapshots are appropriate and when they are noisy."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Snapshot Testing for UI and JSON\n\nSnapshot tests capture output (rendered HTML, JSON, image) and alert on changes. Useful for regressions, but can become brittle. The skill is knowing when to use snapshots and when not to.\n\n### When to Use\n\n- Rendered component HTML (React, Vue)\n- JSON responses (API output)\n- Generated documents (PDFs, reports)\n- Visual regressions (with pixel-diff tools)\n\n### Decision Framework for Jest, Pytest, or Playwright\n\n1. **Snapshots are regression detectors, not tests.** They don't assert correctness, only change. Use with unit/integration tests that verify behavior.\n2. **Review snapshots in code review.** New snapshot? Diff is clear. Review change visually. Approve if intentional.\n3. **Pixel-diff for visual regressions.** Use Percy, Chromatic, or similar for screenshot comparison. More robust than HTML snapshots for UI changes.\n4. **Don't snapshot large objects.** Snapshot of entire user object (100 fields) = noisy diffs. Snapshot specific output.\n5. **Intentional snapshot updates.** jest -u updates snapshots. Use when intentional change is made; commit diff in same PR.\n\n### Anti-patterns to Avoid\n\n- Snapshot as unit test. Snapshot changes, developer runs jest -u without thinking. Changed API contract, didn't notice.\n- Huge snapshots. Diff is unreadable. Snapshot only relevant output.\n- Snapshot with timestamps. Every run creates new snapshot due to datetime. Mock time or remove dynamic values.\n\n### Checklist\n\n- [ ] Snapshots are paired with unit/integration tests verifying behavior\n- [ ] Snapshot diffs are reviewed in code review (intentional changes only)\n- [ ] Snapshots don't contain timestamps or random data\n- [ ] Large snapshots are broken into smaller, focused ones\n- [ ] jest -u (snapshot update) is used intentionally, not blindly\n- [ ] Pixel-diff tool used for visual regression (if applicable)\n- [ ] Snapshot updates are documented in commit message\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "snapshot testing, golden file, approval testing",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "reproducing-bugs-from-logs",
@@ -1157,25 +740,11 @@
         "incident reproduction",
         "trace analysis"
       ],
-      "recommended_supporting_files": [
-        "references/bug-reproduction-flow.md",
-        "templates/regression-test-template.md"
-      ],
-      "implementation_notes": [
-        "Start from raw evidence and preserve the minimal failing case."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Log Analysis and Error Reproduction\n\nProduction bugs are hard to debug without logs. The skill is structuring logs so you can reproduce (or understand) issues from error traces, request IDs, and user context.\n\n### When to Use\n\n- Production incident: user reports \"checkout failed\"\n- Error spike: hundreds of 500s, need to understand why\n- Flaky issue: happens once a week, need to reproduce\n\n### Decision Framework for Structured Logging (Winston, Pino, Python logging)\n\n1. **Structured logging, not printf.** `logger.error({ userId, orderId, error: err.message, stack: err.stack })` \u2192 JSON \u2192 searchable. Not \"Error occurred\".\n2. **Request IDs link events.** Every request gets unique ID (UUID). All logs for that request include ID. Trace full request \u2192 database \u2192 API call \u2192 response.\n3. **Error context is crucial.** Don't just log error message. Include variables at time of error (user ID, order ID, payment status). Why did it fail, not just that it failed.\n4. **Log levels are meaningful.** DEBUG (development), INFO (expected events), WARN (recoverable problems), ERROR (failures), FATAL (process crash).\n5. **Sampling for high-volume logs.** If logging every request and you're 1M req/day, storage is expensive. Sample: log 1 in 100 requests, all errors.\n\n### Anti-patterns to Avoid\n\n- Unstructured logs. \"Error occurred\" with no context. Can't reproduce or understand.\n- No request ID. Logs from user request mixed with logs from other requests. Can't follow request.\n- Logging sensitive data. Passwords, credit cards in logs = breach when logs are leaked.\n- No timestamp or timezone. When did error occur? Hard to correlate with other events.\n\n### Checklist\n\n- [ ] Logs are structured (JSON), not printf format\n- [ ] Every request has unique ID (UUID); included in all logs\n- [ ] Error logs include context (user ID, resource ID, variables at time of error)\n- [ ] Log levels are used correctly (DEBUG, INFO, WARN, ERROR, FATAL)\n- [ ] No sensitive data logged (passwords, credit cards, PII)\n- [ ] Timestamp and timezone are included\n- [ ] Error stack traces are logged in full\n- [ ] Log aggregation tool (ELK, DataDog) is set up; searchable by request ID\n- [ ] Test: generate error, search logs by request ID, can reproduce path\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "reproduce bug, logs to test, incident reproduction",
+        "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
+      }
     },
     {
       "name": "hardening-ci-pipelines",
@@ -1195,25 +764,11 @@
         "test matrix",
         "build caching"
       ],
-      "recommended_supporting_files": [
-        "references/ci-checklist.md",
-        "examples/workflow-patterns.md"
-      ],
-      "implementation_notes": [
-        "Push for fast feedback loops and clear quality gates."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Build, Test, Deploy Safety\n\nCI/CD pipelines are the blast radius for code changes. A compromised pipeline = compromised app. The skill is designing pipelines for reliability, security, and fast feedback.\n\n### When to Use\n\n- Setting up CI/CD for a new project\n- Auditing pipeline for security and reliability\n- Reducing pipeline failures or duration\n\n### Decision Framework for GitHub Actions, GitLab CI, or CircleCI\n\n1. **Secrets are not in code.** Use secret management (AWS Secrets Manager, HashiCorp Vault). CI/CD system (GitHub Actions) provides secret injection.\n2. **Artifact integrity.** Build artifact should be reproducible. Dockerfile fingerprint doesn't change unless code or dependencies change.\n3. **Test gates before deploy.** Unit tests \u2192 integration tests \u2192 staging deploy \u2192 smoke tests \u2192 production deploy. Each gate must pass.\n4. **Permissions are minimal.** Deploy step requires manual approval. Automated rollback on error.\n5. **Status checks are visible.** Every PR shows CI status. Can't merge without passing tests.\n\n### Anti-patterns to Avoid\n\n- Secrets in code or config files. CI/CD logs are often visible.\n- Non-deterministic builds. Build same code twice, get different artifact. Hard to debug.\n- No tests before deploy. Tests run after merge. If test fails, bug is in production.\n\n### Checklist\n\n- [ ] Secrets are injected via CI/CD secret management\n- [ ] Build is deterministic (same code = same artifact)\n- [ ] Dockerfile or build script is version-controlled\n- [ ] Unit and integration tests run before merge\n- [ ] Staging deploy runs smoke tests\n- [ ] Deploy to production requires approval\n- [ ] Deployment is logged (who, when, what changed)\n- [ ] Rollback procedure is automated and tested\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "ci pipeline, github actions, flaky build",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "shipping-containerized-services",
@@ -1232,25 +787,11 @@
         "runtime config",
         "image size"
       ],
-      "recommended_supporting_files": [
-        "references/container-guide.md",
-        "examples/dockerfile-patterns.md"
-      ],
-      "implementation_notes": [
-        "Cover build caching, non-root execution, and health checks."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Docker, Images, and Container Orchestration\n\nContainers package code and dependencies. The skill is writing Dockerfiles that are secure, small, and fast to build.\n\n### When to Use\n\n- Deploying services to production (Kubernetes, ECS, Docker Swarm)\n- Ensuring consistency across dev, staging, production\n- Scaling services horizontally\n\n### Decision Framework for Docker + Kubernetes or ECS\n\n1. **Multi-stage builds reduce image size.** Build stage with build tools, runtime stage with only app + dependencies. Final image is 50% smaller.\n2. **Base image matters.** Alpine (5MB) vs. Ubuntu (77MB). For Node.js, use node:22-alpine. For Python, python:3.11-slim.\n3. **Layer caching aids iteration.** Layers that don't change are reused. Put COPY (changes frequently) after RUN (stable dependencies). Rebuild faster.\n4. **Non-root user for security.** Don't run as root. Create app user; run process as app. Limits damage if container is compromised.\n5. **Healthchecks enable orchestration.** Container reports healthy/unhealthy. Orchestrator (K8s) restarts unhealthy containers.\n\n### Anti-patterns to Avoid\n\n- Single-stage Dockerfile. Build tools in final image = bloat.\n- Running as root. Compromise = full container access.\n- Latest base image tag. Base image changes; build is non-reproducible. Pin version (node:22.3.0).\n\n### Checklist\n\n- [ ] Dockerfile uses multi-stage builds\n- [ ] Base image is minimal (Alpine, Debian slim)\n- [ ] Layer order optimizes cache (stable dependencies first)\n- [ ] Non-root user is created; process runs as app user\n- [ ] Healthcheck is defined\n- [ ] Image is built and tested in CI before deploy\n- [ ] Image size is <500MB (warn >1GB)\n- [ ] Secrets (API keys, passwords) are not in image\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "dockerfile, container image, kubernetes deploy",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "managing-infrastructure-as-code",
@@ -1269,27 +810,11 @@
         "infrastructure module",
         "cloud deploy"
       ],
-      "recommended_supporting_files": [
-        "references/iac-review-checklist.md",
-        "examples/environment-patterns.md"
-      ],
-      "implementation_notes": [
-        "Encourage explicit change plans and state safety."
-      ],
-      "suggested_frontmatter": {
-        "disable-model-invocation": true
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Terraform, Pulumi, or CloudFormation\n\nInfrastructure as Code treats infrastructure like software: version-controlled, reviewed, tested. The skill is designing repeatable, safe infrastructure deployments.\n\n### When to Use\n\n- Managing cloud resources (AWS, GCP, Azure)\n- Ensuring consistency across environments\n- Disaster recovery and scaling\n\n### Decision Framework for Terraform\n\n1. **State is sacred.** Terraform state file knows what resources exist. Modify via Terraform, not by hand. Corruption = destroyed resources.\n2. **Modules for composition.** Reusable infrastructure components (networking, database, app service). Reduces duplication.\n3. **Plan before apply.** `terraform plan` shows changes. Review, approve, then `terraform apply`. Prevents accidents.\n4. **State is remote and locked.** Store in S3 (with backend locking), not locally. Multiple people can use same state safely.\n5. **Drift detection.** Periodically run `terraform plan`; if resources changed outside Terraform, alert. Keep code and reality in sync.\n\n### Anti-patterns to Avoid\n\n- Manual infrastructure changes. Infrastructure drifts from code. Can't reproduce.\n- No plan review. Apply directly to production. Oops, deleted database.\n- State in local Git. Multiple people modify; conflicts and corruption.\n\n### Checklist\n\n- [ ] Infrastructure is code (Terraform, Pulumi, or CloudFormation)\n- [ ] All resources are managed via IaC (no manual console changes)\n- [ ] Plan is reviewed before apply\n- [ ] State is stored remotely with locking (S3 + DynamoDB)\n- [ ] Environments (dev, staging, prod) use same code (different var files)\n- [ ] Secrets (API keys, passwords) are managed securely (not in code)\n- [ ] Drift detection runs regularly\n- [ ] Rollback procedure is tested\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "terraform review, pulumi, iac",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "improving-developer-experience",
@@ -1308,25 +833,11 @@
         "scripts cleanup",
         "repo ergonomics"
       ],
-      "recommended_supporting_files": [
-        "references/devex-checklist.md",
-        "templates/onboarding-template.md"
-      ],
-      "implementation_notes": [
-        "Value clear defaults, one-command setup, and smaller cognitive load."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Local Dev Setup, Onboarding, and Tooling\n\nDeveloper experience (DX) is force multiplier. Fast, clear setup and tools = faster onboarding and fewer bugs. The skill is automating setup, documenting workflows, and choosing tools that scale.\n\n### When to Use\n\n- New team member; setup takes >1 hour\n- Complex local development (many services, databases)\n- Frequent environment-specific bugs\n\n### Decision Framework for Docker Compose, Make, or Devcontainers\n\n1. **Docker Compose for local dev.** One docker-compose.yml starts all services (API, database, Redis, etc.). `docker compose up` = everything running.\n2. **Makefile or npm scripts for commands.** `make dev`, `make test`, `make lint`. Consistent interface; no one has to remember flags.\n3. **Devcontainers (VSCode) for isolation.** Development happens in container matching production. No \"works on my machine\" issues.\n4. **README is a checklist.** Prerequisites (Node.js version, Docker), steps to run locally, common issues. New dev follows checklist; done in 30min.\n5. **CI mirrors local tests.** Run same tests locally as in CI. No surprises on push.\n\n### Anti-patterns to Avoid\n\n- Manual setup steps. \"Install X, run Y, set env var Z.\" Tedious and error-prone.\n- Documentation is outdated. New team member follows README; steps fail. Frustration.\n- Local dev differs from production. Service runs locally but fails in Docker. Debugging is painful.\n\n### Checklist\n\n- [ ] Docker Compose starts all services (`docker compose up`)\n- [ ] README has setup checklist (prerequisites, steps, troubleshooting)\n- [ ] `make dev` or `npm run dev` starts local environment\n- [ ] `make test` runs same tests as CI\n- [ ] No secrets in code; env vars are documented (with examples)\n- [ ] Devcontainers (VSCode) or equivalent for reproducible dev environment\n- [ ] New team member can run locally in <1 hour\n- [ ] Local dev matches production (Node.js version, dependencies)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "developer experience, onboarding, dev setup",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "maintaining-monorepos",
@@ -1345,25 +856,11 @@
         "turbo",
         "package boundaries"
       ],
-      "recommended_supporting_files": [
-        "references/monorepo-patterns.md",
-        "examples/package-boundary-rules.md"
-      ],
-      "implementation_notes": [
-        "Keep guidance aligned with dependency direction and validation scope."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Workspace Layout, Dependencies, and Tooling\n\nMonorepos (single repo, multiple projects) reduce friction but add complexity. The skill is structuring workspaces, managing dependencies, and enabling independent deployment.\n\n### When to Use\n\n- Multiple related services (API, web app, CLI) in one repo\n- Shared libraries and utilities\n- Coordinating changes across services\n\n### Decision Framework for Lerna, Nx, Turborepo, or pnpm Workspaces\n\n1. **Clear folder structure.** /packages/api, /packages/web, /packages/shared. Each package has own package.json.\n2. **Shared libraries via symlink.** Monorepo tool symlinks shared packages into node_modules. Code changes instantly reflected.\n3. **Build graph for incremental builds.** Only rebuild packages that changed. If shared library changed, rebuild dependents.\n4. **Publishing from monorepo.** Each package has version, changelog, publish trigger. Coordinated but independent releases.\n5. **Dependency management.** Monorepo tool ensures versions are consistent (shared library same version everywhere).\n\n### Anti-patterns to Avoid\n\n- Copy-paste code across packages. Monorepo exists to share. Shared library should be explicit.\n- Tight coupling between packages. One change breaks unrelated package. Defeats scaling.\n- No build isolation. Webpack for web, Node for API in same repo. Build tool conflicts.\n\n### Checklist\n\n- [ ] Folder structure is clear (/packages/api, /packages/web, /packages/shared)\n- [ ] Each package has own package.json and tsconfig.json\n- [ ] Monorepo tool (Lerna, Nx, Turborepo) manages dependencies\n- [ ] Build graph is incremental (only changed packages rebuilt)\n- [ ] Shared library is symlinked and changes are instant\n- [ ] Each package can be deployed independently\n- [ ] Dependency versions are consistent across packages\n- [ ] CI runs tests only for changed packages (--since flag)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "monorepo, workspace graph, nx",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "running-release-checklists",
@@ -1382,28 +879,11 @@
         "rollback plan",
         "launch readiness"
       ],
-      "recommended_supporting_files": [
-        "templates/release-checklist.md",
-        "templates/post-release-review.md"
-      ],
-      "implementation_notes": [
-        "Best as a workflow skill with explicit validator steps."
-      ],
-      "suggested_frontmatter": {
-        "disable-model-invocation": true,
-        "allowed-tools": "Read Grep Bash(git *)"
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Versioning, Changelogs, and Release Coordination\n\nReleases are high-stakes events. Mistakes (missing migration, wrong version number) cause downtime. The skill is running checklists, automating where possible, and maintaining a clear changelog.\n\n### When to Use\n\n- Preparing a release (new version, multiple PRs)\n- Coordinating cross-team deployments\n- Documenting changes for users\n\n### Decision Framework for Semantic Versioning and Changelogs\n\n1. **Semantic Versioning (SemVer).** MAJOR.MINOR.PATCH. MAJOR for breaking changes, MINOR for features, PATCH for fixes. Users understand impact.\n2. **Changelog is manual effort.** Auto-generated from commits is noisy. Humans write clear, user-facing summary. Keep CHANGELOG.md.\n3. **Release checklist is explicit.** Version bump, changelog update, migrations, feature flags OFF, staged deploy, production deploy, rollback plan. Run in order.\n4. **Dry-run release in staging.** Deploy to staging, run smoke tests, verify no errors. Then confidently deploy to production.\n5. **Announce releases.** Slack notification, email, blog post. Users (customers, team) know what changed and why.\n\n### Anti-patterns to Avoid\n\n- Ad-hoc releases. \"Let's just deploy\" without checklist. Forgotten migration = downtime.\n- No changelog. Users don't know what changed. Support gets flooded with questions.\n- Version mismatch. Code is v2.1, deployed v2.0. Confusion and bugs.\n\n### Checklist\n\n- [ ] Version number is bumped (SemVer)\n- [ ] CHANGELOG.md is updated with user-facing summary\n- [ ] All migrations are ready (if database changes)\n- [ ] Feature flags for new features are OFF by default\n- [ ] Staged deploy runs smoke tests (OK)\n- [ ] Production deploy plan is documented (steps, rollback)\n- [ ] Team is notified (Slack, email)\n- [ ] Rollback procedure is tested and ready\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "release checklist, go live, rollback plan",
+        "allowed-tools": "Bash Read"
+      }
     },
     {
       "name": "threat-modeling-features",
@@ -1424,25 +904,11 @@
         "trust boundary",
         "abuse case"
       ],
-      "recommended_supporting_files": [
-        "templates/threat-model-template.md",
-        "references/common-web-threats.md"
-      ],
-      "implementation_notes": [
-        "Keep the method lightweight enough for regular use but concrete enough to drive mitigations."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Identifying and Mitigating Threats\n\nThreat modeling anticipates attacks before code is written. The skill is identifying attack vectors (data breach, DoS, privilege escalation) and mitigating them early.\n\n### When to Use\n\n- Designing new features (payment, auth, admin panel)\n- Security review before launch\n- Incident post-mortem: \"How do we prevent this?\"\n\n### Decision Framework\n\n1. **STRIDE framework.** Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege. Ask: which threats apply?\n2. **Trust boundaries.** Data crossing boundary = potential attack. User input \u2192 database: sanitize. User upload \u2192 storage: scan. External API \u2192 app: validate.\n3. **Least privilege.** User has only permissions they need. Payment service doesn't need to delete users. Limits blast radius.\n4. **Defense in depth.** Multiple layers. Firewall + authentication + rate limiting + encryption. One layer fails, others protect.\n5. **Assume breach.** What if attacker is inside? Encryption at rest, audit logs, alerting on anomalies.\n\n### Anti-patterns to Avoid\n\n- Security as afterthought. Design without threat modeling; fix vulnerabilities after launch.\n- Trusting user input. \"Users are good\" or \"We validate on frontend.\" Backend must validate.\n- Single point of failure. Authentication only via password. MFA is secondary.\n\n### Checklist\n\n- [ ] STRIDE threats for feature are identified (Spoofing, Tampering, etc.)\n- [ ] Trust boundaries are drawn; data crossing them is validated\n- [ ] Least privilege is applied (user has minimal permissions)\n- [ ] Authentication and authorization are enforced server-side\n- [ ] Sensitive data is encrypted (at rest and in transit)\n- [ ] Rate limiting prevents brute force and DoS\n- [ ] Audit logs record sensitive actions\n- [ ] Incident response plan exists (if breach detected, what's the playbook?)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "threat model, attack surface, security review",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "auditing-secrets-and-config",
@@ -1462,25 +928,11 @@
         "config hygiene",
         "secret rotation"
       ],
-      "recommended_supporting_files": [
-        "references/secrets-checklist.md",
-        "examples/config-risk-patterns.md"
-      ],
-      "implementation_notes": [
-        "Focus on removal of trust assumptions and safer defaults."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Secret Management and Configuration\n\nSecrets (API keys, passwords, database credentials) are targets. Config (feature flags, endpoints) changes between environments. The skill is separating them from code and rotating frequently.\n\n### When to Use\n\n- Onboarding service (needs database credentials)\n- Rotating credentials (monthly, after departure)\n- Auditing for exposed secrets\n\n### Decision Framework for AWS Secrets Manager, HashiCorp Vault, or similar\n\n1. **Secrets are never in code.** Git history is forever. One leaked secret = account compromise. Use secret manager.\n2. **Config via environment variables.** `process.env.DATABASE_URL`, `process.env.STRIPE_API_KEY`. Different values per environment.\n3. **Least privilege for services.** Database user has only SELECT, not DROP. API service has only its API key, not admin key.\n4. **Rotation schedule.** Database passwords rotated monthly. API keys rotated quarterly. If leaked, damage is limited.\n5. **Audit logs for access.** Who accessed which secret? Alert on unusual access patterns.\n\n### Anti-patterns to Avoid\n\n- Secrets in code or .env files. Git history or accidental pushes = leak.\n- One shared secret for all services. If leaked, all services are compromised.\n- No rotation. Secret compromised a year ago; still active.\n- No audit logs. Can't detect breach or investigate.\n\n### Checklist\n\n- [ ] No secrets in Git history (`git log -p --all | grep -i password`)\n- [ ] Secrets are in secret manager (AWS Secrets Manager, Vault)\n- [ ] Config is via environment variables\n- [ ] `.env.example` exists (no real secrets); checked in\n- [ ] Least privilege for service credentials\n- [ ] Secrets are rotated monthly\n- [ ] Audit logs for secret access\n- [ ] Leaked secret procedure is documented (revoke, rotate, investigate)\n- [ ] Test: try to access secret without permission; verify denied\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "secrets audit, env vars, credential exposure",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "improving-observability",
@@ -1499,25 +951,11 @@
         "metrics",
         "instrumentation"
       ],
-      "recommended_supporting_files": [
-        "references/observability-guide.md",
-        "templates/instrumentation-plan.md"
-      ],
-      "implementation_notes": [
-        "Tie every recommendation to a concrete debugging or alerting outcome."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Logging, Metrics, and Tracing for Production Visibility\n\nObservability = visibility into system behavior. Logging answers \"what happened?\", metrics answer \"how much?\", tracing answers \"why is it slow?\". The skill is collecting useful data and surfacing it quickly.\n\n### When to Use\n\n- Incident: need to understand what happened\n- Performance: query is slow; why?\n- Trends: error rate increasing; investigate\n\n### Decision Framework for Prometheus, ELK, Datadog, or similar\n\n1. **Structured logging.** JSON logs with context (user_id, request_id, service). Searchable and analyzable.\n2. **Metrics for health.** Request latency, error rate, queue depth. Alerting on anomalies (error rate >1%).\n3. **Distributed tracing.** Trace request across services (web \u2192 API \u2192 database). Find bottleneck (which service is slow?).\n4. **Retention and cost.** Full logs for 7 days; sampled after. Metrics for 1 year. Tracing for 24 hours. Balance detail and cost.\n5. **Dashboards for on-call.** Key metrics on one screen (error rate, latency, queue depth). On-call engineer can assess health in 30s.\n\n### Anti-patterns to Avoid\n\n- Logging everything. Storage cost explodes; noise drowns signal.\n- No metrics. Logs tell you errors happened; metrics tell you the rate.\n- No alerting. Errors occur; team doesn't know until user complains.\n\n### Checklist\n\n- [ ] Structured logging (JSON) with context (user_id, request_id)\n- [ ] Key metrics are collected (latency, error rate, queue depth, resource usage)\n- [ ] Alerts for critical metrics (error rate >X%, latency >Yms)\n- [ ] Distributed tracing setup (request ID flows across services)\n- [ ] Dashboards show health at a glance\n- [ ] Log retention is set (7-30 days; archive older)\n- [ ] On-call has clear procedure to investigate (runbook)\n- [ ] Regular review of logs (errors, patterns); improve monitoring\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "observability, tracing, structured logs",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "setting-slos-and-alerts",
@@ -1536,25 +974,11 @@
         "monitoring thresholds",
         "incident response"
       ],
-      "recommended_supporting_files": [
-        "references/slo-guide.md",
-        "examples/alert-routing.md"
-      ],
-      "implementation_notes": [
-        "Prefer user-impact signals over infrastructure vanity metrics."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Service Level Objectives and Alerting\n\nSLOs (Service Level Objectives) define acceptable uptime and performance. Alerting tells you when you breach SLOs. The skill is setting realistic SLOs and responding to breaches.\n\n### When to Use\n\n- Defining service reliability targets\n- Incident response and on-call\n- Capacity planning and scaling\n\n### Decision Framework\n\n1. **SLO is realistic.** 99.9% uptime (8.76 hours downtime/year) vs. 99.99% (52 minutes/year). Business impact determines target.\n2. **Error budget.** If SLO is 99.9%, you have 8.76 hours of downtime/year. Spend it on deploys, maintenance. Overspend = SLO breach.\n3. **Alerts are high-fidelity.** Alert when SLO is at risk, not on every blip. False alarms = on-call fatigue.\n4. **Runbook exists.** Alert fires; on-call has procedure: check logs, restart service, page engineer. No guessing.\n5. **Blameless post-mortems.** When SLO breaches, investigate and learn. No blame; fix systemic issues.\n\n### Anti-patterns to Avoid\n\n- SLO too strict. 99.99% for non-critical service = constant alerting, no one responds.\n- Alerts everywhere. Alert fatigue; on-call ignores them.\n- No error budget concept. Deploy conservatively even if reliability allows risk-taking.\n\n### Checklist\n\n- [ ] SLO is defined per service (uptime, latency, error rate)\n- [ ] SLO is realistic and matches business needs\n- [ ] Error budget is tracked and communicated\n- [ ] Alerts are configured for SLO breaches (high-fidelity, low false positive rate)\n- [ ] Runbook exists for critical alerts\n- [ ] On-call rotation is clear (who's on-call, how to escalate)\n- [ ] Incident response process is documented\n- [ ] Post-mortems are conducted (no blame, focus on improvements)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "slo, alert fatigue, slis",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "reviewing-failure-modes",
@@ -1574,25 +998,11 @@
         "retry storm",
         "fallback"
       ],
-      "recommended_supporting_files": [
-        "references/failure-mode-checklist.md",
-        "examples/degradation-patterns.md"
-      ],
-      "implementation_notes": [
-        "Center on what users experience and what operators can recover quickly."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Resilience Analysis and Mitigation\n\nFailure is inevitable. The skill is anticipating failure modes (database down, API timeout, network partition) and designing systems that degrade gracefully.\n\n### When to Use\n\n- Designing new service or feature\n- Resilience review before launch\n- Incident post-mortem: \"How do we survive this?\"\n\n### Decision Framework\n\n1. **FMEA (Failure Mode and Effects Analysis).** List failure modes: database down, API timeout, cache miss. For each, design mitigation.\n2. **Graceful degradation.** Feature depends on external API; API is slow? Show cached data, not error. User experience degrades; service doesn't fail.\n3. **Circuit breaker pattern.** Calling slow external API? Stop calling after N failures. Return fallback. Retry periodically.\n4. **Timeout and retry.** Request hangs = bad. Set timeout (5s); retry with exponential backoff (1s, 2s, 4s, 8s).\n5. **Bulkhead isolation.** Payment service fails; shouldn't take down entire site. Isolate (separate thread pool, circuit breaker, queue).\n\n### Anti-patterns to Avoid\n\n- Assuming external services are reliable. They fail. Assume timeout.\n- Cascading failures. Payment service down \u2192 order service down \u2192 web site down. Isolate and degrade gracefully.\n- No fallback. API is slow; user gets error. Fallback to cached data.\n\n### Checklist\n\n- [ ] Failure modes are identified and documented\n- [ ] Timeout is set for external requests\n- [ ] Retry logic with exponential backoff\n- [ ] Circuit breaker for external APIs\n- [ ] Graceful degradation when dependency fails\n- [ ] Fallback data or cached data is available\n- [ ] Bulkhead isolation (separate resources per service)\n- [ ] Test: kill database, API timeout, network partition; verify graceful degradation\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "failure mode, partial outage, degraded mode",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "validating-backup-and-restore",
@@ -1611,27 +1021,11 @@
         "disaster recovery",
         "restore test"
       ],
-      "recommended_supporting_files": [
-        "templates/restore-drill-template.md",
-        "references/recovery-checklist.md"
-      ],
-      "implementation_notes": [
-        "Treat proof of restoration as more important than backup existence."
-      ],
-      "suggested_frontmatter": {
-        "disable-model-invocation": true
-      },
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Data Protection and Disaster Recovery\n\nBackups are only useful if you can restore them. The skill is testing restore procedures, knowing RTO (Recovery Time Objective) and RPO (Recovery Point Objective), and ensuring backups are encrypted and stored safely.\n\n### When to Use\n\n- Launch of new service\n- Quarterly backup testing\n- Incident: data corruption, need to restore\n\n### Decision Framework for Backup Strategy\n\n1. **Automated daily backups.** Don't rely on manual dumps. Schedule via cron or managed service.\n2. **Multiple backup locations.** Local, offsite, cloud. If one is compromised, others survive.\n3. **RTO and RPO are explicit.** RTO: time to restore (target: <1 hour for critical data). RPO: data loss (target: <1 hour). Affects backup frequency and retention.\n4. **Restore testing, not just backups.** Backup is worthless if restore fails. Test monthly: restore to staging, verify data integrity.\n5. **Encryption at rest and in transit.** Backup is a juicy target. Encrypt with key managed separately from data.\n\n### Anti-patterns to Avoid\n\n- No backups. Too expensive or \"we won't need it.\" Hardware fails.\n- Backups not tested. \"We have backups\" until restore fails.\n- Single backup location. Compromised = all gone.\n- No encryption. Backup leaked = data breach.\n\n### Checklist\n\n- [ ] Automated daily backups (database, files, configs)\n- [ ] Backups are stored in multiple locations (local, cloud, offsite)\n- [ ] Backups are encrypted (AES-256) with separate key management\n- [ ] RTO and RPO are defined and achievable\n- [ ] Restore procedure is documented and tested\n- [ ] Monthly restore test to staging; verify data integrity\n- [ ] Retention policy is clear (keep 30 days, archive old)\n- [ ] Monitoring: backup success/failure, storage usage\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "backup restore, recovery drill, rpo rto",
+        "allowed-tools": "Read Grep"
+      }
     },
     {
       "name": "extracting-reusable-skills",
@@ -1650,26 +1044,10 @@
         "reuse this process",
         "codify this pattern"
       ],
-      "recommended_supporting_files": [
-        "templates/skill-seed-template.md",
-        "references/skill-authoring-rules.md",
-        "templates/eval-template.md"
-      ],
-      "implementation_notes": [
-        "This is the meta-skill that should feed the database over time."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## From Task to Reusable Skill\n\nRepeated tasks should become reusable skills. The skill is recognizing when to extract, designing skill interfaces, and authoring clear, stack-specific documentation.\n\n### When to Use\n\n- Task is repeated across projects or team members\n- Task is complex and domain-specific\n- Pattern emerges in multiple codebases\n\n### Decision Framework for Claude Code Skills\n\n1. **Skill is self-contained and focused.** Not \"do everything,\" but \"generate SQL migration\" or \"audit component accessibility.\"\n2. **Skill interface is clear.** Input (code snippet, requirements), output (generated artifact, audit report). Use Claude's first-class integration: read files, run commands, return markdown.\n3. **Stack specificity.** Skill for React + TypeScript + Tailwind has different guidance than generic Vue. Reference specific patterns, libraries, tools.\n4. **Skill body is 400-2500 chars.** Substantive, not boilerplate. Include \"when to use,\" \"decision framework,\" \"anti-patterns,\" \"checklist.\"\n5. **Reference supporting files.** Complex checklists, examples, patterns \u2192 separate markdown files. Linked from skill body.\n\n### Anti-patterns to Avoid\n\n- Generic skill. \"Help me code\" + generic advice. Not useful.\n- Bloated skill. 5000 chars of examples. Split into supporting files.\n- No context. Skill doesn't mention React, Node, or databases. Sounds random.\n\n### Checklist\n\n- [ ] Skill solves a repeated problem (not one-off task)\n- [ ] Skill is focused (one primary action, not many)\n- [ ] Skill body is 400-2500 chars with decision framework and anti-patterns\n- [ ] Skill references specific tech (React, FastAPI, Tailwind, etc.)\n- [ ] Trigger phrases are natural (words engineers use)\n- [ ] Supporting files are separate, linked from body\n- [ ] Example usage is concrete (real code, not pseudocode)\n- [ ] Skill is tested by running it on real codebase\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "create a skill, extract workflow, reuse this process"
+      }
     },
     {
       "name": "curating-team-conventions",
@@ -1687,25 +1065,10 @@
         "best practices",
         "coding guidelines"
       ],
-      "recommended_supporting_files": [
-        "references/convention-catalog.md",
-        "templates/convention-template.md"
-      ],
-      "implementation_notes": [
-        "Keep conventions opinionated, testable, and easy to locate by domain."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Documentation, Linting, and Standardization\n\nTeam conventions (code style, PR size, file organization) scale culture. The skill is documenting conventions, automating enforcement, and evolving them.\n\n### When to Use\n\n- Onboarding new team member\n- Code review becomes repetitive (\"use const, not var\")\n- Merging teams or codebases with different standards\n\n### Decision Framework\n\n1. **Conventions are enforceable.** Use linters (ESLint, Ruff), formatters (Prettier, Black), TypeScript strict mode. Don't rely on code review alone.\n2. **Conventions are documented.** CONTRIBUTING.md, ENGINEERING.md. New dev reads once; no questions.\n3. **Conventions evolve.** Quarterly review. Does the convention still make sense? Vote, update, commit.\n4. **Conventions are optional or required.** Style (const vs var)? Enforced by linter. Architecture? Manual review. Clarity on which is which.\n5. **Conventions reflect tech stack.** React conventions differ from Next.js (Server Components). Document both.\n\n### Anti-patterns to Avoid\n\n- Undocumented conventions. Tribal knowledge. New dev doesn't know.\n- Manual enforcement. Code review becomes nag-fest.\n- Stale conventions. \"We used to do that; ignore it.\"\n\n### Checklist\n\n- [ ] CONTRIBUTING.md or ENGINEERING.md documents conventions\n- [ ] Linters enforce style (ESLint, Ruff, Prettier)\n- [ ] Pre-commit hooks prevent violations\n- [ ] PR template includes checklist (conventions checklist)\n- [ ] Examples of good/bad code for conventions\n- [ ] Conventions are reviewed and updated quarterly\n- [ ] New dev can contribute without \"unwritten rules\"\n- [ ] CI enforces linters (CI fails if violation)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "team conventions, engineering standards, best practices"
+      }
     },
     {
       "name": "generating-pr-reviews",
@@ -1725,25 +1088,10 @@
         "merge risk",
         "review comments"
       ],
-      "recommended_supporting_files": [
-        "references/pr-review-checklist.md",
-        "templates/review-output-template.md"
-      ],
-      "implementation_notes": [
-        "Best when paired with explicit change summaries and validation commands."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Systematic Code Review\n\nCode review is knowledge transfer and quality gate. The skill is reviewing efficiently, catching real issues (not style), and providing actionable feedback.\n\n### When to Use\n\n- Every PR (before merge)\n- Code review becomes time-consuming\n- Need to scale review across team\n\n### Decision Framework for Code Review\n\n1. **Automate style; review substance.** Linter catches style. Reviewer focuses on logic, performance, security.\n2. **Review checklist is explicit.** Does code change have tests? Is error handling present? Are edge cases covered? Use checklist to stay consistent.\n3. **Comment is actionable.** Not \"bad variable name.\" \"Variable `x` is unclear; use `paymentAmount` instead.\"\n4. **Approve with conditions.** \"Approve once you add test for edge case X\" is clearer than \"request changes\" without hope of resolution.\n5. **Review is timely.** PR waiting 3 days for review = slow merge, merge conflicts. Target 24-hour reviews.\n\n### Anti-patterns to Avoid\n\n- Nitpicky review. Style issues that linter should catch. Wastes time.\n- No structure. Review comments are random. Reviewer missed security issue because distracted by naming.\n- Slow reviews. PR sits for days; context is lost.\n\n### Checklist\n\n- [ ] Linter passes (code style is automated)\n- [ ] Tests are included (unit, integration, or E2E)\n- [ ] Error handling is present (no silent failures)\n- [ ] Security considerations (auth, input validation, no secrets)\n- [ ] Performance is reasonable (no N+1 queries, no memory leaks)\n- [ ] Documentation is updated (code comments, README)\n- [ ] Commit messages are clear (not \"WIP\" or \"fix stuff\")\n- [ ] Edge cases are handled (null, empty, boundary conditions)\n- [ ] PR is under 400 lines (reviewable in <30min)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "pr review, code review, diff review"
+      }
     },
     {
       "name": "planning-multi-agent-work",
@@ -1762,25 +1110,10 @@
         "agent coordination",
         "task decomposition"
       ],
-      "recommended_supporting_files": [
-        "references/multi-agent-patterns.md",
-        "templates/parallel-plan-template.md"
-      ],
-      "implementation_notes": [
-        "Keep sub-tasks independent and route large evidence into files."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Delegation and Async Coordination\n\nMulti-agent systems (multiple Claude instances or team members working simultaneously) require clear specs, ownership, and sync points. The skill is decomposing tasks so agents can work in parallel.\n\n### When to Use\n\n- Large codebase changes requiring multiple agents/people\n- Parallel work streams (API + web + database)\n- Urgent tasks needing rapid execution\n\n### Decision Framework for Claude Code Skills and Agents\n\n1. **Spec is written first.** Agent reads spec; executes independently. No back-and-forth.\n2. **Ownership is clear.** Agent A builds API endpoints; Agent B builds UI; Agent C integrates. No overlap or duplication.\n3. **Interfaces are stable.** Agent B needs to know API contract (endpoint, request/response shape). Defined in spec, not emergent.\n4. **Async by default.** Agents work on different files/systems; no waiting. Reduces coordination overhead.\n5. **Sync points are explicit.** After API is built, Agent B starts UI. Spec defines these dependencies.\n\n### Anti-patterns to Avoid\n\n- Vague spec. \"Build something.\" Agent wastes time guessing intent.\n- Overlapping ownership. Two agents build same component; merge conflict.\n- Synchronous work. Agent A builds API, Agent B waits. Serialize work unnecessarily.\n\n### Checklist\n\n- [ ] Spec is written and shared (clear intent, requirements)\n- [ ] Ownership is assigned (Agent A: API, Agent B: UI)\n- [ ] Interfaces are defined (API contract, data format)\n- [ ] Dependencies are documented (A finishes before B starts)\n- [ ] Agents work on different files/systems (no conflicts)\n- [ ] Sync points are scheduled (integration check-in)\n- [ ] Progress is tracked (status updates)\n- [ ] Integration testing is planned (all components together)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "subagents, parallel work, agent coordination"
+      }
     },
     {
       "name": "building-rag-ready-docs",
@@ -1800,25 +1133,10 @@
         "vector db docs",
         "knowledge base"
       ],
-      "recommended_supporting_files": [
-        "references/rag-doc-patterns.md",
-        "templates/doc-structure-template.md"
-      ],
-      "implementation_notes": [
-        "Focus on consistent headings, examples, and low-ambiguity naming."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Documentation for AI Integration\n\nRAG (Retrieval-Augmented Generation) systems fetch relevant docs to answer questions. Good RAG docs are searchable, structured, and comprehensive. The skill is organizing documentation so AI can retrieve and use it.\n\n### When to Use\n\n- Building a chatbot or AI assistant\n- Existing docs are disorganized or scattered\n- Need to enable AI to answer codebase questions\n\n### Decision Framework\n\n1. **Structure for retrieval.** Docs are chunked by topic (API endpoints, configuration options). AI can retrieve relevant chunks.\n2. **Headings are descriptive.** \"Authentication\" is vague; \"JWT Token Rotation and Expiry\" is specific. Improves retrieval relevance.\n3. **Examples are concrete.** Code snippets, curl requests, expected responses. AI can extract and reuse.\n4. **Cross-references are links.** Markdown links to related docs. Helps AI navigate.\n5. **Metadata helps indexing.** Tags (frontend, backend, security) or categories. Narrows search space.\n\n### Anti-patterns to Avoid\n\n- Unstructured docs. Walls of text. Hard to retrieve relevant section.\n- No examples. AI doesn't know how to use API or config.\n- Scattered docs. README, wiki, Notion, wiki.js\u2014docs everywhere. AI doesn't know where to look.\n\n### Checklist\n\n- [ ] Docs are organized by topic (API, config, deployment, troubleshooting)\n- [ ] Each doc has descriptive headings (not generic)\n- [ ] Examples are included (code snippets, curl requests, expected output)\n- [ ] Docs are linked (cross-references via markdown)\n- [ ] Docs are searchable (indexed in RAG system)\n- [ ] Metadata (tags, categories) helps retrieval\n- [ ] Docs are up-to-date (reviewed quarterly)\n- [ ] AI can retrieve and accurately answer questions using docs\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "rag docs, retrieval, chunking"
+      }
     },
     {
       "name": "turning-runbooks-into-skills",
@@ -1836,25 +1154,10 @@
         "codify process",
         "repeatable workflow"
       ],
-      "recommended_supporting_files": [
-        "templates/runbook-conversion-template.md",
-        "references/workflow-skill-guidelines.md"
-      ],
-      "implementation_notes": [
-        "Strong fit for deployment, incident, and compliance workflows."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Automation from Manual Procedures\n\nRunbooks are procedures (incident response, deployment, backups). Skills automate them. The skill is identifying automation opportunities and building reliable automation.\n\n### When to Use\n\n- Runbook is followed >1x/month\n- Runbook is error-prone (forgotten steps, manual mistakes)\n- Runbook is long (>10 steps)\n\n### Decision Framework\n\n1. **Runbook step \u2192 skill command.** Manual: \"SSH to server, check logs, restart.\" Skill: \"Check logs for errors, alert if restart needed.\"\n2. **Idempotency is essential.** Skill runs twice (accidental re-trigger)? Same result. No side effects.\n3. **Observability is built-in.** Skill logs actions taken (what was done, why, result). On-call can see what happened.\n4. **Fallback is manual.** Skill automates happy path. If something's wrong, escalate to human. Don't blindly execute.\n5. **Skill is tested in staging first.** Before trusting automation in production, test on staging.\n\n### Anti-patterns to Avoid\n\n- Blind automation. Skill executes without validation. Corrupt state = disaster.\n- Non-idempotent automation. Skill runs twice; creates duplicate entries or state conflict.\n- No visibility. Skill silently fails. Team doesn't know until user complains.\n\n### Checklist\n\n- [ ] Runbook is well-documented (each step is clear)\n- [ ] Runbook is error-prone (manual steps, easy to forget)\n- [ ] Skill implements key steps (not all\u2014keep human in loop for validation)\n- [ ] Skill is idempotent (safe to run twice)\n- [ ] Skill logs actions taken\n- [ ] Skill validates state before acting (no blindly executing)\n- [ ] Skill has fallback to manual (escalates if something's wrong)\n- [ ] Skill is tested in staging before production\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "runbook to skill, operational checklist, codify process"
+      }
     },
     {
       "name": "cataloging-codebase-patterns",
@@ -1873,25 +1176,10 @@
         "repository conventions",
         "architecture map"
       ],
-      "recommended_supporting_files": [
-        "templates/pattern-catalog-template.md",
-        "references/repo-reading-checklist.md"
-      ],
-      "implementation_notes": [
-        "This helps keep skills grounded in actual code rather than generic advice."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Mining Code for Reusable Patterns\n\nLarge codebases have repeated patterns (API endpoint structure, form handling, error management). The skill is identifying and documenting patterns so new code follows them consistently.\n\n### When to Use\n\n- Codebase is >100K LOC with inconsistent patterns\n- Onboarding is slow due to unclear patterns\n- Code review repeats \"we usually do this differently\"\n\n### Decision Framework\n\n1. **Pattern is explicit, not implicit.** \"Use react-query for API fetching\" vs. \"some use fetch, some axios, some react-query.\" Explicit wins.\n2. **Pattern is documented with examples.** Not just \"use error boundary for error handling.\" Show example, explain, show wrong way.\n3. **Pattern is enforced by linting or convention.** Auto-enforcement is preferred (linting); manual review is fallback (conventions doc).\n4. **Pattern is discoverable.** Developers know where to find it (ENGINEERING.md, Storybook, wiki).\n5. **Pattern evolves.** \"We used to do X; now we do Y\" is documented. Reduces confusion.\n\n### Anti-patterns to Avoid\n\n- Implicit patterns. Experienced dev knows; new dev guesses.\n- Inconsistent enforcement. Some code follows pattern; some doesn't. Confusing.\n- Outdated patterns. \"Old code uses middleware; new code uses hooks.\" Docs don't clarify which is preferred.\n\n### Checklist\n\n- [ ] Patterns are identified (API endpoints, form handling, error handling, etc.)\n- [ ] Patterns are documented with examples (good and bad code)\n- [ ] Examples are from actual codebase (not pseudocode)\n- [ ] New code follows patterns (enforced in code review)\n- [ ] Patterns are versioned (deprecated patterns are marked)\n- [ ] Patterns are discoverable (linked from ENGINEERING.md)\n- [ ] New dev learns patterns from docs, not osmosis\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "codebase patterns, preferred patterns, repository conventions"
+      }
     },
     {
       "name": "evaluating-tooling-choices",
@@ -1909,25 +1197,10 @@
         "framework evaluation",
         "build vs buy"
       ],
-      "recommended_supporting_files": [
-        "templates/tooling-evaluation-template.md",
-        "references/decision-criteria.md"
-      ],
-      "implementation_notes": [
-        "Keep tradeoffs explicit and tied to team constraints rather than hype."
-      ],
-      "suggested_frontmatter": {},
-      "source_urls": [
-        "https://code.claude.com/docs/en/skills",
-        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
-        "https://github.com/trailofbits/skills",
-        "https://github.com/Aaronontheweb/dotnet-skills",
-        "https://github.com/alirezarezvani/claude-skills",
-        "https://github.com/slavingia/skills",
-        "https://x.com/CodevolutionWeb/status/2034683638382506063",
-        "https://x.com/JJEnglert/status/2038639244038521068",
-        "https://x.com/ghumare64/status/2014246449593176406"
-      ]
+      "skill_body": "## Decision Framework for Build Tools and Dependencies\n\nChoosing the right tool (bundler, testing framework, ORM) affects productivity and maintenance burden for years. The skill is evaluating options systematically and documenting decisions.\n\n### When to Use\n\n- Choosing tech for new project\n- Auditing existing tools (are they still the best choice?)\n- Team is considering migration (webpack \u2192 Vite, Jest \u2192 Vitest)\n\n### Decision Framework\n\n1. **Evaluation criteria.** Performance, maintainability, community, learning curve, cost. Weight by importance to project.\n2. **Trade-offs are explicit.** Webpack is slower than Vite, but has more loaders. Vitest is newer but faster. Document tradeoffs.\n3. **Proof of concept.** Don't commit based on docs. Build prototype with candidate tool. Measure, compare.\n4. **Decision record.** ADR (Architecture Decision Record) documents: what was the decision, why this tool, alternatives considered, tradeoffs. Helps future decisions.\n5. **Sunsetting strategy.** If switching tools later, is it easy? If tool is proprietary, can you escape? Low switching cost preferred.\n\n### Anti-patterns to Avoid\n\n- Trendy choice. \"Everyone uses X.\" X might not suit your project.\n- One person decides. Tool is imposed on team. Resistance and resentment.\n- No tradeoff analysis. Choose based on one metric (speed, not maintainability).\n\n### Checklist\n\n- [ ] Evaluation criteria are defined and weighted\n- [ ] Candidates are evaluated against criteria\n- [ ] Proof of concept is built (not just research)\n- [ ] Decision is documented (ADR format)\n- [ ] Team understands tradeoffs and rationale\n- [ ] Migration cost is estimated (if switching later)\n- [ ] Tool is evaluated annually (still best choice?)\n\n",
+      "frontmatter_overrides": {
+        "when_to_use": "tool comparison, library choice, framework evaluation"
+      }
     }
   ],
   "maintenance_policy": {
