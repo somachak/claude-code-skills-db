@@ -1,0 +1,1938 @@
+{
+  "version": "2026-04-14",
+  "generated_at": "2026-04-14T15:01:00+01:00",
+  "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
+  "skill_blueprint": {
+    "required_fields": [
+      "name",
+      "description"
+    ],
+    "recommended_fields": [
+      "when_to_use",
+      "argument-hint",
+      "allowed-tools",
+      "paths",
+      "disable-model-invocation",
+      "user-invocable"
+    ],
+    "name_rules": [
+      "Use lowercase letters, numbers, and hyphens only",
+      "Keep names at or below 64 characters",
+      "Do not include reserved words such as anthropic or claude",
+      "Prefer clear activity-oriented names over vague names like helper or utils"
+    ],
+    "description_rules": [
+      "Write in third person",
+      "State what the skill does and when to use it",
+      "Include concrete trigger terms developers naturally use",
+      "Keep it concise enough for reliable discovery"
+    ],
+    "body_rules": [
+      "Keep SKILL.md focused and move large references into supporting files",
+      "Reference support files directly from SKILL.md and keep references one level deep",
+      "Bundle scripts for deterministic checks, validation, or report generation",
+      "Use standing instructions rather than one-off task steps",
+      "Build evaluation scenarios and validator loops before expanding the skill"
+    ]
+  },
+  "categories": {
+    "frontend": "UI architecture, component systems, accessibility, performance, and browser-facing workflows.",
+    "backend": "APIs, services, distributed systems, authentication, jobs, and production runtime concerns.",
+    "data": "Schema design, SQL quality, migrations, analytics events, pipelines, and search/indexing.",
+    "testing": "Unit, integration, E2E, regression, bug reproduction, and test feedback loops.",
+    "platform": "CI/CD, containers, infrastructure, monorepos, release workflows, and developer experience.",
+    "security-reliability": "Threat modeling, secret management, observability, resiliency, incidents, and recovery.",
+    "ai-productivity": "Skill extraction, conventions, PR review, agent orchestration, docs, and codebase intelligence."
+  },
+  "skills": [
+    {
+      "name": "building-accessible-ui",
+      "title": "Accessible UI Review",
+      "category": "frontend",
+      "audience": [
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks. Use when building or reviewing component libraries, forms, dialogs, navigation, and responsive interfaces.",
+      "trigger_phrases": [
+        "accessibility audit",
+        "keyboard navigation",
+        "aria",
+        "screen reader",
+        "wcag",
+        "semantic html"
+      ],
+      "recommended_supporting_files": [
+        "references/accessibility-checklist.md",
+        "references/component-a11y-patterns.md",
+        "scripts/ui-a11y-audit.sh"
+      ],
+      "implementation_notes": [
+        "Prefer deterministic checks where possible, then finish with manual interaction review.",
+        "Pair well with browser-based verification and component-level examples."
+      ],
+      "suggested_frontmatter": {
+        "allowed-tools": "Read Grep Bash(npm run *)",
+        "when_to_use": "Use for React, Vue, HTML, CSS, form, modal, menu, table, and design-system tasks."
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-component-systems",
+      "title": "Component System Design",
+      "category": "frontend",
+      "audience": [
+        "front-end",
+        "design-system",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.",
+      "trigger_phrases": [
+        "component library",
+        "design system",
+        "props api",
+        "slot patterns",
+        "headless ui"
+      ],
+      "recommended_supporting_files": [
+        "references/component-api-guidelines.md",
+        "references/token-strategy.md",
+        "examples/component-patterns.md"
+      ],
+      "implementation_notes": [
+        "Keep rules opinionated and consistent across frameworks.",
+        "Include anti-patterns such as prop explosion and style leakage."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "debugging-react-rendering",
+      "title": "React Rendering Debugger",
+      "category": "frontend",
+      "audience": [
+        "front-end"
+      ],
+      "priority": "core",
+      "description": "Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications. Use when UI feels slow, renders are noisy, or component updates are confusing.",
+      "trigger_phrases": [
+        "rerender",
+        "useeffect bug",
+        "memoization",
+        "stale closure",
+        "react performance"
+      ],
+      "recommended_supporting_files": [
+        "references/react-rendering-checklist.md",
+        "examples/common-render-bugs.md"
+      ],
+      "implementation_notes": [
+        "Focus on render cause tracing, dependency analysis, and before-after verification."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "hardening-forms-and-validation",
+      "title": "Form and Validation Hardening",
+      "category": "frontend",
+      "audience": [
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.",
+      "trigger_phrases": [
+        "form validation",
+        "error states",
+        "submit flow",
+        "field validation",
+        "optimistic ui"
+      ],
+      "recommended_supporting_files": [
+        "references/form-state-patterns.md",
+        "references/error-copy-checklist.md",
+        "examples/form-edge-cases.md"
+      ],
+      "implementation_notes": [
+        "Cover disabled states, loading states, retry paths, and schema parity with the backend."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "modern-css-architecture",
+      "title": "Modern CSS Architecture",
+      "category": "frontend",
+      "audience": [
+        "front-end"
+      ],
+      "priority": "core",
+      "description": "Improves CSS architecture, token usage, layout consistency, and responsive styling strategy. Use when refactoring styling systems, Tailwind conventions, CSS modules, or shared UI foundations.",
+      "trigger_phrases": [
+        "tailwind conventions",
+        "css architecture",
+        "design tokens",
+        "responsive layout",
+        "utility classes"
+      ],
+      "recommended_supporting_files": [
+        "references/css-architecture-guide.md",
+        "references/token-usage.md",
+        "examples/layout-patterns.md"
+      ],
+      "implementation_notes": [
+        "Keep naming, spacing, and token rules short enough to load reliably."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "optimizing-bundle-performance",
+      "title": "Bundle Performance Optimizer",
+      "category": "frontend",
+      "audience": [
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks. Use when load time, bundle size, or interaction latency becomes a concern.",
+      "trigger_phrases": [
+        "bundle size",
+        "code splitting",
+        "hydration",
+        "lazy loading",
+        "webpack analyze",
+        "vite"
+      ],
+      "recommended_supporting_files": [
+        "references/bundle-budget-guide.md",
+        "examples/dependency-triage.md",
+        "scripts/analyze-bundle.sh"
+      ],
+      "implementation_notes": [
+        "Prefer measurable budgets and build output analysis over generic advice."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "verifying-responsive-layouts",
+      "title": "Responsive Layout Verifier",
+      "category": "frontend",
+      "audience": [
+        "front-end"
+      ],
+      "priority": "core",
+      "description": "Checks breakpoint behavior, overflow, spacing collapse, and layout resilience across screen sizes. Use when shipping pages, dashboards, marketing sites, or mobile-heavy workflows.",
+      "trigger_phrases": [
+        "responsive bug",
+        "breakpoints",
+        "mobile layout",
+        "overflow",
+        "tablet layout"
+      ],
+      "recommended_supporting_files": [
+        "references/responsive-checklist.md",
+        "examples/common-layout-failures.md"
+      ],
+      "implementation_notes": [
+        "Combine CSS inspection with browser-based viewport checks."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-frontend-security",
+      "title": "Frontend Security Review",
+      "category": "frontend",
+      "audience": [
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes. Use when handling user content, auth state, embeds, or rich text.",
+      "trigger_phrases": [
+        "xss",
+        "unsafe html",
+        "token storage",
+        "content security",
+        "frontend auth"
+      ],
+      "recommended_supporting_files": [
+        "references/frontend-threats.md",
+        "examples/rendering-risks.md"
+      ],
+      "implementation_notes": [
+        "Keep security guidance concrete and tied to actual UI code paths."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-rest-apis",
+      "title": "REST API Design",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts. Use when creating or refactoring HTTP services and public or internal APIs.",
+      "trigger_phrases": [
+        "rest api",
+        "http api",
+        "pagination",
+        "error contract",
+        "resource design"
+      ],
+      "recommended_supporting_files": [
+        "references/rest-api-checklist.md",
+        "examples/error-response-patterns.md",
+        "examples/pagination-patterns.md"
+      ],
+      "implementation_notes": [
+        "Emphasize contract stability and smallest safe change."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-graphql-apis",
+      "title": "GraphQL API Design",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs GraphQL schemas, resolver boundaries, batching, and authorization rules. Use when building graphs, federated services, or resolver-heavy integrations.",
+      "trigger_phrases": [
+        "graphql schema",
+        "resolver performance",
+        "n+1",
+        "federation",
+        "graphql auth"
+      ],
+      "recommended_supporting_files": [
+        "references/graphql-schema-guide.md",
+        "references/resolver-checklist.md"
+      ],
+      "implementation_notes": [
+        "Include explicit notes on batching, caching, and schema evolution."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "building-background-jobs",
+      "title": "Background Job Builder",
+      "category": "backend",
+      "audience": [
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling. Use when adding workers, task queues, cron-style jobs, or async processing pipelines.",
+      "trigger_phrases": [
+        "queue worker",
+        "retry logic",
+        "idempotency",
+        "scheduled job",
+        "background task"
+      ],
+      "recommended_supporting_files": [
+        "references/job-reliability-guide.md",
+        "examples/idempotency-patterns.md"
+      ],
+      "implementation_notes": [
+        "Push for explicit retry classes, deduplication, and observability hooks."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "implementing-auth-flows",
+      "title": "Authentication Flow Builder",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions. Use when shipping login, SSO, OAuth, password reset, invitation, or RBAC features.",
+      "trigger_phrases": [
+        "oauth",
+        "sso",
+        "session",
+        "jwt",
+        "rbac",
+        "password reset"
+      ],
+      "recommended_supporting_files": [
+        "references/auth-flow-maps.md",
+        "references/authorization-checklist.md",
+        "examples/auth-edge-cases.md"
+      ],
+      "implementation_notes": [
+        "Treat auth changes as high-risk and recommend validator loops and threat review."
+      ],
+      "suggested_frontmatter": {
+        "disable-model-invocation": true,
+        "allowed-tools": "Read Grep Bash(pytest *) Bash(npm test *)"
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "handling-webhooks",
+      "title": "Webhook Integration Hardening",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Builds and reviews webhook consumers for signature verification, retries, deduplication, ordering issues, and replay safety. Use when integrating payment, messaging, or external event providers.",
+      "trigger_phrases": [
+        "webhook",
+        "signature verification",
+        "replay attack",
+        "event dedupe",
+        "provider integration"
+      ],
+      "recommended_supporting_files": [
+        "references/webhook-checklist.md",
+        "examples/provider-failure-modes.md"
+      ],
+      "implementation_notes": [
+        "Center the skill on authenticity, retries, and safe reprocessing."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-backend-concurrency",
+      "title": "Backend Concurrency Review",
+      "category": "backend",
+      "audience": [
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Reviews concurrent backend code for race conditions, deadlocks, ordering bugs, lock contention, and inconsistent side effects. Use when services coordinate shared state, workers, or high-throughput workloads.",
+      "trigger_phrases": [
+        "race condition",
+        "deadlock",
+        "concurrency bug",
+        "parallel worker",
+        "lock contention"
+      ],
+      "recommended_supporting_files": [
+        "references/concurrency-review-checklist.md",
+        "examples/common-races.md"
+      ],
+      "implementation_notes": [
+        "Good fit for Go, Java, Python, .NET, and Node worker systems."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "building-event-driven-services",
+      "title": "Event-Driven Service Design",
+      "category": "backend",
+      "audience": [
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation. Use when adopting queues, streams, outbox patterns, or domain events.",
+      "trigger_phrases": [
+        "event driven",
+        "kafka",
+        "queue design",
+        "outbox pattern",
+        "consumer group"
+      ],
+      "recommended_supporting_files": [
+        "references/event-contracts.md",
+        "references/outbox-guide.md"
+      ],
+      "implementation_notes": [
+        "Make delivery semantics and failure assumptions visible."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-caching-strategies",
+      "title": "Caching Strategy Review",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks. Use when introducing Redis, CDN, query, or application-level caching.",
+      "trigger_phrases": [
+        "cache invalidation",
+        "redis",
+        "ttl",
+        "stale data",
+        "cache key"
+      ],
+      "recommended_supporting_files": [
+        "references/cache-patterns.md",
+        "examples/invalidation-strategies.md"
+      ],
+      "implementation_notes": [
+        "Prefer workload-specific guidance over generic caching advice."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "hardening-file-uploads",
+      "title": "File Upload Hardening",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Secures file upload flows for validation, scanning, storage isolation, content-type trust, and post-processing safety. Use when handling avatars, attachments, imports, or user-generated media.",
+      "trigger_phrases": [
+        "file upload",
+        "content type",
+        "virus scan",
+        "attachment",
+        "storage isolation"
+      ],
+      "recommended_supporting_files": [
+        "references/upload-security-checklist.md",
+        "examples/upload-edge-cases.md"
+      ],
+      "implementation_notes": [
+        "Treat parser execution and storage exposure as first-class concerns."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "documenting-api-contracts",
+      "title": "API Contract Documentation",
+      "category": "backend",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Produces concise API contract documentation, examples, and change notes that stay aligned with code. Use when shipping endpoints, SDKs, integrations, or internal platform surfaces.",
+      "trigger_phrases": [
+        "openapi",
+        "api docs",
+        "integration guide",
+        "contract examples",
+        "sdk docs"
+      ],
+      "recommended_supporting_files": [
+        "references/api-doc-style.md",
+        "templates/endpoint-template.md",
+        "examples/contract-examples.md"
+      ],
+      "implementation_notes": [
+        "Pair especially well with schema-first or OpenAPI-first teams."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-database-schemas",
+      "title": "Database Schema Designer",
+      "category": "data",
+      "audience": [
+        "back-end",
+        "data",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems. Use when creating new tables, domain models, or storage-backed product features.",
+      "trigger_phrases": [
+        "database schema",
+        "table design",
+        "foreign keys",
+        "normalization",
+        "relational model"
+      ],
+      "recommended_supporting_files": [
+        "references/schema-design-guide.md",
+        "examples/table-patterns.md"
+      ],
+      "implementation_notes": [
+        "Keep business invariants explicit in the schema guidance."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-sql-performance",
+      "title": "SQL Performance Review",
+      "category": "data",
+      "audience": [
+        "back-end",
+        "data"
+      ],
+      "priority": "core",
+      "description": "Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans. Use when queries slow down APIs, jobs, dashboards, or analytics pipelines.",
+      "trigger_phrases": [
+        "slow query",
+        "sql tuning",
+        "index",
+        "query plan",
+        "postgres",
+        "mysql"
+      ],
+      "recommended_supporting_files": [
+        "references/sql-review-checklist.md",
+        "examples/index-patterns.md"
+      ],
+      "implementation_notes": [
+        "Require explain-plan thinking and measurable before-after checks."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "planning-data-migrations",
+      "title": "Data Migration Planner",
+      "category": "data",
+      "audience": [
+        "back-end",
+        "data"
+      ],
+      "priority": "core",
+      "description": "Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks. Use when changing live data models or moving data between stores.",
+      "trigger_phrases": [
+        "migration plan",
+        "backfill",
+        "zero downtime migration",
+        "rollout sequencing",
+        "data change"
+      ],
+      "recommended_supporting_files": [
+        "references/migration-checklist.md",
+        "templates/migration-plan-template.md"
+      ],
+      "implementation_notes": [
+        "Favor plan-validate-execute workflows and explicit rollback points."
+      ],
+      "suggested_frontmatter": {
+        "disable-model-invocation": true
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-search-and-indexes",
+      "title": "Search and Index Design",
+      "category": "data",
+      "audience": [
+        "back-end",
+        "data",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs search schemas, indexing strategies, ranking tradeoffs, and query filters. Use when implementing application search, faceting, vector or lexical retrieval, or hybrid discovery features.",
+      "trigger_phrases": [
+        "search index",
+        "elasticsearch",
+        "meilisearch",
+        "ranking",
+        "facets",
+        "vector search"
+      ],
+      "recommended_supporting_files": [
+        "references/search-design-guide.md",
+        "examples/filtering-patterns.md"
+      ],
+      "implementation_notes": [
+        "Cover query intent, recall, ranking, and freshness separately."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "modeling-analytics-events",
+      "title": "Analytics Event Modeling",
+      "category": "data",
+      "audience": [
+        "data",
+        "full-stack",
+        "product"
+      ],
+      "priority": "core",
+      "description": "Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis. Use when adding instrumentation to frontend or backend product flows.",
+      "trigger_phrases": [
+        "tracking plan",
+        "analytics events",
+        "event naming",
+        "instrumentation",
+        "product analytics"
+      ],
+      "recommended_supporting_files": [
+        "references/event-taxonomy.md",
+        "templates/tracking-plan-template.md"
+      ],
+      "implementation_notes": [
+        "Stress consistency, versioning, and privacy-aware field selection."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "validating-etl-pipelines",
+      "title": "ETL Pipeline Validator",
+      "category": "data",
+      "audience": [
+        "data",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors. Use when building ingestion jobs, warehouse transforms, or sync systems.",
+      "trigger_phrases": [
+        "etl validation",
+        "schema drift",
+        "pipeline freshness",
+        "reconciliation",
+        "warehouse"
+      ],
+      "recommended_supporting_files": [
+        "references/pipeline-checklist.md",
+        "examples/data-reconciliation.md",
+        "scripts/validate-pipeline.py"
+      ],
+      "implementation_notes": [
+        "Use machine-verifiable checks where possible and preserve sample failure diagnostics."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "generating-unit-tests",
+      "title": "Unit Test Generator",
+      "category": "testing",
+      "audience": [
+        "front-end",
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.",
+      "trigger_phrases": [
+        "unit tests",
+        "edge case tests",
+        "regression test",
+        "branch coverage"
+      ],
+      "recommended_supporting_files": [
+        "references/unit-test-checklist.md",
+        "examples/test-case-matrix.md"
+      ],
+      "implementation_notes": [
+        "Bias toward behavior-focused tests and small deterministic fixtures."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "designing-integration-tests",
+      "title": "Integration Test Designer",
+      "category": "testing",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Designs integration tests around service contracts, persistence, side effects, and environment setup. Use when changes cross module, network, storage, or framework boundaries.",
+      "trigger_phrases": [
+        "integration test",
+        "service contract",
+        "testcontainers",
+        "db integration",
+        "api integration"
+      ],
+      "recommended_supporting_files": [
+        "references/integration-test-guide.md",
+        "examples/environment-fixtures.md"
+      ],
+      "implementation_notes": [
+        "Use realistic dependencies but keep setup repeatable and observable."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "stabilizing-e2e-tests",
+      "title": "E2E Test Stabilizer",
+      "category": "testing",
+      "audience": [
+        "front-end",
+        "full-stack",
+        "qa"
+      ],
+      "priority": "core",
+      "description": "Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes. Use when browser tests are brittle or slow.",
+      "trigger_phrases": [
+        "playwright flake",
+        "cypress flake",
+        "e2e instability",
+        "retrying tests",
+        "waiting for ui"
+      ],
+      "recommended_supporting_files": [
+        "references/e2e-stability-guide.md",
+        "examples/flaky-patterns.md"
+      ],
+      "implementation_notes": [
+        "Lean on deterministic selectors, network awareness, and state setup shortcuts."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-test-coverage",
+      "title": "Coverage Gap Reviewer",
+      "category": "testing",
+      "audience": [
+        "front-end",
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews what is not tested and prioritizes the highest-risk missing scenarios. Use when shipping new code, after large refactors, or after incidents that revealed blind spots.",
+      "trigger_phrases": [
+        "coverage gaps",
+        "missing tests",
+        "risk-based testing",
+        "test blind spots"
+      ],
+      "recommended_supporting_files": [
+        "references/coverage-prioritization.md",
+        "templates/gap-review-template.md"
+      ],
+      "implementation_notes": [
+        "Focus on business risk and failure probability, not raw percentages alone."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "snapshot-regression-checks",
+      "title": "Snapshot Regression Checks",
+      "category": "testing",
+      "audience": [
+        "front-end",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization. Use when outputs should remain consistent over time.",
+      "trigger_phrases": [
+        "snapshot testing",
+        "golden file",
+        "approval testing",
+        "email snapshot"
+      ],
+      "recommended_supporting_files": [
+        "references/snapshot-guidelines.md",
+        "examples/stable-output-patterns.md"
+      ],
+      "implementation_notes": [
+        "Include criteria for when snapshots are appropriate and when they are noisy."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reproducing-bugs-from-logs",
+      "title": "Bug Reproduction From Logs",
+      "category": "testing",
+      "audience": [
+        "back-end",
+        "full-stack",
+        "qa"
+      ],
+      "priority": "core",
+      "description": "Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.",
+      "trigger_phrases": [
+        "reproduce bug",
+        "logs to test",
+        "incident reproduction",
+        "trace analysis"
+      ],
+      "recommended_supporting_files": [
+        "references/bug-reproduction-flow.md",
+        "templates/regression-test-template.md"
+      ],
+      "implementation_notes": [
+        "Start from raw evidence and preserve the minimal failing case."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "hardening-ci-pipelines",
+      "title": "CI Pipeline Hardening",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "full-stack",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation. Use when builds are slow, flaky, expensive, or hard to trust.",
+      "trigger_phrases": [
+        "ci pipeline",
+        "github actions",
+        "flaky build",
+        "test matrix",
+        "build caching"
+      ],
+      "recommended_supporting_files": [
+        "references/ci-checklist.md",
+        "examples/workflow-patterns.md"
+      ],
+      "implementation_notes": [
+        "Push for fast feedback loops and clear quality gates."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "shipping-containerized-services",
+      "title": "Containerized Service Shipping",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks. Use when containerizing APIs, workers, or internal tools.",
+      "trigger_phrases": [
+        "dockerfile",
+        "container image",
+        "kubernetes deploy",
+        "runtime config",
+        "image size"
+      ],
+      "recommended_supporting_files": [
+        "references/container-guide.md",
+        "examples/dockerfile-patterns.md"
+      ],
+      "implementation_notes": [
+        "Cover build caching, non-root execution, and health checks."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "managing-infrastructure-as-code",
+      "title": "Infrastructure as Code Review",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns. Use when working with Terraform, Pulumi, or cloud templates.",
+      "trigger_phrases": [
+        "terraform review",
+        "pulumi",
+        "iac",
+        "infrastructure module",
+        "cloud deploy"
+      ],
+      "recommended_supporting_files": [
+        "references/iac-review-checklist.md",
+        "examples/environment-patterns.md"
+      ],
+      "implementation_notes": [
+        "Encourage explicit change plans and state safety."
+      ],
+      "suggested_frontmatter": {
+        "disable-model-invocation": true
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "improving-developer-experience",
+      "title": "Developer Experience Optimizer",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow. Use when repos are hard to bootstrap, inconsistent, or slow to work in.",
+      "trigger_phrases": [
+        "developer experience",
+        "onboarding",
+        "dev setup",
+        "scripts cleanup",
+        "repo ergonomics"
+      ],
+      "recommended_supporting_files": [
+        "references/devex-checklist.md",
+        "templates/onboarding-template.md"
+      ],
+      "implementation_notes": [
+        "Value clear defaults, one-command setup, and smaller cognitive load."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "maintaining-monorepos",
+      "title": "Monorepo Maintenance",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation. Use when scaling packages, apps, services, and shared libraries together.",
+      "trigger_phrases": [
+        "monorepo",
+        "workspace graph",
+        "nx",
+        "turbo",
+        "package boundaries"
+      ],
+      "recommended_supporting_files": [
+        "references/monorepo-patterns.md",
+        "examples/package-boundary-rules.md"
+      ],
+      "implementation_notes": [
+        "Keep guidance aligned with dependency direction and validation scope."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "running-release-checklists",
+      "title": "Release Checklist Runner",
+      "category": "platform",
+      "audience": [
+        "platform",
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification. Use when preparing staging or production releases.",
+      "trigger_phrases": [
+        "release checklist",
+        "go live",
+        "rollback plan",
+        "launch readiness"
+      ],
+      "recommended_supporting_files": [
+        "templates/release-checklist.md",
+        "templates/post-release-review.md"
+      ],
+      "implementation_notes": [
+        "Best as a workflow skill with explicit validator steps."
+      ],
+      "suggested_frontmatter": {
+        "disable-model-invocation": true,
+        "allowed-tools": "Read Grep Bash(git *)"
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "threat-modeling-features",
+      "title": "Feature Threat Modeling",
+      "category": "security-reliability",
+      "audience": [
+        "security",
+        "back-end",
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations. Use when reviewing auth changes, payments, admin tools, integrations, or other sensitive workflows.",
+      "trigger_phrases": [
+        "threat model",
+        "attack surface",
+        "security review",
+        "trust boundary",
+        "abuse case"
+      ],
+      "recommended_supporting_files": [
+        "templates/threat-model-template.md",
+        "references/common-web-threats.md"
+      ],
+      "implementation_notes": [
+        "Keep the method lightweight enough for regular use but concrete enough to drive mitigations."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "auditing-secrets-and-config",
+      "title": "Secrets and Config Audit",
+      "category": "security-reliability",
+      "audience": [
+        "security",
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.",
+      "trigger_phrases": [
+        "secrets audit",
+        "env vars",
+        "credential exposure",
+        "config hygiene",
+        "secret rotation"
+      ],
+      "recommended_supporting_files": [
+        "references/secrets-checklist.md",
+        "examples/config-risk-patterns.md"
+      ],
+      "implementation_notes": [
+        "Focus on removal of trust assumptions and safer defaults."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "improving-observability",
+      "title": "Observability Improvement",
+      "category": "security-reliability",
+      "audience": [
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.",
+      "trigger_phrases": [
+        "observability",
+        "tracing",
+        "structured logs",
+        "metrics",
+        "instrumentation"
+      ],
+      "recommended_supporting_files": [
+        "references/observability-guide.md",
+        "templates/instrumentation-plan.md"
+      ],
+      "implementation_notes": [
+        "Tie every recommendation to a concrete debugging or alerting outcome."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "setting-slos-and-alerts",
+      "title": "SLO and Alert Design",
+      "category": "security-reliability",
+      "audience": [
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus. Use when tuning monitoring for APIs, background systems, or customer-facing journeys.",
+      "trigger_phrases": [
+        "slo",
+        "alert fatigue",
+        "slis",
+        "monitoring thresholds",
+        "incident response"
+      ],
+      "recommended_supporting_files": [
+        "references/slo-guide.md",
+        "examples/alert-routing.md"
+      ],
+      "implementation_notes": [
+        "Prefer user-impact signals over infrastructure vanity metrics."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "reviewing-failure-modes",
+      "title": "Failure Mode Review",
+      "category": "security-reliability",
+      "audience": [
+        "back-end",
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews how systems fail under dependency outages, partial writes, retries, and degraded states. Use when services coordinate remote calls, queues, or critical transactions.",
+      "trigger_phrases": [
+        "failure mode",
+        "partial outage",
+        "degraded mode",
+        "retry storm",
+        "fallback"
+      ],
+      "recommended_supporting_files": [
+        "references/failure-mode-checklist.md",
+        "examples/degradation-patterns.md"
+      ],
+      "implementation_notes": [
+        "Center on what users experience and what operators can recover quickly."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "validating-backup-and-restore",
+      "title": "Backup and Restore Validation",
+      "category": "security-reliability",
+      "audience": [
+        "platform",
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Validates backup scope, recovery steps, restore drills, and data integrity assumptions. Use when services store critical operational or customer data.",
+      "trigger_phrases": [
+        "backup restore",
+        "recovery drill",
+        "rpo rto",
+        "disaster recovery",
+        "restore test"
+      ],
+      "recommended_supporting_files": [
+        "templates/restore-drill-template.md",
+        "references/recovery-checklist.md"
+      ],
+      "implementation_notes": [
+        "Treat proof of restoration as more important than backup existence."
+      ],
+      "suggested_frontmatter": {
+        "disable-model-invocation": true
+      },
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "extracting-reusable-skills",
+      "title": "Reusable Skill Extractor",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack",
+        "platform",
+        "ai"
+      ],
+      "priority": "core",
+      "description": "Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.",
+      "trigger_phrases": [
+        "create a skill",
+        "extract workflow",
+        "reuse this process",
+        "codify this pattern"
+      ],
+      "recommended_supporting_files": [
+        "templates/skill-seed-template.md",
+        "references/skill-authoring-rules.md",
+        "templates/eval-template.md"
+      ],
+      "implementation_notes": [
+        "This is the meta-skill that should feed the database over time."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "curating-team-conventions",
+      "title": "Team Convention Curator",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack",
+        "platform"
+      ],
+      "priority": "core",
+      "description": "Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills. Use when teams repeat style, design, or workflow guidance.",
+      "trigger_phrases": [
+        "team conventions",
+        "engineering standards",
+        "best practices",
+        "coding guidelines"
+      ],
+      "recommended_supporting_files": [
+        "references/convention-catalog.md",
+        "templates/convention-template.md"
+      ],
+      "implementation_notes": [
+        "Keep conventions opinionated, testable, and easy to locate by domain."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "generating-pr-reviews",
+      "title": "Pull Request Review Assistant",
+      "category": "ai-productivity",
+      "audience": [
+        "front-end",
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability. Use when preparing PR feedback, self-reviewing changes, or training reviewers.",
+      "trigger_phrases": [
+        "pr review",
+        "code review",
+        "diff review",
+        "merge risk",
+        "review comments"
+      ],
+      "recommended_supporting_files": [
+        "references/pr-review-checklist.md",
+        "templates/review-output-template.md"
+      ],
+      "implementation_notes": [
+        "Best when paired with explicit change summaries and validation commands."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "planning-multi-agent-work",
+      "title": "Multi-Agent Work Planner",
+      "category": "ai-productivity",
+      "audience": [
+        "platform",
+        "ai",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.",
+      "trigger_phrases": [
+        "subagents",
+        "parallel work",
+        "agent coordination",
+        "task decomposition"
+      ],
+      "recommended_supporting_files": [
+        "references/multi-agent-patterns.md",
+        "templates/parallel-plan-template.md"
+      ],
+      "implementation_notes": [
+        "Keep sub-tasks independent and route large evidence into files."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "building-rag-ready-docs",
+      "title": "RAG-Ready Documentation Builder",
+      "category": "ai-productivity",
+      "audience": [
+        "ai",
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology. Use when preparing codebase docs, runbooks, or API guides for AI systems.",
+      "trigger_phrases": [
+        "rag docs",
+        "retrieval",
+        "chunking",
+        "vector db docs",
+        "knowledge base"
+      ],
+      "recommended_supporting_files": [
+        "references/rag-doc-patterns.md",
+        "templates/doc-structure-template.md"
+      ],
+      "implementation_notes": [
+        "Focus on consistent headings, examples, and low-ambiguity naming."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "turning-runbooks-into-skills",
+      "title": "Runbook to Skill Converter",
+      "category": "ai-productivity",
+      "audience": [
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls. Use when a manual checklist is repeated often enough to automate guidance.",
+      "trigger_phrases": [
+        "runbook to skill",
+        "operational checklist",
+        "codify process",
+        "repeatable workflow"
+      ],
+      "recommended_supporting_files": [
+        "templates/runbook-conversion-template.md",
+        "references/workflow-skill-guidelines.md"
+      ],
+      "implementation_notes": [
+        "Strong fit for deployment, incident, and compliance workflows."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "cataloging-codebase-patterns",
+      "title": "Codebase Pattern Cataloger",
+      "category": "ai-productivity",
+      "audience": [
+        "front-end",
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior. Use when onboarding to large codebases or consolidating conventions.",
+      "trigger_phrases": [
+        "codebase patterns",
+        "preferred patterns",
+        "repository conventions",
+        "architecture map"
+      ],
+      "recommended_supporting_files": [
+        "templates/pattern-catalog-template.md",
+        "references/repo-reading-checklist.md"
+      ],
+      "implementation_notes": [
+        "This helps keep skills grounded in actual code rather than generic advice."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    },
+    {
+      "name": "evaluating-tooling-choices",
+      "title": "Engineering Tooling Evaluator",
+      "category": "ai-productivity",
+      "audience": [
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "description": "Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.",
+      "trigger_phrases": [
+        "tool comparison",
+        "library choice",
+        "framework evaluation",
+        "build vs buy"
+      ],
+      "recommended_supporting_files": [
+        "templates/tooling-evaluation-template.md",
+        "references/decision-criteria.md"
+      ],
+      "implementation_notes": [
+        "Keep tradeoffs explicit and tied to team constraints rather than hype."
+      ],
+      "suggested_frontmatter": {},
+      "source_urls": [
+        "https://code.claude.com/docs/en/skills",
+        "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices",
+        "https://github.com/trailofbits/skills",
+        "https://github.com/Aaronontheweb/dotnet-skills",
+        "https://github.com/alirezarezvani/claude-skills",
+        "https://github.com/slavingia/skills",
+        "https://x.com/CodevolutionWeb/status/2034683638382506063",
+        "https://x.com/JJEnglert/status/2038639244038521068",
+        "https://x.com/ghumare64/status/2014246449593176406"
+      ]
+    }
+  ],
+  "maintenance_policy": {
+    "selection_rule": "Prefer official documentation first, then active public repositories with clear structure, then public community tips that are specific and repeatable.",
+    "update_rule": "Add or modify entries only when at least one strong source supports the pattern and the description can clearly state what the skill does and when to use it.",
+    "quality_rule": "Keep names precise, descriptions discovery-friendly, and support files one level deep from SKILL.md."
+  }
+}

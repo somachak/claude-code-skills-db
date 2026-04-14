@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Claude Code Developer Skills Database",
+  "type": "object",
+  "required": [
+    "version",
+    "generated_at",
+    "purpose",
+    "skill_blueprint",
+    "categories",
+    "skills"
+  ],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "skill_blueprint": {
+      "type": "object"
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "category",
+          "audience",
+          "priority",
+          "description",
+          "trigger_phrases",
+          "recommended_supporting_files",
+          "implementation_notes",
+          "suggested_frontmatter",
+          "source_urls"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "audience": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "core",
+              "high",
+              "specialized"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "trigger_phrases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommended_supporting_files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "implementation_notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "suggested_frontmatter": {
+            "type": "object"
+          },
+          "source_urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
