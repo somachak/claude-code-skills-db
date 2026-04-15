@@ -1,8 +1,8 @@
 # Skills Index
 
-_50 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_53 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-04-14` · **Last generated:** `2026-04-14T16:39:58.135074+00:00`
+**Version:** `2026-04-15` · **Last generated:** `2026-04-15T07:13:55.104753Z`
 
 ## Quick search
 
@@ -18,6 +18,7 @@ _50 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`turning-runbooks-into-skills`](./skills/ai-productivity/turning-runbooks-into-skills/SKILL.md) | ai-productivity | core | Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls |
 | [`building-background-jobs`](./skills/backend/building-background-jobs/SKILL.md) | backend | core | Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling |
 | [`building-event-driven-services`](./skills/backend/building-event-driven-services/SKILL.md) | backend | core | Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation |
+| [`configuring-modern-python-projects`](./skills/backend/configuring-modern-python-projects/SKILL.md) | backend | supporting | Configures Python projects with modern tooling — uv for dependencies, ruff for lint and format, ty for type checking, PEP 735 dependency groups, PEP 723 inline script deps |
 | [`designing-graphql-apis`](./skills/backend/designing-graphql-apis/SKILL.md) | backend | core | Designs GraphQL schemas, resolver boundaries, batching, and authorization rules |
 | [`designing-rest-apis`](./skills/backend/designing-rest-apis/SKILL.md) | backend | core | Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts |
 | [`documenting-api-contracts`](./skills/backend/documenting-api-contracts/SKILL.md) | backend | core | Produces concise API contract documentation, examples, and change notes that stay aligned with code |
@@ -47,12 +48,14 @@ _50 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`running-release-checklists`](./skills/platform/running-release-checklists/SKILL.md) | platform | core | Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification |
 | [`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md) | platform | core | Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks |
 | [`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md) | security-reliability | core | Audits secret handling, environment configuration, rotation practices, and accidental exposure risks |
+| [`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md) | security-reliability | supporting | Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases |
 | [`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md) | security-reliability | core | Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations |
 | [`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md) | security-reliability | core | Reviews how systems fail under dependency outages, partial writes, retries, and degraded states |
 | [`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md) | security-reliability | core | Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus |
 | [`threat-modeling-features`](./skills/security-reliability/threat-modeling-features/SKILL.md) | security-reliability | core | Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations |
 | [`validating-backup-and-restore`](./skills/security-reliability/validating-backup-and-restore/SKILL.md) | security-reliability | core | Validates backup scope, recovery steps, restore drills, and data integrity assumptions |
 | [`designing-integration-tests`](./skills/testing/designing-integration-tests/SKILL.md) | testing | core | Designs integration tests around service contracts, persistence, side effects, and environment setup |
+| [`designing-property-based-tests`](./skills/testing/designing-property-based-tests/SKILL.md) | testing | supporting | Identifies code patterns where property-based testing produces stronger coverage than example-based tests — serialization pairs, parsers, normalizers, validators, pure functions |
 | [`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md) | testing | core | Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details |
 | [`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md) | testing | core | Turns logs, traces, and error reports into concrete reproduction steps and regression tests |
 | [`reviewing-test-coverage`](./skills/testing/reviewing-test-coverage/SKILL.md) | testing | core | Reviews what is not tested and prioritizes the highest-risk missing scenarios |
@@ -86,6 +89,8 @@ _50 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `queue worker`, `retry logic`, `idempotency`, `scheduled job`, `background task`
 - **[`building-event-driven-services`](./skills/backend/building-event-driven-services/SKILL.md)** — Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation. Use when adopting queues, streams, outbox patterns, or domain events.
   · triggers: `event driven`, `kafka`, `queue design`, `outbox pattern`, `consumer group`
+- **[`configuring-modern-python-projects`](./skills/backend/configuring-modern-python-projects/SKILL.md)** — Configures Python projects with modern tooling — uv for dependencies, ruff for lint and format, ty for type checking, PEP 735 dependency groups, PEP 723 inline script deps. Use when creating a new FastAPI or Django service, writing standalone scripts, or migrating a project from pip/Poetry/mypy/black.
+  · triggers: `pyproject.toml`, `uv add`, `ruff`, `python tooling`, `migrate from poetry`, `pep 735`
 - **[`designing-graphql-apis`](./skills/backend/designing-graphql-apis/SKILL.md)** — Designs GraphQL schemas, resolver boundaries, batching, and authorization rules. Use when building graphs, federated services, or resolver-heavy integrations.
   · triggers: `graphql schema`, `resolver performance`, `n+1`, `federation`, `graphql auth`
 - **[`designing-rest-apis`](./skills/backend/designing-rest-apis/SKILL.md)** — Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts. Use when creating or refactoring HTTP services and public or internal APIs.
@@ -156,6 +161,8 @@ _50 skills across 7 categories. Generated from `skills-database.json` — do not
 
 - **[`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md)** — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
   · triggers: `secrets audit`, `env vars`, `credential exposure`, `config hygiene`, `secret rotation`
+- **[`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md)** — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases. Use when adding lint coverage for a vulnerability class, codifying a postmortem, or building taint rules for user-input-to-sink flows.
+  · triggers: `semgrep rule`, `custom static analysis`, `taint mode`, `codify a postmortem`, `lint for security bug`, `semgrep --test`
 - **[`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md)** — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.
   · triggers: `observability`, `tracing`, `structured logs`, `metrics`, `instrumentation`
 - **[`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md)** — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states. Use when services coordinate remote calls, queues, or critical transactions.
@@ -171,6 +178,8 @@ _50 skills across 7 categories. Generated from `skills-database.json` — do not
 
 - **[`designing-integration-tests`](./skills/testing/designing-integration-tests/SKILL.md)** — Designs integration tests around service contracts, persistence, side effects, and environment setup. Use when changes cross module, network, storage, or framework boundaries.
   · triggers: `integration test`, `service contract`, `testcontainers`, `db integration`, `api integration`
+- **[`designing-property-based-tests`](./skills/testing/designing-property-based-tests/SKILL.md)** — Identifies code patterns where property-based testing produces stronger coverage than example-based tests — serialization pairs, parsers, normalizers, validators, pure functions. Use when writing tests for TypeScript, Node, or Python code that encodes, parses, normalizes, or validates user input.
+  · triggers: `fast-check`, `hypothesis`, `property-based testing`, `roundtrip`, `invariant testing`, `fuzzing inputs`
 - **[`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md)** — Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.
   · triggers: `unit tests`, `edge case tests`, `regression test`, `branch coverage`
 - **[`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md)** — Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.

@@ -5,9 +5,9 @@ Installable Claude Code skills grouped by category. Every skill is a directory w
 ## Categories
 
 - [`ai-productivity/`](./ai-productivity/) — 8 skills. Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work, building RAG-ready docs, and cataloging patterns.
-- [`backend/`](./backend/) — 10 skills. Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhooks, event-driven systems, and backend documentation.
+- [`backend/`](./backend/) — 11 skills. Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhooks, event-driven systems, and backend documentation.
 - [`data/`](./data/) — 6 skills. Schema design, SQL review, migrations, search/indexing, analytics instrumentation, and ETL validation.
 - [`frontend/`](./frontend/) — 8 skills. React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, CSS architecture, responsive behavior, bundle performance, and browser-facing security.
 - [`platform/`](./platform/) — 6 skills. CI/CD, containers, infrastructure as code, monorepos, release workflows, and developer experience.
-- [`security-reliability/`](./security-reliability/) — 6 skills. Threat modeling, secrets/config audits, observability, SLOs, failure modes, and recovery readiness.
-- [`testing/`](./testing/) — 6 skills. Unit, integration, E2E, snapshot, coverage, and production-bug regression workflows.
+- [`security-reliability/`](./security-reliability/) — 7 skills. Threat modeling, secrets/config audits, observability, SLOs, failure modes, and recovery readiness.
+- [`testing/`](./testing/) — 7 skills. Unit, integration, E2E, snapshot, coverage, and production-bug regression workflows.

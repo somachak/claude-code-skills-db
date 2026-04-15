@@ -5,6 +5,7 @@ Threat modeling, secrets/config audits, observability, SLOs, failure modes, and 
 ## Included skills
 
 - [`auditing-secrets-and-config/`](./auditing-secrets-and-config/) — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks.
+- [`authoring-semgrep-rules/`](./authoring-semgrep-rules/) — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases.
 - [`improving-observability/`](./improving-observability/) — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations.
 - [`reviewing-failure-modes/`](./reviewing-failure-modes/) — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states.
 - [`setting-slos-and-alerts/`](./setting-slos-and-alerts/) — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus.

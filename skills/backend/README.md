@@ -6,6 +6,7 @@ Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhook
 
 - [`building-background-jobs/`](./building-background-jobs/) — Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling.
 - [`building-event-driven-services/`](./building-event-driven-services/) — Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation.
+- [`configuring-modern-python-projects/`](./configuring-modern-python-projects/) — Configures Python projects with modern tooling — uv for dependencies, ruff for lint and format, ty for type checking, PEP 735 dependency groups, PEP 723 inline script deps.
 - [`designing-graphql-apis/`](./designing-graphql-apis/) — Designs GraphQL schemas, resolver boundaries, batching, and authorization rules.
 - [`designing-rest-apis/`](./designing-rest-apis/) — Designs REST APIs with clear resource boundaries, versioning rules, pagination, idempotency, and error contracts.
 - [`documenting-api-contracts/`](./documenting-api-contracts/) — Produces concise API contract documentation, examples, and change notes that stay aligned with code.
