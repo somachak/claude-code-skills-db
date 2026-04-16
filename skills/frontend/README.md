@@ -4,7 +4,10 @@ React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, C
 
 ## Included skills
 
+- [`animating-react-components-with-motion/`](./animating-react-components-with-motion/) — Implements 60fps GPU-accelerated animations in React, Next.
+- [`avoiding-nextjs-app-router-anti-patterns/`](./avoiding-nextjs-app-router-anti-patterns/) — Identifies and fixes common Next.
 - [`building-accessible-ui/`](./building-accessible-ui/) — Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks.
+- [`building-nextjs-shadcn-interfaces/`](./building-nextjs-shadcn-interfaces/) — Builds production-grade Next.
 - [`debugging-react-rendering/`](./debugging-react-rendering/) — Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications.
 - [`designing-component-systems/`](./designing-component-systems/) — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries.
 - [`hardening-forms-and-validation/`](./hardening-forms-and-validation/) — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment.

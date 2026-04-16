@@ -1,6 +1,6 @@
 {
-  "version": "2026-04-15",
-  "generated_at": "2026-04-15T07:13:55.104753Z",
+  "version": "2026-04-16",
+  "generated_at": "2026-04-16T08:13:10.624970Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -526,6 +526,53 @@
       }
     },
     {
+      "name": "implementing-postgres-vector-search",
+      "title": "PostgreSQL Vector and Hybrid Search",
+      "category": "data",
+      "audience": [
+        "full-stack",
+        "backend"
+      ],
+      "priority": "supporting",
+      "description": "Implements semantic, vector, and hybrid full-text search in PostgreSQL using pgvector and ParadeDB (pg_search). Covers HNSW/IVFFlat index selection, cosine vs L2 distance operators, BM25 + RRF hybrid ranking, halfvec(3072) memory savings, connection pooling, performance tuning, and re-ranking with Cohere. Use when adding similarity search, RAG retrieval, or Elasticsearch-alternative search to a Node/Python/FastAPI backend. Triggers: pgvector, vector search, semantic search, hybrid search, HNSW, BM25, RAG retrieval, ParadeDB, pg_search.",
+      "trigger_phrases": [
+        "pgvector",
+        "vector search postgres",
+        "semantic search postgresql",
+        "hybrid search bm25",
+        "hnsw index",
+        "rag retrieval database",
+        "paradedb pg_search"
+      ],
+      "skill_body": "# PostgreSQL Vector and Hybrid Search\n\nAdd semantic, keyword, and hybrid search to any Postgres-backed application.\n\n## When to Use\n- Building RAG pipelines that need fast nearest-neighbour retrieval\n- Replacing Elasticsearch/OpenSearch with a pure-Postgres solution\n- Implementing autocomplete, fuzzy search, or similarity scoring\n- Scoring and re-ranking results with cross-encoders or Cohere\n\n---\n\n## Setup\n\n```sql\nCREATE EXTENSION IF NOT EXISTS vector;\n\nCREATE TABLE documents (\n  id        SERIAL PRIMARY KEY,\n  content   TEXT NOT NULL,\n  embedding vector(1536)     -- OpenAI text-embedding-3-small\n  -- embedding halfvec(3072) -- text-embedding-3-large, saves ~50% RAM\n);\n```\n\nDocker quick-start:\n```bash\n# pgvector only\ndocker run -d -e POSTGRES_PASSWORD=postgres -p 5432:5432 pgvector/pgvector:pg17\n\n# ParadeDB (pgvector + pg_search + BM25)\ndocker run -d -e POSTGRES_PASSWORD=postgres -p 5432:5432 paradedb/paradedb:latest\n```\n\n---\n\n## Distance Operators\n\n| Operator | Metric | Best for |\n|----------|--------|----------|\n| `<=>` | Cosine | Normalised text embeddings (most common) |\n| `<->` | L2 / Euclidean | Image embeddings, non-normalised vectors |\n| `<#>` | Negative inner product | When vectors are pre-normalised (fastest) |\n\n---\n\n## Indexing Decision Tree\n\n```\nRow count?\n\u251c\u2500 < 10 000  \u2192 No index needed (sequential scan is fast enough)\n\u251c\u2500 10k\u20131M   \u2192 HNSW (fast query, larger RAM, no training required)\n\u2502              CREATE INDEX ON docs USING hnsw (embedding vector_cosine_ops)\n\u2502              WITH (m = 16, ef_construction = 64);\n\u2514\u2500 > 1M     \u2192 IVFFlat (less RAM, requires training data)\n               CREATE INDEX ON docs USING ivfflat (embedding vector_cosine_ops)\n               WITH (lists = 100);  -- rule of thumb: sqrt(row_count)\n```\n\n**HNSW tuning:**\n- `m` (16 default): edges per node \u2014 higher = better recall, more RAM\n- `ef_construction` (64 default): build-time search depth \u2014 higher = slower build, better index\n- At query time: `SET hnsw.ef_search = 100;` for recall vs. speed trade-off\n\n---\n\n## Core Query Patterns\n\n```sql\n-- Basic semantic search\nSELECT id, content, 1 - (embedding <=> $1) AS similarity\nFROM documents\nORDER BY embedding <=> $1\nLIMIT 10;\n\n-- Filter before vector sort (use WHERE early to reduce candidates)\nSELECT id, content\nFROM documents\nWHERE category = 'tech'\nORDER BY embedding <=> $1\nLIMIT 10;\n\n-- Preload index on startup (cold-start optimisation)\nSELECT 1 FROM documents ORDER BY embedding <=> $1 LIMIT 1;\n```\n\n---\n\n## Hybrid Search: Vector + BM25 with RRF\n\nReciprocal Rank Fusion combines semantic and keyword scores without normalisation:\n\n```sql\n-- Using ParadeDB's pg_search for BM25\nWITH semantic AS (\n  SELECT id, ROW_NUMBER() OVER (ORDER BY embedding <=> $1) AS rank\n  FROM documents\n  ORDER BY embedding <=> $1\n  LIMIT 60\n),\nkeyword AS (\n  SELECT id, ROW_NUMBER() OVER (ORDER BY bm25_score DESC) AS rank\n  FROM documents\n  WHERE content @@@ $2          -- pg_search BM25 operator\n  LIMIT 60\n)\nSELECT\n  COALESCE(s.id, k.id) AS id,\n  (COALESCE(1.0 / (60 + s.rank), 0) +\n   COALESCE(1.0 / (60 + k.rank), 0)) AS rrf_score\nFROM semantic s FULL OUTER JOIN keyword k USING (id)\nORDER BY rrf_score DESC\nLIMIT 10;\n```\n\n---\n\n## Fuzzy / Trigram Search (No Extension Needed)\n\n```sql\n-- Enable pg_trgm\nCREATE EXTENSION IF NOT EXISTS pg_trgm;\nCREATE INDEX ON documents USING gin (content gin_trgm_ops);\n\n-- Similarity threshold query\nSELECT id, content, similarity(content, $1) AS score\nFROM documents\nWHERE similarity(content, $1) > 0.3\nORDER BY score DESC\nLIMIT 10;\n```\n\n---\n\n## Re-Ranking with External APIs (Cohere)\n\n```typescript\n// After retrieving top-40 candidates from Postgres:\nconst { results } = await cohere.rerank({\n  model: 'rerank-v3.5',\n  query: userQuery,\n  documents: candidates.map(c => c.content),\n  topN: 10,\n});\nconst reranked = results.map(r => candidates[r.index]);\n```\n\n---\n\n## Performance Anti-Patterns\n\n| Anti-Pattern | Fix |\n|---|---|\n| Fetching all rows and filtering in app code | Use `WHERE` + LIMIT in SQL |\n| No index on a 100k+ row table | Add HNSW (takes ~2 min, online, no lock) |\n| `SELECT *` with 1536-float vector column | `SELECT id, content` \u2014 exclude the vector from result |\n| Rebuilding index on every deploy | Index persists; only rebuild after bulk inserts |\n| Storing full `vector(3072)` when half-precision is enough | Use `halfvec(3072)` to halve RAM |\n\n---\n\n## Checklist\n\n- [ ] Extension created: `CREATE EXTENSION IF NOT EXISTS vector`\n- [ ] HNSW index added once row count exceeds 10k\n- [ ] Distance operator matches embedding normalisation (`<=>` for cosine is safest default)\n- [ ] Query filters applied *before* ORDER BY to reduce scan set\n- [ ] `SELECT` explicitly excludes the vector column unless needed\n- [ ] Connection pool (PgBouncer / Supabase pooler) used in production\n- [ ] Embeddings generated outside transactions; stored in bulk\n",
+      "frontmatter_overrides": {
+        "allowed-tools": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ]
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/postgres-semantic-search",
+        "source_type": "github-repo",
+        "stars": 25,
+        "forks": 8,
+        "captured_at": "2026-04-16T08:13:10.624949Z",
+        "hunter_score": 90,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 20,
+          "uniqueness": 10
+        },
+        "note": "Rewritten by Opus 4.6 hunter; expanded with HNSW tuning parameters, anti-patterns table, re-ranking pattern."
+      }
+    },
+    {
       "name": "modeling-analytics-events",
       "title": "Analytics Event Modeling",
       "category": "data",
@@ -620,6 +667,98 @@
       }
     },
     {
+      "name": "animating-react-components-with-motion",
+      "title": "React Animation with Motion.dev",
+      "category": "frontend",
+      "audience": [
+        "full-stack",
+        "frontend"
+      ],
+      "priority": "supporting",
+      "description": "Implements 60fps GPU-accelerated animations in React, Next.js, Svelte, and Astro using Motion.dev (the Framer Motion successor). Covers the animation pattern decision tree (entrance, gesture, scroll, layout), spring physics tuning, stagger orchestration, prefers-reduced-motion accessibility, and performance validation. Use when adding page transitions, scroll reveals, hover interactions, drag gestures, or layout animations. Triggers: motion.dev, framer motion, animation react, scroll reveal, parallax, spring physics, whileHover, whileInView, AnimatePresence.",
+      "trigger_phrases": [
+        "motion.dev animation",
+        "framer motion react",
+        "scroll reveal nextjs",
+        "spring animation",
+        "whileHover whileInView",
+        "page transitions react",
+        "animate react component"
+      ],
+      "skill_body": "# React Animation with Motion.dev\n\nMotion.dev (Framer Motion successor, 10M+ downloads/month) \u2014 60fps GPU-accelerated animations for React, Next.js, Svelte, and Astro.\n\n## When to Use\n- Adding entrance animations, scroll reveals, or hover effects\n- Building gesture interactions (drag, tap, hover)\n- Implementing page or route transitions\n- Creating layout animations with shared-element morphing\n\n**Don't use for:** CSS-only transitions, static sites without JS, Vue apps (use `motion-v`), complex SVG/Canvas animations (GSAP is better).\n\n---\n\n## Installation\n\n```bash\nnpm install motion          # React, Next.js, Svelte, Astro\nnpm install motion-v        # Vue 3\n```\n\nImport path by framework:\n- React / Next.js: `import { motion, AnimatePresence } from \"motion/react\"`\n- Svelte / Astro: `import { animate, scroll } from \"motion\"`\n\n---\n\n## Pattern Decision Tree\n\n```\nWhat should animate?\n\nENTRANCE (mount / page load)\n  \u2192 initial={{ opacity: 0, y: 20 }}\n    animate={{ opacity: 1, y: 0 }}\n    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}\n\nGESTURE (hover / tap / drag)\n  \u2192 whileHover={{ scale: 1.05 }}\n    whileTap={{ scale: 0.95 }}\n    transition={{ type: \"spring\", stiffness: 300, damping: 20 }}\n    (spring physics \u2014 no explicit duration)\n\nSCROLL (reveal / parallax)\n  \u2192 whileInView={{ opacity: 1, y: 0 }}\n    initial={{ opacity: 0, y: 50 }}\n    viewport={{ once: true, amount: 0.3 }}\n\nLAYOUT (reorder / expand)\n  \u2192 <motion.div layout />          (auto FLIP animation)\n    <motion.div layoutId=\"hero\" />  (shared-element morph)\n```\n\n---\n\n## Copy-Paste Patterns\n\n### Fade-Up Entrance\n```tsx\n<motion.div\n  initial={{ opacity: 0, y: 20 }}\n  animate={{ opacity: 1, y: 0 }}\n  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}\n/>\n```\n\n### Staggered List\n```tsx\nconst container = {\n  hidden: {},\n  show: { transition: { staggerChildren: 0.12 } },\n};\nconst item = {\n  hidden: { opacity: 0, y: 16 },\n  show:   { opacity: 1, y: 0,  transition: { duration: 0.4 } },\n};\n\n<motion.ul variants={container} initial=\"hidden\" animate=\"show\">\n  {items.map(i => (\n    <motion.li key={i.id} variants={item}>{i.name}</motion.li>\n  ))}\n</motion.ul>\n```\n\n### Hover Card\n```tsx\n<motion.div\n  whileHover={{ y: -6, boxShadow: \"0 16px 32px rgba(0,0,0,0.12)\" }}\n  transition={{ type: \"spring\", stiffness: 300, damping: 20 }}\n/>\n```\n\n### Scroll Reveal\n```tsx\n<motion.section\n  initial={{ opacity: 0, y: 48 }}\n  whileInView={{ opacity: 1, y: 0 }}\n  viewport={{ once: true, amount: 0.25 }}\n  transition={{ duration: 0.55 }}\n/>\n```\n\n### Exit Animation (requires AnimatePresence)\n```tsx\n<AnimatePresence>\n  {show && (\n    <motion.div\n      key=\"modal\"\n      initial={{ opacity: 0, scale: 0.96 }}\n      animate={{ opacity: 1, scale: 1 }}\n      exit={{ opacity: 0, scale: 0.96 }}\n    />\n  )}\n</AnimatePresence>\n```\n\n---\n\n## Spring Physics Reference\n\n```tsx\n// Snappy UI response (buttons, toggles)\ntransition={{ type: \"spring\", stiffness: 400, damping: 25 }}\n\n// Natural card lift\ntransition={{ type: \"spring\", stiffness: 300, damping: 20 }}\n\n// Slow, weighty entrance\ntransition={{ type: \"spring\", stiffness: 120, damping: 18, mass: 1.5 }}\n```\nRule: prefer spring over tween for interactive elements \u2014 it feels physically grounded.\n\n---\n\n## Accessibility (Required)\n\n```tsx\n// Always respect prefers-reduced-motion\nconst prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;\n\n<motion.div\n  animate={{ opacity: 1, y: prefersReduced ? 0 : -8 }}\n  transition={prefersReduced ? { duration: 0 } : { duration: 0.5 }}\n/>\n```\nOr use the CSS approach alongside: `@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }`\n\n---\n\n## Performance Rules\n\n| Rule | Why |\n|------|-----|\n| Animate only `transform` and `opacity` | GPU-composited \u2014 no layout recalc |\n| Never animate `width`, `height`, `top`, `left` | Triggers layout/paint on every frame |\n| Add `will-change: transform` on elements that animate often | Pre-promote to GPU layer |\n| Keep `staggerChildren` between 0.05\u20130.2s | Faster feels snappy; slower feels laggy |\n| Use `viewport={{ once: true }}` for scroll reveals | Prevents re-triggering on scroll back |\n\n---\n\n## Anti-Patterns\n\n- `duration: 0.8` on a hover effect \u2014 too slow, users feel the UI is unresponsive. Keep hover \u2264 0.3s.\n- Animating `height: \"auto\"` without `layout` prop \u2014 use `<motion.div layout>` instead.\n- Forgetting `key` prop inside `AnimatePresence` \u2014 exit animation won't fire.\n- Animating 50+ list items simultaneously without stagger \u2014 creates a janky blur of motion.\n- Using `useEffect` to trigger animations \u2014 use `useAnimation` hook or variants instead.\n\n---\n\n## Checklist\n\n- [ ] Animations use only `transform` / `opacity` properties\n- [ ] `prefers-reduced-motion` respected\n- [ ] Interactive elements have spring transitions (not tween)\n- [ ] Scroll reveals use `viewport={{ once: true }}`\n- [ ] Exit animations wrapped in `AnimatePresence` with unique `key`\n- [ ] Stagger intervals between 0.08\u20130.15s for list animations\n- [ ] Hover duration \u2264 0.25s\n",
+      "frontmatter_overrides": {
+        "allowed-tools": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash"
+        ]
+      },
+      "provenance": {
+        "source_url": "https://github.com/199-biotechnologies/motion-dev-animations-skill/blob/main/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 13,
+        "forks": 2,
+        "captured_at": "2026-04-16T08:13:10.624952Z",
+        "hunter_score": 80,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 0,
+          "depth": 20,
+          "uniqueness": 10
+        },
+        "note": "Source is a well-structured SKILL.md. Rewritten by Opus 4.6 hunter; condensed decision tree, added anti-patterns, kept all code examples."
+      }
+    },
+    {
+      "name": "avoiding-nextjs-app-router-anti-patterns",
+      "title": "Next.js App Router Anti-Pattern Detector",
+      "category": "frontend",
+      "audience": [
+        "full-stack",
+        "frontend"
+      ],
+      "priority": "supporting",
+      "description": "Identifies and fixes common Next.js 14/15 App Router anti-patterns: misuse of useEffect for data fetching or browser detection, incorrect Server/Client component boundaries, unnecessary client-side state, and Pages Router migration mistakes. Use when reviewing Next.js code, debugging hydration errors, detecting waterfall data fetching, or migrating from Pages Router. Covers TypeScript strict mode, async params/searchParams (Next.js 15+), and serializable props rules.",
+      "trigger_phrases": [
+        "next.js anti-patterns",
+        "useEffect bad practice",
+        "app router mistake",
+        "server client component boundary",
+        "nextjs hydration error",
+        "pages router migration",
+        "unnecessary usestate nextjs"
+      ],
+      "skill_body": "# Next.js App Router Anti-Pattern Detector\n\nIdentify and fix the most common App Router mistakes before they ship.\n\n## When to Use\n- Reviewing Next.js 14/15 code for correctness\n- Debugging hydration mismatches or flash-of-wrong-content\n- Migrating a Pages Router codebase to App Router\n- Preventing unnecessary client-side JavaScript\n\n---\n\n## Anti-Pattern Taxonomy\n\n### 1. Misusing `useEffect` for Browser Detection\n\n**Wrong \u2014 causes hydration mismatch and flash of default content:**\n```tsx\n'use client';\nexport default function BrowserCheck() {\n  const [isSafari, setIsSafari] = useState(false);\n  useEffect(() => { setIsSafari(/Safari/.test(navigator.userAgent)); }, []);\n  return <div>{isSafari ? 'Unsupported' : 'Welcome'}</div>;\n}\n```\n\n**Correct \u2014 direct detection with SSR guard:**\n```tsx\n'use client';\nexport default function BrowserCheck() {\n  const isSafari =\n    typeof navigator !== 'undefined' &&\n    /Safari/.test(navigator.userAgent) &&\n    !/Chrome/.test(navigator.userAgent);\n  return <div>{isSafari ? 'Unsupported' : 'Welcome'}</div>;\n}\n```\nRule: detect synchronously in the render body, always guard with `typeof navigator !== 'undefined'`.\n\n---\n\n### 2. Using `useEffect` for Data Fetching in Client Components\n\n**Wrong \u2014 creates loading state waterfall, blocks SSR:**\n```tsx\n'use client';\nexport default function PostList() {\n  const [posts, setPosts] = useState([]);\n  useEffect(() => { fetch('/api/posts').then(r => r.json()).then(setPosts); }, []);\n  return <ul>{posts.map(p => <li key={p.id}>{p.title}</li>)}</ul>;\n}\n```\n\n**Correct \u2014 move data to a Server Component:**\n```tsx\n// app/posts/page.tsx \u2014 Server Component, no 'use client'\nexport default async function PostList() {\n  const posts = await db.query('SELECT id, title FROM posts');\n  return <ul>{posts.map(p => <li key={p.id}>{p.title}</li>)}</ul>;\n}\n```\nRule: if data doesn't require browser events or real-time updates, fetch in a Server Component.\n\n---\n\n### 3. Wrong `'use client'` Placement \u2014 Too High\n\n**Wrong \u2014 converts entire subtree to client-side:**\n```tsx\n'use client'; // \u2190 placed on a layout with many static children\nexport default function DashboardLayout({ children }) { ... }\n```\n\n**Correct \u2014 push the boundary down to the interactive leaf:**\n```tsx\n// DashboardLayout.tsx \u2014 Server Component (no directive)\nexport default function DashboardLayout({ children }) {\n  return <section>{children}<ThemeToggle /></section>;\n}\n\n// ThemeToggle.tsx \u2014 tiny leaf that needs state\n'use client';\nexport function ThemeToggle() { const [dark, setDark] = useState(false); ... }\n```\n\n---\n\n### 4. Passing Non-Serialisable Props Across the Boundary\n\n**Wrong \u2014 functions and class instances can't cross the server\u2192client boundary:**\n```tsx\n// Server Component\nexport default async function Page() {\n  const handler = () => console.log('click'); // \u2190 closure on server\n  return <Button onClick={handler} />;        // \u2190 Button is 'use client'\n}\n```\n\n**Correct \u2014 use Server Actions for callbacks:**\n```tsx\n// actions.ts\n'use server';\nexport async function logClick() { console.log('click from server'); }\n\n// page.tsx \u2014 Server Component\nimport { logClick } from './actions';\nexport default function Page() {\n  return <Button onClick={logClick} />;\n}\n```\n\n---\n\n### 5. `any` Type in TypeScript (Build-Breaking)\n\n```tsx\n// Wrong \u2014 breaks strict builds\nfunction Page({ params }: { params: any }) { ... }\n\n// Correct \u2014 fully typed App Router props\nfunction Page({ params }: { params: { slug: string } }) { ... }\nfunction Page({ searchParams }: {\n  searchParams: { [key: string]: string | string[] | undefined }\n}) { ... }\nasync function myAction(formData: FormData) { ... }  // Server Action\n```\n\n---\n\n### 6. Async Params / SearchParams (Next.js 15+)\n\nNext.js 15 made `params` and `searchParams` async. Access them with `await` or `use()`:\n\n```tsx\n// pages/[slug]/page.tsx\nexport default async function Page({\n  params,\n}: {\n  params: Promise<{ slug: string }>;\n}) {\n  const { slug } = await params;\n  ...\n}\n```\n\nRun the official codemod if migrating: `npx @next/codemod@canary upgrade latest`.\n\n---\n\n## Decision Checklist\n\nBefore opening a PR on Next.js code, verify:\n\n- [ ] No `useEffect` used purely for data fetching (use Server Components or SWR/TanStack)\n- [ ] No `useEffect` for synchronous browser detection\n- [ ] `'use client'` placed at the smallest possible boundary (leaf, not layout)\n- [ ] All props crossing Server\u2192Client boundary are JSON-serialisable\n- [ ] No `any` type where specific types are inferrable\n- [ ] `params` and `searchParams` awaited in Next.js 15+ projects\n- [ ] Browser-only APIs guarded with `typeof window !== 'undefined'`\n- [ ] Data fetching in parallel via `Promise.all` where multiple independent fetches exist\n\n---\n\n## Quick Reference: Pages Router \u2192 App Router Migration\n\n| Pages Router pattern | App Router replacement |\n|----------------------|------------------------|\n| `getServerSideProps` | `async` Server Component |\n| `getStaticProps` | `async` Server Component + `generateStaticParams` |\n| `useRouter().push()` | `useRouter` from `next/navigation` (client only) |\n| `_app.tsx` global state | Root `layout.tsx` with context |\n| `next/head` | `export const metadata` or `generateMetadata` |\n",
+      "frontmatter_overrides": {
+        "allowed-tools": [
+          "Read",
+          "Write",
+          "Edit",
+          "Glob",
+          "Grep",
+          "Bash"
+        ]
+      },
+      "provenance": {
+        "source_url": "https://github.com/wsimmonds/claude-nextjs-skills/tree/main/nextjs-anti-patterns",
+        "source_type": "github-repo",
+        "stars": 83,
+        "forks": 15,
+        "captured_at": "2026-04-16T08:13:10.624942Z",
+        "hunter_score": 90,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 20,
+          "uniqueness": 10
+        },
+        "note": "Rewritten by Opus 4.6 hunter; source content verified and expanded with Next.js 15 async params, migration table."
+      }
+    },
+    {
       "name": "building-accessible-ui",
       "title": "Accessible UI Review",
       "category": "frontend",
@@ -642,6 +781,53 @@
         "when_to_use": "accessibility audit, keyboard navigation, aria",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
+      }
+    },
+    {
+      "name": "building-nextjs-shadcn-interfaces",
+      "title": "Next.js 15 + shadcn/ui Interface Builder",
+      "category": "frontend",
+      "audience": [
+        "full-stack",
+        "frontend"
+      ],
+      "priority": "supporting",
+      "description": "Builds production-grade Next.js 15 + shadcn/ui interfaces: project setup, file organisation, route groups, async params migration, CSS variable theming, and component composition rules. Guides the 'use client' boundary placement, cn() class merging, serialisable props enforcement, and avoidance of generic AI-generated aesthetics. Use when scaffolding a new Next.js project, adding shadcn/ui to an existing one, building complex layouts, or reviewing UI code for App Router compliance. Triggers: shadcn, nextjs ui, next.js components, tailwind component system.",
+      "trigger_phrases": [
+        "shadcn/ui nextjs",
+        "build nextjs interface",
+        "next.js 15 ui",
+        "tailwind component system",
+        "shadcn setup",
+        "nextjs file organization",
+        "use client placement"
+      ],
+      "skill_body": "# Next.js 15 + shadcn/ui Interface Builder\n\nBuild distinctive, production-grade frontends \u2014 not generic AI-slop UIs.\n\n## When to Use\n- Scaffolding a new Next.js 15 project with shadcn/ui\n- Adding UI components to an existing App Router project\n- Reviewing layouts for client-boundary or theming mistakes\n- Migrating from a custom component library to shadcn primitives\n\n---\n\n## Project Scaffold\n\n```bash\nbunx --bun shadcn@latest init \\\n  --preset \"https://ui.shadcn.com/init?base=radix&style=nova&baseColor=neutral&iconLibrary=lucide&font=geist-sans\" \\\n  --template next\n```\n\nThis initialises Next.js 15 + shadcn nova style + Geist font + Lucide icons in one command.\n\n---\n\n## File Organisation\n\n```\napp/\n\u251c\u2500\u2500 (protected)/         # Routes requiring auth\n\u2502   \u251c\u2500\u2500 dashboard/\n\u2502   \u2514\u2500\u2500 settings/\n\u251c\u2500\u2500 (public)/            # Unauthenticated routes\n\u2502   \u251c\u2500\u2500 login/\n\u2502   \u2514\u2500\u2500 register/\n\u251c\u2500\u2500 actions/             # Server Actions (global)\n\u251c\u2500\u2500 api/                 # Route Handlers\n\u251c\u2500\u2500 layout.tsx           # Root layout\n\u2514\u2500\u2500 globals.css          # CSS variable tokens\ncomponents/\n\u251c\u2500\u2500 ui/                  # shadcn primitives (auto-generated, don't edit)\n\u2514\u2500\u2500 shared/              # Business components\nhooks/                   # Custom React hooks\nlib/                     # Shared utilities (cn, auth helpers)\ndata/                    # Database query functions\nai/                      # AI tools, agents, system prompts\n```\n\nRoute groups `(protected)` and `(public)` organise auth boundaries without adding URL segments.\n\n---\n\n## Core Composition Rules\n\n### 1. Import Aliases \u2014 always `@/`\n```tsx\nimport { Button } from \"@/components/ui/button\";  // \u2705\nimport { Button } from \"../../components/ui/button\"; // \u274c\n```\n\n### 2. Class Merging with `cn()`\n```tsx\nimport { cn } from \"@/lib/utils\";\n\nfunction Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {\n  return (\n    <div className={cn(\"rounded-lg border bg-card p-6 shadow-sm\", className)} {...props} />\n  );\n}\n```\n\n### 3. Minimal `'use client'` Boundaries\n```tsx\n// layout.tsx \u2014 Server Component, no directive needed\nexport default function DashboardLayout({ children }: { children: React.ReactNode }) {\n  return (\n    <div className=\"grid grid-cols-[240px_1fr] min-h-screen\">\n      <Sidebar />          {/* Server Component */}\n      <main>{children}</main>\n      <ThemeToggle />      {/* Client Component \u2014 tiny leaf */}\n    </div>\n  );\n}\n\n// ThemeToggle.tsx \u2014 only this file needs 'use client'\n\"use client\";\nexport function ThemeToggle() {\n  const [dark, setDark] = useState(false);\n  return <Button onClick={() => setDark(d => !d)}>{dark ? \"\u2600\ufe0f\" : \"\ud83c\udf19\"}</Button>;\n}\n```\n\n### 4. CSS Variables \u2014 Never Hardcode Colours\n```css\n/* globals.css \u2014 tokens that shadcn themes use */\n:root {\n  --background: 0 0% 100%;\n  --foreground: 222.2 84% 4.9%;\n  --primary: 222.2 47.4% 11.2%;\n}\n```\n```tsx\n// Use semantic tokens, not raw Tailwind colours\n<div className=\"bg-background text-foreground\">   {/* \u2705 */}\n<div className=\"bg-white text-gray-900\">          {/* \u274c \u2014 breaks dark mode */}\n```\n\n---\n\n## Async Params (Next.js 15+)\n\n```tsx\n// app/[slug]/page.tsx\nexport default async function Page({\n  params,\n}: {\n  params: Promise<{ slug: string }>;\n}) {\n  const { slug } = await params;   // Must await in Next.js 15\n  return <h1>{slug}</h1>;\n}\n```\n\n---\n\n## Server Actions in Forms\n\n```tsx\n// actions.ts\n\"use server\";\nexport async function createPost(formData: FormData) {\n  const title = formData.get(\"title\") as string;\n  await db.insert(posts).values({ title });\n  revalidatePath(\"/posts\");\n}\n\n// page.tsx \u2014 Server Component, no 'use client' needed\nexport default function NewPostPage() {\n  return (\n    <form action={createPost}>\n      <Input name=\"title\" placeholder=\"Post title\" />\n      <Button type=\"submit\">Create</Button>\n    </form>\n  );\n}\n```\n\n---\n\n## Design Principles (Avoid Generic AI Output)\n\n- **No purple gradients** \u2014 use neutral backgrounds, meaningful colour only for status/CTAs\n- **Icons communicate, labels clarify** \u2014 don't stack both unless there's a real reason\n- **Whitespace is structure** \u2014 spacing rhythm should match the design system tokens\n- **Every element earns its place** \u2014 decoration without function is noise\n\n---\n\n## Common Mistakes Checklist\n\n- [ ] `'use client'` placed at layout level rather than leaf component\n- [ ] Hardcoded Tailwind colours instead of CSS variables (`text-gray-900` vs `text-foreground`)\n- [ ] Relative imports instead of `@/` alias\n- [ ] Async `params` or `searchParams` not awaited (Next.js 15)\n- [ ] `onClick` passed from Server Component without Server Action\n- [ ] shadcn `ui/` components edited directly (they regenerate on `shadcn add`)\n",
+      "frontmatter_overrides": {
+        "allowed-tools": [
+          "Read",
+          "Write",
+          "Edit",
+          "Bash",
+          "Glob",
+          "Grep"
+        ]
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/nextjs-shadcn",
+        "source_type": "github-repo",
+        "stars": 25,
+        "forks": 8,
+        "captured_at": "2026-04-16T08:13:10.624951Z",
+        "hunter_score": 88,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 18,
+          "uniqueness": 10
+        },
+        "note": "Rewritten by Opus 4.6 hunter; expanded with Server Actions in forms, design principles, common mistakes checklist."
       }
     },
     {

@@ -1,8 +1,8 @@
 # Skills Index
 
-_53 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_57 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-04-15` · **Last generated:** `2026-04-15T07:13:55.104753Z`
+**Version:** `2026-04-16` · **Last generated:** `2026-04-16T08:13:10.624970Z`
 
 ## Quick search
 
@@ -29,11 +29,15 @@ _53 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`reviewing-caching-strategies`](./skills/backend/reviewing-caching-strategies/SKILL.md) | backend | core | Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks |
 | [`designing-database-schemas`](./skills/data/designing-database-schemas/SKILL.md) | data | core | Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems |
 | [`designing-search-and-indexes`](./skills/data/designing-search-and-indexes/SKILL.md) | data | core | Designs search schemas, indexing strategies, ranking tradeoffs, and query filters |
+| [`implementing-postgres-vector-search`](./skills/data/implementing-postgres-vector-search/SKILL.md) | data | supporting | Implements semantic, vector, and hybrid full-text search in PostgreSQL using pgvector and ParadeDB (pg_search) |
 | [`modeling-analytics-events`](./skills/data/modeling-analytics-events/SKILL.md) | data | core | Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis |
 | [`planning-data-migrations`](./skills/data/planning-data-migrations/SKILL.md) | data | core | Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks |
 | [`reviewing-sql-performance`](./skills/data/reviewing-sql-performance/SKILL.md) | data | core | Reviews SQL queries for plan quality, indexing opportunities, cardinality traps, and unnecessary scans |
 | [`validating-etl-pipelines`](./skills/data/validating-etl-pipelines/SKILL.md) | data | core | Validates ETL and ELT pipelines for freshness, schema drift, lineage breaks, duplication, and reconciliation errors |
+| [`animating-react-components-with-motion`](./skills/frontend/animating-react-components-with-motion/SKILL.md) | frontend | supporting | Implements 60fps GPU-accelerated animations in React, Next.js, Svelte, and Astro using Motion.dev (the Framer Motion successor) |
+| [`avoiding-nextjs-app-router-anti-patterns`](./skills/frontend/avoiding-nextjs-app-router-anti-patterns/SKILL.md) | frontend | supporting | Identifies and fixes common Next.js 14/15 App Router anti-patterns: misuse of useEffect for data fetching or browser detection, incorrect Server/Client component boundaries, unnecessary client-side state, and Pages Router migration mistakes |
 | [`building-accessible-ui`](./skills/frontend/building-accessible-ui/SKILL.md) | frontend | core | Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks |
+| [`building-nextjs-shadcn-interfaces`](./skills/frontend/building-nextjs-shadcn-interfaces/SKILL.md) | frontend | supporting | Builds production-grade Next.js 15 + shadcn/ui interfaces: project setup, file organisation, route groups, async params migration, CSS variable theming, and component composition rules |
 | [`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md) | frontend | core | Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications |
 | [`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md) | frontend | core | Designs reusable UI component systems, prop APIs, composition rules, and state boundaries |
 | [`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md) | frontend | core | Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment |
@@ -114,6 +118,8 @@ _53 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `database schema`, `table design`, `foreign keys`, `normalization`, `relational model`
 - **[`designing-search-and-indexes`](./skills/data/designing-search-and-indexes/SKILL.md)** — Designs search schemas, indexing strategies, ranking tradeoffs, and query filters. Use when implementing application search, faceting, vector or lexical retrieval, or hybrid discovery features.
   · triggers: `search index`, `elasticsearch`, `meilisearch`, `ranking`, `facets`, `vector search`
+- **[`implementing-postgres-vector-search`](./skills/data/implementing-postgres-vector-search/SKILL.md)** — Implements semantic, vector, and hybrid full-text search in PostgreSQL using pgvector and ParadeDB (pg_search). Covers HNSW/IVFFlat index selection, cosine vs L2 distance operators, BM25 + RRF hybrid ranking, halfvec(3072) memory savings, connection pooling, performance tuning, and re-ranking with Cohere. Use when adding similarity search, RAG retrieval, or Elasticsearch-alternative search to a Node/Python/FastAPI backend. Triggers: pgvector, vector search, semantic search, hybrid search, HNSW, BM25, RAG retrieval, ParadeDB, pg_search.
+  · triggers: `pgvector`, `vector search postgres`, `semantic search postgresql`, `hybrid search bm25`, `hnsw index`, `rag retrieval database`...
 - **[`modeling-analytics-events`](./skills/data/modeling-analytics-events/SKILL.md)** — Models analytics events, naming conventions, user properties, and event contracts for trustworthy product analysis. Use when adding instrumentation to frontend or backend product flows.
   · triggers: `tracking plan`, `analytics events`, `event naming`, `instrumentation`, `product analytics`
 - **[`planning-data-migrations`](./skills/data/planning-data-migrations/SKILL.md)** — Plans safe schema and data migrations with backfills, rollout sequencing, rollback paths, and runtime compatibility checks. Use when changing live data models or moving data between stores.
@@ -125,8 +131,14 @@ _53 skills across 7 categories. Generated from `skills-database.json` — do not
 
 ### frontend
 
+- **[`animating-react-components-with-motion`](./skills/frontend/animating-react-components-with-motion/SKILL.md)** — Implements 60fps GPU-accelerated animations in React, Next.js, Svelte, and Astro using Motion.dev (the Framer Motion successor). Covers the animation pattern decision tree (entrance, gesture, scroll, layout), spring physics tuning, stagger orchestration, prefers-reduced-motion accessibility, and performance validation. Use when adding page transitions, scroll reveals, hover interactions, drag gestures, or layout animations. Triggers: motion.dev, framer motion, animation react, scroll reveal, parallax, spring physics, whileHover, whileInView, AnimatePresence.
+  · triggers: `motion.dev animation`, `framer motion react`, `scroll reveal nextjs`, `spring animation`, `whileHover whileInView`, `page transitions react`...
+- **[`avoiding-nextjs-app-router-anti-patterns`](./skills/frontend/avoiding-nextjs-app-router-anti-patterns/SKILL.md)** — Identifies and fixes common Next.js 14/15 App Router anti-patterns: misuse of useEffect for data fetching or browser detection, incorrect Server/Client component boundaries, unnecessary client-side state, and Pages Router migration mistakes. Use when reviewing Next.js code, debugging hydration errors, detecting waterfall data fetching, or migrating from Pages Router. Covers TypeScript strict mode, async params/searchParams (Next.js 15+), and serializable props rules.
+  · triggers: `next.js anti-patterns`, `useEffect bad practice`, `app router mistake`, `server client component boundary`, `nextjs hydration error`, `pages router migration`...
 - **[`building-accessible-ui`](./skills/frontend/building-accessible-ui/SKILL.md)** — Reviews interface code for accessibility issues, semantic structure, keyboard behavior, focus management, and interaction risks. Use when building or reviewing component libraries, forms, dialogs, navigation, and responsive interfaces.
   · triggers: `accessibility audit`, `keyboard navigation`, `aria`, `screen reader`, `wcag`, `semantic html`
+- **[`building-nextjs-shadcn-interfaces`](./skills/frontend/building-nextjs-shadcn-interfaces/SKILL.md)** — Builds production-grade Next.js 15 + shadcn/ui interfaces: project setup, file organisation, route groups, async params migration, CSS variable theming, and component composition rules. Guides the 'use client' boundary placement, cn() class merging, serialisable props enforcement, and avoidance of generic AI-generated aesthetics. Use when scaffolding a new Next.js project, adding shadcn/ui to an existing one, building complex layouts, or reviewing UI code for App Router compliance. Triggers: shadcn, nextjs ui, next.js components, tailwind component system.
+  · triggers: `shadcn/ui nextjs`, `build nextjs interface`, `next.js 15 ui`, `tailwind component system`, `shadcn setup`, `nextjs file organization`...
 - **[`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md)** — Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications. Use when UI feels slow, renders are noisy, or component updates are confusing.
   · triggers: `rerender`, `useeffect bug`, `memoization`, `stale closure`, `react performance`
 - **[`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md)** — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
