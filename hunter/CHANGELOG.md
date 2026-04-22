@@ -76,3 +76,62 @@ After manual review of source content against quality_rubric.md, 4 skills were a
 - [reject] `ctxvault` — Python agent memory library, interesting but not a SKILL.md and off-stack
 - [reject] ~108 others — below threshold, awesome-lists, editor plugins, or off-stack material
 
+
+## 2026-04-22 [opus-4.6] APPLIED — +9 new / ~0 updated
+
+Mode: full discovery + Opus quality gate. Discovered 715 candidates (github search + curated repos + RSS). Heuristic flagged 123 creates. After quality gate: 9 accepted, 114 rejected.
+
+### Created (9)
+
+- [create] `frontend-design` score=90
+  source=https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
+  reason=Official Anthropic skill — not in DB. Deep design thinking direction (brutalist/editorial/luxury aesthetics), anti-AI-slop principles, typography/motion/spatial composition guidance. Genuinely net-new territory in frontend category.
+
+- [create] `webapp-testing` score=82
+  source=https://github.com/anthropics/skills/blob/main/skills/webapp-testing/SKILL.md
+  reason=Official Anthropic skill — not in DB. Playwright-focused with decision tree for static vs dynamic apps, with_server.py lifecycle management, reconnaissance-then-action workflow. Distinct from existing stabilizing-e2e-tests (that's about flaky test repair, this is about interaction automation).
+
+- [create] `claude-api` score=88
+  source=https://github.com/anthropics/skills/blob/main/skills/claude-api/SKILL.md
+  reason=Official Anthropic skill — not in DB. Authoritative surface-selection framework, current model table, adaptive thinking patterns, anti-patterns, provider-detection logic. Rewrote from 32k to 5.4k retaining highest-value decision content. Always-on category (ai-productivity).
+
+- [create] `property-based-testing` score=78
+  source=https://github.com/trailofbits/skills/blob/main/plugins/property-based-testing/skills/property-based-testing/SKILL.md
+  reason=Net-new despite existing designing-property-based-tests. PBT skill has property catalog, strength hierarchy, and task-typed decision tree (writing/designing/reviewing/interpreting failures). Trigram similarity 0.16 (below 0.40 threshold). Complements rather than duplicates incumbent.
+
+- [create] `semgrep-rule-creator` score=76
+  source=https://github.com/trailofbits/skills/blob/main/plugins/semgrep-rule-creator/skills/semgrep-rule-creator/SKILL.md
+  reason=Net-new vs existing authoring-semgrep-rules. ToB version has "rationalizations to reject" pattern, false-positive control, taint mode worked examples, and validation loop. Trigram similarity near zero. Deeper and more opinionated than incumbent.
+
+- [create] `sharp-edges` score=80
+  source=https://github.com/trailofbits/skills/blob/main/plugins/sharp-edges/skills/sharp-edges/SKILL.md
+  reason=No overlap with any existing skill. API misuse-resistance analysis is a distinct security discipline. "Pit of success" framing, JWT/crypto footgun taxonomy, rationalization rejection table. Fits security-reliability always-on category.
+
+- [create] `differential-review` score=82
+  source=https://github.com/trailofbits/skills/blob/main/plugins/differential-review/skills/differential-review/SKILL.md
+  reason=Net-new. Security-focused diff review with blast-radius quantification, codebase-size strategy, and mandatory report generation. Distinct from generating-pr-reviews (general PR feedback) — this is specifically security regression detection.
+
+- [create] `insecure-defaults` score=82
+  source=https://github.com/trailofbits/skills/blob/main/plugins/insecure-defaults/skills/insecure-defaults/SKILL.md
+  reason=Net-new. Fail-open vs fail-secure distinction is precise and valuable. Explicitly scoped away from test fixtures, example files, dev-only tools. Fills gap in security-reliability category.
+
+- [create] `designing-workflow-skills` score=78
+  source=https://github.com/trailofbits/skills/blob/main/plugins/workflow-skill-design/skills/designing-workflow-skills/SKILL.md
+  reason=Net-new meta-skill for skill authors. Numbered phases with entry/exit criteria, description-as-trigger principle, routing patterns, safety gates. Directly applicable to anyone building Claude Code skills. Fits ai-productivity always-on category.
+
+### Skipped (notable)
+
+- `modern-python` (trailofbits) — DB already has strong `configuring-modern-python-projects` with identical toolset (uv/ruff/ty). ToB version adds prek and security tooling table but conceptually duplicate. Incumbent scored 80+. Skipped per no-duplicates rule.
+- `theme-factory` (anthropics/skills) — DB has `artifact-stylist` covering same territory (theming artifacts). Skip.
+- `testing-handbook-generator` — Meta-tool for generating other skills from ToB handbook. Too narrow/bootstrapping-only. Skip.
+- `ask-questions-if-underspecified` — Useful but generic Claude behavior, not stack-specific. Score 60, compliance below threshold.
+
+### Rejected (representative sample from 114)
+
+- `awesome-*` (50+ repos) — Resource curation lists, not executable skills.
+- `coding-interview-university`, `professional-programming` — Off-stack knowledge repos.
+- `browser-use`, `playwright` (repo), `laravel`, `firecrawl` — Tool READMEs, not SKILL.md files.
+- `open-saas`, `codepilot`, `ai-website-cloner-template`, `skybridge` — Starter templates; no SKILL.md depth.
+- `carmack-council`, `orchestkit`, `agency-agents`, `editor-pro-max` — Interesting architectures but no standalone skill authoring quality.
+- `alirezarezvani/claude-skills/*` (all at score 60) — Shallow bodies; "POWERFUL" branding with thin decision content. Compliance scores 10-15, below 15 minimum.
+- `insecure-defaults-from-gstack`, `ctxvault`, `claude-agent-team-manager`, `beagle` — Below threshold.

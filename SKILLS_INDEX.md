@@ -1,8 +1,8 @@
 # Skills Index
 
-_57 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_66 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-04-16` · **Last generated:** `2026-04-16T08:13:10.624970Z`
+**Version:** `2026-04-22` · **Last generated:** `2026-04-22T13:55:42.316960Z`
 
 ## Quick search
 
@@ -10,7 +10,9 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
 |---|---|---|---|
 | [`building-rag-ready-docs`](./skills/ai-productivity/building-rag-ready-docs/SKILL.md) | ai-productivity | core | Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology |
 | [`cataloging-codebase-patterns`](./skills/ai-productivity/cataloging-codebase-patterns/SKILL.md) | ai-productivity | core | Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior |
+| [`claude-api`](./skills/ai-productivity/claude-api/SKILL.md) | ai-productivity | supporting | Build, debug, and optimize Claude API / Anthropic SDK apps |
 | [`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md) | ai-productivity | core | Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills |
+| [`designing-workflow-skills`](./skills/ai-productivity/designing-workflow-skills/SKILL.md) | ai-productivity | supporting | Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure |
 | [`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md) | ai-productivity | core | Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden |
 | [`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md) | ai-productivity | core | Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas |
 | [`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md) | ai-productivity | core | Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability |
@@ -40,6 +42,7 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`building-nextjs-shadcn-interfaces`](./skills/frontend/building-nextjs-shadcn-interfaces/SKILL.md) | frontend | supporting | Builds production-grade Next.js 15 + shadcn/ui interfaces: project setup, file organisation, route groups, async params migration, CSS variable theming, and component composition rules |
 | [`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md) | frontend | core | Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications |
 | [`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md) | frontend | core | Designs reusable UI component systems, prop APIs, composition rules, and state boundaries |
+| [`frontend-design`](./skills/frontend/frontend-design/SKILL.md) | frontend | supporting | Create distinctive, production-grade frontend interfaces with high design quality |
 | [`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md) | frontend | core | Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment |
 | [`modern-css-architecture`](./skills/frontend/modern-css-architecture/SKILL.md) | frontend | core | Improves CSS architecture, token usage, layout consistency, and responsive styling strategy |
 | [`optimizing-bundle-performance`](./skills/frontend/optimizing-bundle-performance/SKILL.md) | frontend | core | Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks |
@@ -53,18 +56,24 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md) | platform | core | Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks |
 | [`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md) | security-reliability | core | Audits secret handling, environment configuration, rotation practices, and accidental exposure risks |
 | [`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md) | security-reliability | supporting | Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases |
+| [`differential-review`](./skills/security-reliability/differential-review/SKILL.md) | security-reliability | supporting | Security-focused differential review of code changes (PRs, commits, diffs) |
 | [`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md) | security-reliability | core | Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations |
+| [`insecure-defaults`](./skills/security-reliability/insecure-defaults/SKILL.md) | security-reliability | supporting | Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production |
 | [`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md) | security-reliability | core | Reviews how systems fail under dependency outages, partial writes, retries, and degraded states |
+| [`semgrep-rule-creator`](./skills/security-reliability/semgrep-rule-creator/SKILL.md) | security-reliability | supporting | Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns |
 | [`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md) | security-reliability | core | Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus |
+| [`sharp-edges`](./skills/security-reliability/sharp-edges/SKILL.md) | security-reliability | supporting | Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes |
 | [`threat-modeling-features`](./skills/security-reliability/threat-modeling-features/SKILL.md) | security-reliability | core | Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations |
 | [`validating-backup-and-restore`](./skills/security-reliability/validating-backup-and-restore/SKILL.md) | security-reliability | core | Validates backup scope, recovery steps, restore drills, and data integrity assumptions |
 | [`designing-integration-tests`](./skills/testing/designing-integration-tests/SKILL.md) | testing | core | Designs integration tests around service contracts, persistence, side effects, and environment setup |
 | [`designing-property-based-tests`](./skills/testing/designing-property-based-tests/SKILL.md) | testing | supporting | Identifies code patterns where property-based testing produces stronger coverage than example-based tests — serialization pairs, parsers, normalizers, validators, pure functions |
 | [`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md) | testing | core | Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details |
+| [`property-based-testing`](./skills/testing/property-based-testing/SKILL.md) | testing | supporting | Provides guidance for property-based testing across multiple languages and smart contracts |
 | [`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md) | testing | core | Turns logs, traces, and error reports into concrete reproduction steps and regression tests |
 | [`reviewing-test-coverage`](./skills/testing/reviewing-test-coverage/SKILL.md) | testing | core | Reviews what is not tested and prioritizes the highest-risk missing scenarios |
 | [`snapshot-regression-checks`](./skills/testing/snapshot-regression-checks/SKILL.md) | testing | core | Applies snapshot and golden-file testing carefully for stable outputs such as APIs, emails, rendered templates, and serialization |
 | [`stabilizing-e2e-tests`](./skills/testing/stabilizing-e2e-tests/SKILL.md) | testing | core | Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes |
+| [`webapp-testing`](./skills/testing/webapp-testing/SKILL.md) | testing | supporting | Test and interact with local web applications using Python Playwright scripts |
 
 ## By category
 
@@ -74,8 +83,12 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `rag docs`, `retrieval`, `chunking`, `vector db docs`, `knowledge base`
 - **[`cataloging-codebase-patterns`](./skills/ai-productivity/cataloging-codebase-patterns/SKILL.md)** — Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior. Use when onboarding to large codebases or consolidating conventions.
   · triggers: `codebase patterns`, `preferred patterns`, `repository conventions`, `architecture map`
+- **[`claude-api`](./skills/ai-productivity/claude-api/SKILL.md)** — Build, debug, and optimize Claude API / Anthropic SDK apps. Always includes prompt caching. Handles migrating between Claude model versions and choosing between API surfaces (single call, tool use, agentic loop, Managed Agents). TRIGGER: code imports `anthropic`/`@anthropic-ai/sdk`; user asks for Claude API, Anthropic SDK, or Managed Agents; user adds/modifies a Claude feature (caching, thinking, tool use, batch, files, citations) or model. SKIP: file uses `openai`/other-provider SDK, provider-neutral code, general ML.
+  · triggers: `claude api`, `anthropic sdk`, `prompt caching`, `managed agents`, `claude model`, `tool use`...
 - **[`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md)** — Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills. Use when teams repeat style, design, or workflow guidance.
   · triggers: `team conventions`, `engineering standards`, `best practices`, `coding guidelines`
+- **[`designing-workflow-skills`](./skills/ai-productivity/designing-workflow-skills/SKILL.md)** — Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure. Use when creating skills with sequential pipelines, routing patterns, safety gates, task tracking, phased execution, or any multi-step workflow. Also applies when reviewing or refactoring existing workflow skills for quality.
+  · triggers: `workflow skill`, `skill design`, `multi-step skill`, `phased execution`, `subagent delegation`, `skill authoring`
 - **[`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md)** — Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.
   · triggers: `tool comparison`, `library choice`, `framework evaluation`, `build vs buy`
 - **[`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md)** — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.
@@ -143,6 +156,8 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `rerender`, `useeffect bug`, `memoization`, `stale closure`, `react performance`
 - **[`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md)** — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
   · triggers: `component library`, `design system`, `props api`, `slot patterns`, `headless ui`
+- **[`frontend-design`](./skills/frontend/frontend-design/SKILL.md)** — Create distinctive, production-grade frontend interfaces with high design quality. Use when building web components, pages, artifacts, or applications (websites, landing pages, dashboards, React components, HTML/CSS layouts). Avoids generic AI-slop aesthetics — commits to bold aesthetic direction (brutalist, editorial, luxury, organic, etc.) with intentional typography, color, motion, and spatial composition.
+  · triggers: `frontend design`, `ui design`, `distinctive ui`, `production grade design`, `design aesthetic`, `avoid ai aesthetics`...
 - **[`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md)** — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.
   · triggers: `form validation`, `error states`, `submit flow`, `field validation`, `optimistic ui`
 - **[`modern-css-architecture`](./skills/frontend/modern-css-architecture/SKILL.md)** — Improves CSS architecture, token usage, layout consistency, and responsive styling strategy. Use when refactoring styling systems, Tailwind conventions, CSS modules, or shared UI foundations.
@@ -175,12 +190,20 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `secrets audit`, `env vars`, `credential exposure`, `config hygiene`, `secret rotation`
 - **[`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md)** — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases. Use when adding lint coverage for a vulnerability class, codifying a postmortem, or building taint rules for user-input-to-sink flows.
   · triggers: `semgrep rule`, `custom static analysis`, `taint mode`, `codify a postmortem`, `lint for security bug`, `semgrep --test`
+- **[`differential-review`](./skills/security-reliability/differential-review/SKILL.md)** — Security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects security regressions. Risk-first: focuses on auth, crypto, value transfer, external calls.
+  · triggers: `differential review`, `security review pr`, `code diff security`, `blast radius`, `security regression`
 - **[`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md)** — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations. Use when incidents are hard to diagnose or system behavior is opaque.
   · triggers: `observability`, `tracing`, `structured logs`, `metrics`, `instrumentation`
+- **[`insecure-defaults`](./skills/security-reliability/insecure-defaults/SKILL.md)** — Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Distinguishes fail-open (CRITICAL: app runs with weak secret) from fail-secure (SAFE: app crashes if missing). Use when auditing security, reviewing config management, or analyzing environment variable handling.
+  · triggers: `insecure defaults`, `fail-open`, `hardcoded secrets`, `weak auth defaults`, `environment variable security`
 - **[`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md)** — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states. Use when services coordinate remote calls, queues, or critical transactions.
   · triggers: `failure mode`, `partial outage`, `degraded mode`, `retry storm`, `fallback`
+- **[`semgrep-rule-creator`](./skills/security-reliability/semgrep-rule-creator/SKILL.md)** — Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules for specific bug patterns, security vulnerabilities, or coding standard enforcement. Covers taint mode, false positive control, test structure, and production-quality validation. Different from running existing rulesets.
+  · triggers: `semgrep`, `custom semgrep rules`, `static analysis rules`, `security detection`, `taint analysis`
 - **[`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md)** — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus. Use when tuning monitoring for APIs, background systems, or customer-facing journeys.
   · triggers: `slo`, `alert fatigue`, `slis`, `monitoring thresholds`, `incident response`
+- **[`sharp-edges`](./skills/security-reliability/sharp-edges/SKILL.md)** — Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes. Use when reviewing API designs, configuration schemas, cryptographic library ergonomics, or evaluating whether code follows 'secure by default' and 'pit of success' principles. Triggers: footgun, misuse-resistant, secure defaults, API usability, dangerous configuration.
+  · triggers: `footgun`, `misuse-resistant`, `secure defaults`, `api design review`, `sharp edges`, `pit of success`
 - **[`threat-modeling-features`](./skills/security-reliability/threat-modeling-features/SKILL.md)** — Threat-models new features by identifying assets, trust boundaries, attack paths, and mitigations. Use when reviewing auth changes, payments, admin tools, integrations, or other sensitive workflows.
   · triggers: `threat model`, `attack surface`, `security review`, `trust boundary`, `abuse case`
 - **[`validating-backup-and-restore`](./skills/security-reliability/validating-backup-and-restore/SKILL.md)** — Validates backup scope, recovery steps, restore drills, and data integrity assumptions. Use when services store critical operational or customer data.
@@ -194,6 +217,8 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `fast-check`, `hypothesis`, `property-based testing`, `roundtrip`, `invariant testing`, `fuzzing inputs`
 - **[`generating-unit-tests`](./skills/testing/generating-unit-tests/SKILL.md)** — Generates focused unit tests around branches, edge cases, and regressions without overfitting to implementation details. Use when extending logic, fixing bugs, or improving confidence in isolated modules.
   · triggers: `unit tests`, `edge case tests`, `regression test`, `branch coverage`
+- **[`property-based-testing`](./skills/testing/property-based-testing/SKILL.md)** — Provides guidance for property-based testing across multiple languages and smart contracts. Use when writing tests with serialization/validation/parsing patterns, designing features, or when PBT provides stronger coverage than example-based tests. Detects roundtrip, idempotence, invariant, commutativity, and oracle properties. Includes decision tree by task type and property catalog.
+  · triggers: `property-based testing`, `hypothesis`, `roundtrip testing`, `pbt`, `invariant testing`, `fuzz testing`
 - **[`reproducing-bugs-from-logs`](./skills/testing/reproducing-bugs-from-logs/SKILL.md)** — Turns logs, traces, and error reports into concrete reproduction steps and regression tests. Use when investigating production failures, support tickets, or intermittent defects.
   · triggers: `reproduce bug`, `logs to test`, `incident reproduction`, `trace analysis`
 - **[`reviewing-test-coverage`](./skills/testing/reviewing-test-coverage/SKILL.md)** — Reviews what is not tested and prioritizes the highest-risk missing scenarios. Use when shipping new code, after large refactors, or after incidents that revealed blind spots.
@@ -202,4 +227,6 @@ _57 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `snapshot testing`, `golden file`, `approval testing`, `email snapshot`
 - **[`stabilizing-e2e-tests`](./skills/testing/stabilizing-e2e-tests/SKILL.md)** — Improves end-to-end tests by removing flakiness, clarifying waits, and aligning assertions with user-visible outcomes. Use when browser tests are brittle or slow.
   · triggers: `playwright flake`, `cypress flake`, `e2e instability`, `retrying tests`, `waiting for ui`
+- **[`webapp-testing`](./skills/testing/webapp-testing/SKILL.md)** — Test and interact with local web applications using Python Playwright scripts. Use when verifying frontend functionality, debugging UI behavior, capturing browser screenshots, viewing browser logs, or automating web app interactions. Covers static vs dynamic apps, server lifecycle management via with_server.py, and reconnaissance-then-action workflows.
+  · triggers: `playwright`, `webapp testing`, `browser testing`, `test web app`, `automate browser`, `capture screenshot`
 

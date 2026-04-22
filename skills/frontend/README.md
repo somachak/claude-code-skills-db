@@ -10,6 +10,7 @@ React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, C
 - [`building-nextjs-shadcn-interfaces/`](./building-nextjs-shadcn-interfaces/) — Builds production-grade Next.
 - [`debugging-react-rendering/`](./debugging-react-rendering/) — Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications.
 - [`designing-component-systems/`](./designing-component-systems/) — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries.
+- [`frontend-design/`](./frontend-design/) — Create distinctive, production-grade frontend interfaces with high design quality.
 - [`hardening-forms-and-validation/`](./hardening-forms-and-validation/) — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment.
 - [`modern-css-architecture/`](./modern-css-architecture/) — Improves CSS architecture, token usage, layout consistency, and responsive styling strategy.
 - [`optimizing-bundle-performance/`](./optimizing-bundle-performance/) — Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks.
