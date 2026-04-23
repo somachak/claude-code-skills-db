@@ -1,6 +1,6 @@
 {
-  "version": "2026-04-22",
-  "generated_at": "2026-04-22T13:55:42.316960Z",
+  "version": "2026-04-23",
+  "generated_at": "2026-04-23T06:19:50.811553Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -253,6 +253,34 @@
       "skill_body": "## Delegation and Async Coordination\n\nMulti-agent systems (multiple Claude instances or team members working simultaneously) require clear specs, ownership, and sync points. The skill is decomposing tasks so agents can work in parallel.\n\n### When to Use\n\n- Large codebase changes requiring multiple agents/people\n- Parallel work streams (API + web + database)\n- Urgent tasks needing rapid execution\n\n### Decision Framework for Claude Code Skills and Agents\n\n1. **Spec is written first.** Agent reads spec; executes independently. No back-and-forth.\n2. **Ownership is clear.** Agent A builds API endpoints; Agent B builds UI; Agent C integrates. No overlap or duplication.\n3. **Interfaces are stable.** Agent B needs to know API contract (endpoint, request/response shape). Defined in spec, not emergent.\n4. **Async by default.** Agents work on different files/systems; no waiting. Reduces coordination overhead.\n5. **Sync points are explicit.** After API is built, Agent B starts UI. Spec defines these dependencies.\n\n### Anti-patterns to Avoid\n\n- Vague spec. \"Build something.\" Agent wastes time guessing intent.\n- Overlapping ownership. Two agents build same component; merge conflict.\n- Synchronous work. Agent A builds API, Agent B waits. Serialize work unnecessarily.\n\n### Checklist\n\n- [ ] Spec is written and shared (clear intent, requirements)\n- [ ] Ownership is assigned (Agent A: API, Agent B: UI)\n- [ ] Interfaces are defined (API contract, data format)\n- [ ] Dependencies are documented (A finishes before B starts)\n- [ ] Agents work on different files/systems (no conflicts)\n- [ ] Sync points are scheduled (integration check-in)\n- [ ] Progress is tracked (status updates)\n- [ ] Integration testing is planned (all components together)\n\n",
       "frontmatter_overrides": {
         "when_to_use": "subagents, parallel work, agent coordination"
+      }
+    },
+    {
+      "name": "spec-driven-development",
+      "title": "Spec-Driven Development",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack",
+        "backend"
+      ],
+      "priority": "supporting",
+      "description": "Enforces writing a complete specification before any implementation begins. Use when starting a new feature, API, or subsystem \u2014 especially when working with AI coding agents that over-implement. Produces a nine-section spec with RFC 2119 requirements, acceptance criteria, and test stubs before a single line of code is written. Catches scope creep and ambiguity early. Different from designing-workflow-skills (which designs skills) and designing-rest-apis (which designs API contracts).",
+      "trigger_phrases": [
+        "spec before code",
+        "spec-driven",
+        "write spec first",
+        "acceptance criteria",
+        "requirements before coding",
+        "spec then implement"
+      ],
+      "skill_body": "# Spec-Driven Development\n\n**Core rule: no implementation begins without an approved specification.** No exceptions.\n\n## When to Use\n\n- Starting any new feature, API endpoint, subsystem, or service\n- When AI coding agents tend to over-implement or drift from requirements\n- When you need a binding contract between product intent and engineering output\n- When acceptance criteria need to be defined before code is written\n- Greenfield services, breaking API changes, complex business logic\n\n## When NOT to Use\n\n- Trivial bug fixes with a single, obvious fix\n- Pure refactors with no behavior change (write tests instead)\n- Exploratory spikes where the goal IS ambiguity resolution\n\n## The Nine-Section Spec Template\n\nEvery spec must contain all nine sections \u2014 no partial specs are accepted:\n\n1. **Title and Metadata** \u2014 feature name, author, date, status (Draft / Approved / Superseded)\n2. **Context** \u2014 why this feature exists; what problem it solves and for whom\n3. **Functional Requirements** \u2014 MUST/SHOULD/MAY statements per RFC 2119; each requirement gets an ID (FR-01, FR-02...)\n4. **Non-Functional Requirements** \u2014 latency, throughput, error budget, security constraints\n5. **Acceptance Criteria** \u2014 testable binary conditions (pass/fail); maps 1:1 to test stubs in Phase 4\n6. **Edge Cases** \u2014 explicit enumeration of boundary conditions, error states, race conditions\n7. **API Contracts** \u2014 request/response schemas or function signatures with types\n8. **Data Models** \u2014 database schema changes, event payloads, state machine diagrams\n9. **Explicit Exclusions** \u2014 list what is NOT in scope; prevents gold-plating\n\n## Six-Phase Workflow\n\n**Phase 1 \u2014 Gather Requirements**\nAsk: Who is the actor? What is the trigger? What is the expected outcome? What are the constraints?\n\n**Phase 2 \u2014 Write Spec**\nComplete all nine sections. Use RFC 2119 keywords throughout. Every acceptance criterion must be binary (testable true/false). Every API field must have a type and nullability.\n\n**Phase 3 \u2014 Validate Spec**\nRun these checks before marking Approved:\n- [ ] Every functional requirement has at least one acceptance criterion\n- [ ] Every acceptance criterion is binary (testable)\n- [ ] Edge cases cover: empty inputs, max-size inputs, concurrent access, partial failure\n- [ ] No vague criteria (\"should be fast\" is rejected; \"p95 < 200ms under 100 RPS\" is accepted)\n- [ ] Exclusions section prevents over-scoping\n\n**Phase 4 \u2014 Generate Tests**\nExtract each acceptance criterion into a test stub. The stub must: name the criterion, declare its inputs, state the expected output. No implementation logic yet.\n\n**Phase 5 \u2014 Implement**\nWrite code that makes the test stubs pass. Each commit should reference the spec requirement ID it implements (e.g., `implements FR-03`).\n\n**Phase 6 \u2014 Self-Review**\nBefore closing: verify every acceptance criterion passes, every functional requirement is implemented, no behavior was added beyond the spec.\n\n## Anti-Patterns\n\n- **Vague criteria**: \"The API should handle errors gracefully\" \u2014 rejected. Write the specific error code and response body.\n- **Missing exclusions**: not stating what is out of scope invites scope creep.\n- **Gold-plating**: implementing beyond the spec is a spec violation, even if \"nice to have.\"\n- **Spec-as-afterthought**: writing spec after code defeats the purpose \u2014 the spec IS the source of truth.\n- **Ambiguity threshold**: if >30% of requirements are ambiguous after one clarification round, stop and escalate. Do not guess.\n\n## Escalation Triggers\n\nPause implementation and escalate to a human when:\n- Scope creep is detected (work required exceeds spec)\n- A requirement conflicts with another requirement\n- The implementation would require a breaking API change not anticipated in the spec\n- A security implication emerges that the spec did not address\n- Cross-team dependencies appear that were not declared\n\n## Bounded Autonomy\n\nFor non-breaking, fully-specified work: proceed autonomously. For anything that crosses an escalation trigger: stop, document the blocker, and await resolution before continuing.\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/spec-driven-workflow/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
       }
     },
     {
@@ -1083,6 +1111,34 @@
       }
     },
     {
+      "name": "docker-optimization",
+      "title": "Docker Optimization",
+      "category": "platform",
+      "audience": [
+        "full-stack",
+        "backend"
+      ],
+      "priority": "supporting",
+      "description": "Optimizes Dockerfiles and docker-compose configurations for image size, build speed, layer caching, and security hardening. Use when Dockerfiles are slow to build, images are bloated, containers run as root, or docker-compose files need production hardening. Covers multi-stage builds, .dockerignore strategy, secret handling, non-root users, healthchecks, and base-image selection for Node.js, Python, and compiled binaries. Different from shipping-containerized-services which handles deployment readiness.",
+      "trigger_phrases": [
+        "dockerfile optimization",
+        "slow docker build",
+        "docker image size",
+        "multi-stage build",
+        "docker security hardening",
+        "docker compose production"
+      ],
+      "skill_body": "# Docker Optimization\n\nOptimize Dockerfiles and docker-compose for production: smaller images, faster builds, better security.\n\n## When to Use\n\n- Dockerfile builds are slow (>60s on cached layers)\n- Images are larger than 500MB for interpreted languages or 100MB for compiled\n- Containers run as root (security risk)\n- docker-compose files need production hardening\n- Multi-stage builds are absent or poorly structured\n- Secrets are embedded in image layers\n\n## When NOT to Use\n\n- Kubernetes deployment manifests \u2014 use managing-infrastructure-as-code skill\n- Service deployment strategy (blue/green, rolling) \u2014 out of scope here\n- Registry auth and image signing \u2014 handled by hardening-ci-pipelines skill\n\n## Anti-Patterns\n\n- **`:latest` tags** \u2014 unpredictable, breaks reproducibility. Always pin: `node:20.11-alpine3.19`\n- **`RUN apt-get install` without cleanup** \u2014 leaves cache in the layer, inflates image. Always end with `&& rm -rf /var/lib/apt/lists/*`\n- **Copying source before dependencies** \u2014 invalidates dependency cache on every code change. Copy `package.json` first, install deps, THEN copy source.\n- **Running as root** \u2014 any RCE exploit gets full container privileges. Always add `USER nonroot` before CMD.\n- **Secrets in ENV instructions** \u2014 stored in image history, visible via `docker history`. Use BuildKit secrets or runtime env injection.\n- **No .dockerignore** \u2014 copies node_modules, .git, test fixtures into build context. Always create a .dockerignore.\n\n## Base Image Decision Tree\n\nNeed a compiled binary only? Use distroless/static or scratch.\nInterpreted language (Python/Node/Ruby)? Use `{language}:{version}-alpine` (smallest) or `{language}:{version}-slim` if alpine has compatibility issues.\nNeed specific OS packages? Use `debian:bookworm-slim`.\nAvoid full ubuntu/debian unless truly needed \u2014 no benefit over slim variants.\n\n## Multi-Stage Pattern (Node.js Example)\n\n```dockerfile\n# Stage 1: build dependencies only\nFROM node:20.11-alpine3.19 AS deps\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci --only=production\n\n# Stage 2: build application\nFROM node:20.11-alpine3.19 AS builder\nWORKDIR /app\nCOPY --from=deps /app/node_modules ./node_modules\nCOPY . .\nRUN npm run build\n\n# Stage 3: minimal production image\nFROM node:20.11-alpine3.19 AS runner\nRUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser\nWORKDIR /app\nCOPY --from=builder /app/dist ./dist\nCOPY --from=deps /app/node_modules ./node_modules\nUSER appuser\nEXPOSE 3000\nHEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/health || exit 1\nCMD [\"node\", \"dist/index.js\"]\n```\n\n## Layer Caching Rules\n\nOrder Dockerfile instructions by change frequency (least to most frequent):\n1. Base image and system deps (rarely changes)\n2. Package manifests (package.json, requirements.txt, Cargo.toml)\n3. Dependency installation (npm ci, pip install, cargo build)\n4. Application source code (changes every commit)\n\n## Security Checklist\n\n- [ ] No root user in final stage (USER nonroot or equivalent)\n- [ ] No secrets in ENV or ARG instructions (use BuildKit --secret)\n- [ ] Pinned base image tag (not :latest)\n- [ ] HEALTHCHECK present\n- [ ] .dockerignore excludes: node_modules/, .git/, .env*, *.test.*, coverage/\n- [ ] Read-only filesystem where possible (--read-only at runtime)\n- [ ] No unnecessary capabilities (drop ALL, add back only what is needed)\n\n## docker-compose Production Hardening\n\nKey fields to add to every production service:\n- `restart: unless-stopped`\n- `read_only: true` with `tmpfs: [/tmp]` for scratch space\n- `security_opt: [no-new-privileges:true]`\n- `cap_drop: [ALL]` \u2014 add back only what is required\n- `healthcheck` with a real test command\n\n## Python-Specific Pattern (uv)\n\n```dockerfile\nFROM python:3.12-slim AS base\nENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1\nRUN pip install uv\nCOPY pyproject.toml uv.lock ./\nRUN uv sync --frozen --no-dev\nCOPY src/ ./src/\nRUN adduser --system appuser && chown -R appuser /app\nUSER appuser\n```\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/docker-development/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
+      }
+    },
+    {
       "name": "hardening-ci-pipelines",
       "title": "CI Pipeline Hardening",
       "category": "platform",
@@ -1176,6 +1232,34 @@
       }
     },
     {
+      "name": "release-lifecycle-manager",
+      "title": "Release Lifecycle Manager",
+      "category": "platform",
+      "audience": [
+        "full-stack",
+        "backend"
+      ],
+      "priority": "supporting",
+      "description": "Manages the full software release lifecycle: semantic versioning, conventional commits, automated changelog generation, release readiness gates, hotfix procedures, and rollback triggers. Use when shipping a versioned release, coordinating a hotfix, writing a changelog, or establishing a release process for a team. Different from running-release-checklists which executes a single pre-release checklist. Covers Git Flow, trunk-based, and GitHub Flow workflows.",
+      "trigger_phrases": [
+        "semantic versioning",
+        "conventional commits",
+        "changelog generation",
+        "hotfix procedure",
+        "release process",
+        "bump version"
+      ],
+      "skill_body": "# Release Lifecycle Manager\n\nFull software release lifecycle \u2014 from commit convention through hotfix and rollback.\n\n## When to Use\n\n- Determining the next semantic version from commit history\n- Generating a changelog automatically from conventional commits\n- Planning a release: readiness gates, stakeholder communication, deployment sequencing\n- Managing a P0/P1 hotfix under pressure\n- Establishing a release process for a new team or project\n- Setting rollback triggers before a deployment\n\n## When NOT to Use\n\n- Executing a pre-existing deployment runbook \u2014 use running-release-checklists skill\n- CI/CD pipeline setup \u2014 use hardening-ci-pipelines skill\n- Container image publishing \u2014 use docker-optimization or shipping-containerized-services\n\n## Semantic Versioning Rules\n\nMAJOR.MINOR.PATCH:\n- **MAJOR**: breaking change \u2014 callers must update. Increment when removing/renaming a public API, changing a function signature incompatibly, or changing behavior that breaks existing clients.\n- **MINOR**: new capability, backward compatible. Increment when adding new endpoints, fields, or features; or deprecating (but not removing) an API.\n- **PATCH**: bug fix, backward compatible. Increment when fixing incorrect behavior without changing the interface.\n\nPre-release labels: `1.2.0-alpha.1`, `1.2.0-beta.3`, `1.2.0-rc.1`\n\n## Conventional Commits (Required for Automation)\n\nFormat: `<type>(<scope>): <description>`\n\n| Type | Version Impact | Changelog Section |\n|------|---------------|-------------------|\n| `feat` | MINOR | Features |\n| `fix` | PATCH | Bug Fixes |\n| `perf` | PATCH | Performance |\n| `refactor` | none | Internal |\n| `test` | none | (omitted) |\n| `docs` | none | Documentation |\n| `BREAKING CHANGE` footer | MAJOR | Breaking Changes |\n\nAutomated version bump logic: scan commits since last tag. Any `BREAKING CHANGE` footer -> MAJOR. Any `feat` -> MINOR. Otherwise -> PATCH.\n\n## Release Readiness Gates\n\nBefore cutting a release, all gates must pass:\n- [ ] Test coverage at or above threshold (typically 85%)\n- [ ] Zero open P0/P1 bugs in the milestone\n- [ ] All feature flags for this release tested in staging\n- [ ] Database migrations tested on a staging copy of production data\n- [ ] Rollback procedure documented and tested (not just written)\n- [ ] Stakeholder sign-off (PM + relevant team leads)\n- [ ] Monitoring/alerting deployed for new features\n- [ ] Runbook updated for any new operational dependencies\n\n## Release Workflows\n\n**Trunk-based (recommended for fast teams):**\n- All work lands on `main` via short-lived branches\n- Release from `main` at any time by tagging\n- Hotfixes: cherry-pick to `main`, tag immediately\n\n**Git Flow (recommended for versioned products):**\n- Feature branches into `develop`, then `release/x.y.z`, then `main`\n- Hotfix branches from `main`, merged back to `main` AND `develop`\n\n**GitHub Flow (recommended for SaaS with continuous deployment):**\n- All branches from `main`, merge via PR, deploy on merge\n\n## Hotfix Procedure\n\n| Severity | Definition | SLA |\n|----------|-----------|-----|\n| P0-Critical | Data loss, security breach, complete service down | Deploy within 2 hours |\n| P1-High | Key feature broken for >10% of users | Deploy within 8 hours |\n| P2-Medium | Degraded feature, workaround exists | Next planned release |\n\nP0/P1 hotfix steps:\n1. Create `hotfix/description` branch from the release tag (not main/develop)\n2. Apply minimal fix \u2014 no new features, no refactors\n3. Write a regression test that would have caught the bug\n4. Fast-track review: two engineers, 30-min SLA for P0\n5. Deploy to staging, run smoke tests, deploy to production\n6. Cherry-pick or merge back to main AND develop/trunk\n7. Tag a new PATCH release immediately\n\n## Rollback Triggers\n\nDefine rollback triggers BEFORE deploying:\n- Error rate exceeds threshold (e.g., 2x baseline)\n- p95 latency exceeds SLO threshold (e.g., 2x normal)\n- Any P0 alert firing\n- Synthetic monitor failure in production\n\nRollback options: feature flags (flip off), blue/green (redirect traffic back), image rollback (redeploy previous tag).\n\n## Changelog Template\n\n```markdown\n## [1.3.0] - 2026-04-23\n\n### Breaking Changes\n- Renamed user.email to user.primaryEmail in all API responses (#234)\n\n### Features\n- Add bulk export endpoint for audit logs (#221)\n- Support OAuth2 PKCE flow for mobile clients (#228)\n\n### Bug Fixes\n- Fix pagination cursor wrapping on last page (#230)\n- Correct timezone handling in scheduled job triggers (#225)\n\n### Performance\n- Cut p99 latency on /search by 40% with index optimization (#219)\n```\n\n## Stakeholder Communication Templates\n\n**Pre-release (24h before):**\nRelease X.Y.Z deploys tomorrow at [time]. Changes: [2-line summary]. Downtime: none expected. Rollback: available within 5 min if needed.\n\n**Post-release:**\nX.Y.Z is live. [Key features]. Monitoring looks nominal. [Link to changelog].\n\n**Hotfix:**\nP1 hotfix deploying now for [issue]. ETA: [time]. Impact: [who is affected]. Mitigation available: [workaround if any].\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/release-manager/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
+      }
+    },
+    {
       "name": "running-release-checklists",
       "title": "Release Checklist Runner",
       "category": "platform",
@@ -1219,6 +1303,62 @@
       "frontmatter_overrides": {
         "when_to_use": "dockerfile, container image, kubernetes deploy",
         "allowed-tools": "Bash Read"
+      }
+    },
+    {
+      "name": "adversarial-code-review",
+      "title": "Adversarial Code Review",
+      "category": "security-reliability",
+      "audience": [
+        "full-stack",
+        "backend"
+      ],
+      "priority": "supporting",
+      "description": "Forces genuine critical code review through three hostile personas \u2014 Saboteur, New Hire, and Security Auditor \u2014 each required to find at least one real issue. Eliminates rubber-stamp reviews and self-review blind spots. Use when reviewing your own code, when a second opinion is needed before merging, or when standard review missed issues in production. Different from generating-pr-reviews (which is collaborative feedback) and differential-review (which is security-change-focused).",
+      "trigger_phrases": [
+        "adversarial review",
+        "hostile code review",
+        "find issues in my code",
+        "critical review",
+        "second opinion on code",
+        "break this code"
+      ],
+      "skill_body": "# Adversarial Code Review\n\nThree hostile reviewers. Each MUST find at least one real issue. No rubber-stamping.\n\n## When to Use\n\n- Reviewing your own code before merging (self-review blind spots are real)\n- When a standard review passed but you want a harder look\n- Pre-production review for sensitive features (auth, payments, data handling)\n- When \"looks good to me\" reviews have let bugs through previously\n\n## When NOT to Use\n\n- Collaborative PR feedback where tone matters \u2014 use generating-pr-reviews skill\n- Security-focused diff review of a specific change \u2014 use differential-review skill\n- Quick style/formatting checks \u2014 use linters\n\n## The Three Personas\n\n### Persona 1: The Saboteur\nHunts for code that will break in production:\n- **Validation gaps**: inputs that bypass validation, missing type coercions, off-by-one errors\n- **State inconsistencies**: operations that leave data partially updated on failure\n- **Concurrency issues**: race conditions, double-spending, lost updates under concurrent access\n- **Resource leaks**: connections, file handles, goroutines, callbacks that never resolve\n- **Error handling**: swallowed errors, silent failures, misleading error messages that mask the real failure\n\n### Persona 2: The New Hire\nHunts for maintainability failures:\n- **Unclear naming**: variables or functions whose names do not describe their actual behavior\n- **Scattered logic**: the same concept implemented in three different places\n- **Magic values**: undocumented numbers, strings, or constants with no explanation\n- **Missing tests**: code paths that will silently break and no test will catch\n- **Dead code**: unreachable branches, unused parameters, zombie feature flags\n\n### Persona 3: The Security Auditor\nApplies OWASP Top 10 patterns:\n- **Injection**: user input flowing to SQL, shell commands, template engines, eval()\n- **Auth bypass**: missing authorization checks, privilege escalation paths, insecure token handling\n- **Data exposure**: PII/secrets in logs, debug endpoints in production, over-fetching in API responses\n- **Access control**: horizontal privilege escalation (user A accessing user B's data)\n- **Secrets**: hardcoded credentials, API keys in source, secrets in error messages\n\n## Mandatory Finding Rule\n\n**Each persona MUST find at least one issue.** If a persona finds nothing after genuine effort, the review was insufficiently thorough \u2014 try harder. \"No issues found\" is not an acceptable output.\n\n## Severity Amplification\n\nIssues flagged by two personas are promoted one severity level. Issues flagged by all three are promoted two levels and treated as BLOCK.\n\n```\nNOTE flagged by 2 personas  ->  WARNING\nNOTE flagged by 3 personas  ->  CRITICAL\nWARNING flagged by 2 personas  ->  CRITICAL\n```\n\n## Output Format\n\nFor each finding:\n\n```\n[PERSONA] SEVERITY: one-line summary\n  Evidence: exact line/function reference\n  Why it matters: concrete impact if not fixed\n  Fix: specific, actionable recommendation\n```\n\nSEVERITY levels: NOTE / WARNING / CRITICAL\n\nVerdict:\n- **BLOCK** \u2014 one or more CRITICAL findings. Do not merge until resolved.\n- **CONCERNS** \u2014 multiple WARNING findings. Should be addressed; merge only with sign-off.\n- **CLEAN** \u2014 NOTE-level findings only. Document and merge at team's discretion.\n\n## Anti-Patterns in This Review\n\n- Cosmetic-only findings without a real impact statement\n- Hedged language (\"this might possibly be a concern\") \u2014 be direct\n- Generic findings (\"improve error handling\") without specifying which function and what the fix is\n- Praising the code \u2014 this review is adversarial, not collaborative\n\n## Example Finding\n\n```\n[SABOTEUR] CRITICAL: Cart checkout does not lock inventory before payment\n  Evidence: checkout.ts:142 \u2014 reads inventory count, then processes payment, then decrements\n  Why it matters: concurrent checkouts for the same low-stock item will both succeed,\n                  resulting in negative inventory and oversold orders\n  Fix: use a database transaction with SELECT FOR UPDATE on the inventory row\n       before initiating payment, or use optimistic lock with retry on conflict\n```\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering-team/adversarial-reviewer/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
+      }
+    },
+    {
+      "name": "audit-context-building",
+      "title": "Audit Context Builder",
+      "category": "security-reliability",
+      "audience": [
+        "backend",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "description": "Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting. Use before security audits, threat modeling sessions, or any deep code review where superficial understanding risks missing subtle bugs. Five-phase: orientation, micro-analysis per function, global system reconstruction, stability rules, integration. Do NOT use for generating vulnerability findings \u2014 this is the pre-audit context phase only.",
+      "trigger_phrases": [
+        "security audit context",
+        "deep code analysis",
+        "audit context",
+        "architectural context",
+        "line-by-line analysis",
+        "pre-audit analysis"
+      ],
+      "skill_body": "# Audit Context Builder\n\nBuild ultra-granular architectural context before security audits. This skill drives the mandatory context phase \u2014 it does NOT produce vulnerability findings. Findings come after.\n\n## When to Use\n\n- Starting a security audit of an unfamiliar codebase\n- Before any deep vulnerability hunt where missing context would cause false negatives\n- Architecture review requiring full state-machine understanding\n- Any review where \"I get the gist\" thinking is dangerous\n\n## When NOT to Use\n\n- Do NOT use for generating vulnerability findings (use threat-modeling or differential-review skills)\n- Do NOT use for fix recommendations\n- Do NOT use for quick code scans \u2014 this is deliberate, exhaustive work\n\n## Anti-Patterns to Reject\n\n- **\"I get the gist\"** \u2014 Never skip micro-analysis because a function \"looks obvious.\" Assumptions embed bugs.\n- **\"External calls are black boxes\"** \u2014 For external contracts/libraries with available source, apply the same micro-analysis. For true black boxes, assume adversarial behavior.\n- **\"Global understanding can wait\"** \u2014 Phase 3 (global system reconstruction) unlocks cross-function vulnerabilities that per-function analysis misses entirely.\n- **\"Invariants are obvious\"** \u2014 Document minimum three invariants per function explicitly. Surprises live in the gaps between assumed invariants.\n\n## Five-Phase Workflow\n\n### Phase 1 \u2014 Initial Orientation\nMap the system before reading any function body:\n- Identify all modules, packages, entrypoints\n- List all external actors and their trust levels\n- Catalog all storage variables and their types\n- Draw the high-level call graph (even rough is fine)\n\n### Phase 2 \u2014 Ultra-Granular Function Analysis\nFor EVERY function in scope, document:\n- **Purpose**: single sentence stating what this function does\n- **Inputs**: each parameter with its preconditions and trusted/untrusted classification\n- **Outputs**: return values and all state side-effects\n- **Block-by-block reasoning**: walk each block using First Principles \u2014 state what changes and why\n- **Invariants**: minimum 3 invariants that must hold on entry and exit\n- **Assumptions**: minimum 5 assumptions this function makes about callers/callees\n- **Cross-function deps**: which functions this must call before/after, and in which order\n\n### Phase 3 \u2014 Global System Understanding\nAfter all functions are analyzed, reconstruct:\n- Full state machine: every state variable and all its possible transitions\n- Workflow sequences: the ordered multi-step flows that produce each observable outcome\n- Trust boundaries: where untrusted data enters and where it can propagate to\n\n### Phase 4 \u2014 Stability Rules\nApply throughout analysis to prevent hallucination:\n- Never infer behavior from function names alone \u2014 read the body\n- Explicitly mark uncertainty: \"UNCERTAIN: this assumes X\" rather than stating X as fact\n- If two functions conflict in their documented behavior, flag the discrepancy rather than resolving it\n- Do not skip files \u2014 maintain a checklist and verify every in-scope file completes all phases\n\n### Phase 5 \u2014 Integration\nConnect findings across function boundaries:\n- Identify sequences where Phase 2 assumptions conflict between callers and callees\n- Flag any invariant that a caller violates when invoking a callee\n- Produce a final cross-function dependency graph with trust annotations\n\n## Checklist Before Handing Off to Audit Phase\n\n- [ ] Every in-scope function has Purpose, Inputs, Outputs, Block reasoning, Invariants, Assumptions\n- [ ] All external calls classified: source-available (analyzed) or black-box (adversarial assumption)\n- [ ] Global state machine documented\n- [ ] All entry points and their trust levels listed\n- [ ] No \"I get the gist\" shortcuts taken \u2014 all uncertainty explicitly flagged\n- [ ] Cross-function dependency graph produced\n\n## Decision: When to Use Subagents\n\nFor codebases >5,000 lines, delegate each module to a subagent for Phase 2. The main context must not substitute its own reasoning for a module a subagent was assigned. Collect all subagent outputs before starting Phase 3.\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/trailofbits/skills/blob/main/plugins/audit-context-building/skills/audit-context-building/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
       }
     },
     {
@@ -1348,6 +1488,34 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
+      }
+    },
+    {
+      "name": "managing-secrets-infrastructure",
+      "title": "Managing Secrets Infrastructure",
+      "category": "security-reliability",
+      "audience": [
+        "backend",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "description": "Designs and audits secrets infrastructure at scale: HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager. Use when moving beyond .env files to production secrets management \u2014 dynamic credentials, automatic rotation, audit logging, and CI/CD integration without long-lived tokens. Covers AppRole auth, Kubernetes pod identities, dynamic database credentials, certificate lifecycle, and 15-minute emergency rotation procedures. Different from auditing-secrets-and-config which audits existing code-level practices.",
+      "trigger_phrases": [
+        "hashicorp vault",
+        "secrets manager",
+        "dynamic credentials",
+        "secret rotation",
+        "vault setup",
+        "secrets infrastructure"
+      ],
+      "skill_body": "# Managing Secrets Infrastructure\n\nDesign and operate production secrets management beyond .env files. Infrastructure-scale: Vault, cloud KMS, dynamic credentials, rotation automation.\n\n## When to Use\n\n- Moving from .env files or hardcoded secrets to production secrets management\n- Setting up HashiCorp Vault or cloud secret stores (AWS Secrets Manager, GCP Secret Manager, Azure Key Vault)\n- Implementing dynamic database credentials (short-lived, auto-rotated)\n- Integrating secrets into CI/CD pipelines without long-lived tokens\n- Designing secret rotation without downtime\n- Responding to a suspected secret leak (15-minute containment procedure)\n\n## When NOT to Use\n\n- Auditing existing secret handling in application code \u2014 use auditing-secrets-and-config skill\n- Application-level API key management \u2014 use auditing-secrets-and-config skill\n- This skill is for infrastructure setup, not code review\n\n## Anti-Patterns\n\n- **Long-lived service credentials** \u2014 use dynamic credentials that expire in minutes/hours\n- **Single-person Vault unseal** \u2014 one sick engineer blocks all ops. Use Shamir secret sharing (minimum 3-of-5) or cloud KMS auto-unseal.\n- **No audit devices** \u2014 you cannot investigate a breach without audit logs. Configure two audit backends on day one.\n- **Secrets in CI/CD env vars** \u2014 visible in logs, stored indefinitely. Use OIDC token exchange or Vault Agent instead.\n- **Overly permissive policies** \u2014 a compromised service with `path \"*\" { capabilities = [\"*\"] }` gets everything. Scope to the minimum paths required.\n- **Untested rotation** \u2014 rotation that has never been tested will fail in an emergency. Schedule quarterly rotation drills.\n\n## Vault Architecture Decision\n\n**HA Raft deployment (recommended):**\n- 3 or 5 node cluster with Raft integrated storage\n- Cloud KMS auto-unseal (AWS KMS / GCP Cloud KMS / Azure Key Vault)\n- Environment-based namespaces: ns/production, ns/staging, ns/dev\n- Two audit log destinations: file (local) + syslog/SIEM\n\n**Managed alternatives (simpler, less flexible):**\n- AWS Secrets Manager: best when fully on AWS, pay-per-secret model\n- GCP Secret Manager: best when fully on GCP, flat pricing\n- Azure Key Vault: best for Azure workloads, HSM-backed option\n\n**Decision rule**: use Vault when you need dynamic credentials, multiple clouds, or fine-grained policy control. Use cloud-managed when single-cloud and ops simplicity outweighs flexibility.\n\n## Authentication Methods\n\nAppRole for service-to-service: use short-lived secret IDs (10m TTL), 1h token TTL, policy scoped to the service's paths only.\n\nKubernetes pod identity: bind to specific service account names and namespaces. Token TTL 1h.\n\nOIDC for human operators via Okta/Google: maps groups to Vault policies. Never use userpass auth in production \u2014 OIDC provides MFA and session management.\n\n## Dynamic Credentials (The Key Pattern)\n\nDynamic database credentials give each service request a unique, expiring PostgreSQL role:\n- creation_statements creates a role VALID UNTIL expiration\n- default_ttl of 1h means a compromised credential expires automatically\n- Revoke immediately if a breach is suspected \u2014 no rotation needed, credential is already time-bounded\n\nApply the same pattern for: AWS IAM tokens (STS), SSH certificates (24h TTL per session), PKI certificates.\n\n## Rotation Strategy by Type\n\n| Type | Strategy | Frequency |\n|------|----------|-----------|\n| DB passwords | Dual-account swap: create new, verify, delete old | Automatic via Vault |\n| API keys | Overlap window: create new, update consumers, revoke old | 90 days |\n| TLS certificates | Auto-renew 60 days before expiry via PKI engine | Continuous |\n| SSH keys | Short-lived certs via Vault SSH engine (24h TTL) | Per-session |\n\n## CI/CD Integration (No Long-Lived Tokens)\n\nGitHub Actions: use hashicorp/vault-action with JWT method. The OIDC token from GitHub authenticates to Vault, retrieves the secret, and the token expires after the job. No stored credentials.\n\nKubernetes: use External Secrets Operator with a ClusterSecretStore pointing to Vault. Secrets sync automatically with a configurable refresh interval.\n\n## Emergency Response: Leaked Secret (15-Minute Containment)\n\n1. **0-5 min**: Identify the affected credential. Revoke immediately in Vault (`vault lease revoke`) or cloud console.\n2. **5-10 min**: Generate replacement credential. Update all consumers (Kubernetes secrets, env vars, config).\n3. **10-15 min**: Rotate the root credential for the affected secret engine. Verify audit logs for any use of the leaked credential in the past 24h.\n4. **Post-incident**: Review how the secret leaked (git history, logs, clipboard). Add detection rule to prevent recurrence.\n\n## Vault Unseal Checklist\n\n```\nvault status                     # check seal status\nvault operator unseal $KEY_1     # requires threshold shares\nvault operator unseal $KEY_2\nvault operator unseal $KEY_3\nvault status | grep Sealed       # must output: Sealed false\nvault auth list                  # must show auth methods\nvault secrets list               # must show secret engines\n```\n",
+      "frontmatter_overrides": {},
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/secrets-vault-manager/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-04-23T06:19:50.811553Z"
       }
     },
     {

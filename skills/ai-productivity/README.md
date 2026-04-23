@@ -13,4 +13,5 @@ Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work
 - [`extracting-reusable-skills/`](./extracting-reusable-skills/) — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas.
 - [`generating-pr-reviews/`](./generating-pr-reviews/) — Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability.
 - [`planning-multi-agent-work/`](./planning-multi-agent-work/) — Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows.
+- [`spec-driven-development/`](./spec-driven-development/) — Enforces writing a complete specification before any implementation begins.
 - [`turning-runbooks-into-skills/`](./turning-runbooks-into-skills/) — Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls.

@@ -4,11 +4,14 @@ Threat modeling, secrets/config audits, observability, SLOs, failure modes, and 
 
 ## Included skills
 
+- [`adversarial-code-review/`](./adversarial-code-review/) — Forces genuine critical code review through three hostile personas — Saboteur, New Hire, and Security Auditor — each required to find at least one real issue.
+- [`audit-context-building/`](./audit-context-building/) — Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting.
 - [`auditing-secrets-and-config/`](./auditing-secrets-and-config/) — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks.
 - [`authoring-semgrep-rules/`](./authoring-semgrep-rules/) — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases.
 - [`differential-review/`](./differential-review/) — Security-focused differential review of code changes (PRs, commits, diffs).
 - [`improving-observability/`](./improving-observability/) — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations.
 - [`insecure-defaults/`](./insecure-defaults/) — Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production.
+- [`managing-secrets-infrastructure/`](./managing-secrets-infrastructure/) — Designs and audits secrets infrastructure at scale: HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager.
 - [`reviewing-failure-modes/`](./reviewing-failure-modes/) — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states.
 - [`semgrep-rule-creator/`](./semgrep-rule-creator/) — Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns.
 - [`setting-slos-and-alerts/`](./setting-slos-and-alerts/) — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus.

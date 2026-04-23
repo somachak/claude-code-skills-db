@@ -2,6 +2,66 @@
 
 Append-only log of every daily run. Every decision the hunter makes — create, overwrite, skip, reject — is logged here with its score so a human can audit the library's evolution after the fact.
 
+## 2026-04-23 [opus-4.6] APPLIED — +6 new / ~0 updated
+
+Mode: full discovery + Opus 4.6 quality gate. Discovered 716 candidates (github search + 4 curated repos + 3 RSS feeds). Heuristic flagged 119 creates. After quality gate: 6 accepted, 113 rejected, 0 overwrites.
+
+### Created (6)
+
+- [create] `audit-context-building` score=78
+  source=https://github.com/trailofbits/skills/blob/main/plugins/audit-context-building/skills/audit-context-building/SKILL.md
+  reason=Genuinely net-new. Five-phase pre-audit context methodology (orientation, ultra-granular function analysis, global state reconstruction, stability rules, integration) has zero overlap with any existing skill. Security-reliability always-on. Rewrote for stack-agnostic dev audience, removed blockchain-specific framing from original.
+
+- [create] `spec-driven-development` score=76
+  source=https://github.com/alirezarezvani/claude-skills/blob/main/engineering/spec-driven-workflow/SKILL.md
+  reason=Net-new. Nine-section spec template + six-phase workflow + bounded autonomy rules directly addresses AI-agent over-implementation. No existing skill covers spec-first methodology. Similarity to designing-workflow-skills (meta-skill) is <0.35 (different domain). ai-productivity always-on category.
+
+- [create] `docker-optimization` score=74
+  source=https://github.com/alirezarezvani/claude-skills/blob/main/engineering/docker-development/SKILL.md
+  reason=Net-new vs shipping-containerized-services (deployment readiness) and hardening-ci-pipelines (pipeline). Docker-optimization is specifically about Dockerfile authoring — multi-stage builds, layer caching, base image selection, .dockerignore, security hardening. Different scope, trigram similarity ~0.20. Platform category.
+
+- [create] `managing-secrets-infrastructure` score=76
+  source=https://github.com/alirezarezvani/claude-skills/blob/main/engineering/secrets-vault-manager/SKILL.md
+  reason=Net-new vs auditing-secrets-and-config (which audits code-level practices). This skill is infrastructure: Vault HA setup, dynamic credentials, rotation automation, CI/CD OIDC integration, 15-minute emergency procedure. Trigram similarity ~0.18. Security-reliability always-on.
+
+- [create] `adversarial-code-review` score=80
+  source=https://github.com/alirezarezvani/claude-skills/blob/main/engineering-team/adversarial-reviewer/SKILL.md
+  reason=Net-new. Three hostile personas with mandatory-finding rule and severity amplification is a distinct methodology from generating-pr-reviews (collaborative) and differential-review (security regression). Self-review blind-spot elimination fills a real gap. Trigram similarity to incumbents ~0.22. Security-reliability category.
+
+- [create] `release-lifecycle-manager` score=74
+  source=https://github.com/alirezarezvani/claude-skills/blob/main/engineering/release-manager/SKILL.md
+  reason=Net-new vs running-release-checklists (single checklist execution). This covers semantic versioning automation, conventional commits parsing, changelog generation, hotfix SLA procedures, and rollback trigger definition. Full lifecycle scope. Platform category.
+
+### Skipped (notable)
+
+- `modern-python` (trailofbits) — already in DB as configuring-modern-python-projects. Trailofbits version is the source material; incumbent is faithful. Skip.
+- `semgrep-rule-creator` (trailofbits overwrite) — existing semgrep-rule-creator already carries full trailofbits content at 7002 chars. No meaningful delta. Skip.
+- `senior-devops` (alirezarezvani) — broad DevOps role description. Territory covered by hardening-ci-pipelines, managing-infrastructure-as-code, shipping-containerized-services. Would be duplicate, not net-new.
+- `spec-to-code-compliance` (trailofbits) — blockchain-specific smart contract compliance audit. Off-stack for this library.
+- `dimensional-analysis` (trailofbits) — DeFi/financial arithmetic annotation. Off-stack.
+- `adversarial-reviewer` (alirezarezvani) — accepted as adversarial-code-review above with significant rewrite to meet authoring standards.
+
+### Rejected (representative sample from 113)
+
+- `awesome-*` (40+ repos) — resource curation lists, not executable skills
+- `coding-interview-university`, `professional-programming`, `learning`, `howtheytest` — knowledge repos, not Claude skills
+- `browser-use`, `playwright` (repo), `laravel`, `firecrawl`, `servers` (MCP) — tool READMEs with no SKILL.md
+- `open-saas`, `codepilot`, `ai-website-cloner-template`, `skybridge`, `gstack`, `agency-agents`, `orchestkit`, `editor-pro-max`, `lovcode`, `beagle`, `silos` — starter templates or app tools with no skill body
+- `code-review-skill` (awesome-skills org) — heuristic scored 90 but org looks manufactured for SEO; body similarity to generating-pr-reviews is high
+- `carmack-council`, `builder-skills`, `stitch-kit`, `skillnote`, `tezgah`, `claude-agent-team-manager` — interesting but no standalone SKILL.md quality
+- `algorand/cairo/solana/substrate/ton-vulnerability-scanner` — blockchain-specific, off-stack
+- `yara-rule-authoring`, `address-sanitizer`, `testing-handbook-generator` — C/C++ fuzzing or meta-skill, off-stack
+- `let-fate-decide`, `interpreting-culture-index` — tarot cards and HR assessment, clearly off-scope
+- Marketing skills (ab-test-setup, churn-prevention, copy-editing, free-tool-strategy, onboarding-cro, pricing-strategy) — off-stack for dev-focused library
+- Medical device skills (fda-consultant-specialist, risk-management-specialist) — off-stack
+
+### Discovery failure modes
+
+- Three RSS feeds returned 403 (medium.com/feed/tag/claude-code, medium.com/feed/tag/anthropic, anthropic.com/news/rss.xml) — same persistent failure as previous runs
+- Two curated README 404s (sindresorhus/awesome, bradtraversy/design-resources-for-developers) — same as previous runs; sources.yml should be cleaned up
+- Ran without GITHUB_TOKEN — GitHub API unauthenticated rate limits may have caused missing results on busy search queries
+- hunter/run_hunter.py dry-run timed out at 90s due to network-heavy discovery; decision application done manually via apply_skills.py
+
 ## 2026-04-15 [opus-4.6]
 
 Mode: manual merge (runner flagged 121 create / 0 overwrite / 592 reject from 713 discovered). Heuristic was aggressive — most flagged candidates were repo-level awesome-lists or stack-irrelevant templates, not real SKILL.md files. Applied skeptical quality gate per rubric.

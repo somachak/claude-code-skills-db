@@ -1,8 +1,8 @@
 # Skills Index
 
-_66 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_72 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-04-22` · **Last generated:** `2026-04-22T13:55:42.316960Z`
+**Version:** `2026-04-23` · **Last generated:** `2026-04-23T06:19:50.811553Z`
 
 ## Quick search
 
@@ -17,6 +17,7 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md) | ai-productivity | core | Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas |
 | [`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md) | ai-productivity | core | Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability |
 | [`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md) | ai-productivity | core | Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows |
+| [`spec-driven-development`](./skills/ai-productivity/spec-driven-development/SKILL.md) | ai-productivity | supporting | Enforces writing a complete specification before any implementation begins |
 | [`turning-runbooks-into-skills`](./skills/ai-productivity/turning-runbooks-into-skills/SKILL.md) | ai-productivity | core | Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls |
 | [`building-background-jobs`](./skills/backend/building-background-jobs/SKILL.md) | backend | core | Designs reliable background jobs, retry logic, scheduling strategy, idempotency, and failure handling |
 | [`building-event-driven-services`](./skills/backend/building-event-driven-services/SKILL.md) | backend | core | Designs event-driven services with explicit contracts, delivery semantics, replay handling, and consumer isolation |
@@ -48,17 +49,22 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`optimizing-bundle-performance`](./skills/frontend/optimizing-bundle-performance/SKILL.md) | frontend | core | Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks |
 | [`reviewing-frontend-security`](./skills/frontend/reviewing-frontend-security/SKILL.md) | frontend | core | Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes |
 | [`verifying-responsive-layouts`](./skills/frontend/verifying-responsive-layouts/SKILL.md) | frontend | core | Checks breakpoint behavior, overflow, spacing collapse, and layout resilience across screen sizes |
+| [`docker-optimization`](./skills/platform/docker-optimization/SKILL.md) | platform | supporting | Optimizes Dockerfiles and docker-compose configurations for image size, build speed, layer caching, and security hardening |
 | [`hardening-ci-pipelines`](./skills/platform/hardening-ci-pipelines/SKILL.md) | platform | core | Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation |
 | [`improving-developer-experience`](./skills/platform/improving-developer-experience/SKILL.md) | platform | core | Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow |
 | [`maintaining-monorepos`](./skills/platform/maintaining-monorepos/SKILL.md) | platform | core | Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation |
 | [`managing-infrastructure-as-code`](./skills/platform/managing-infrastructure-as-code/SKILL.md) | platform | core | Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns |
+| [`release-lifecycle-manager`](./skills/platform/release-lifecycle-manager/SKILL.md) | platform | supporting | Manages the full software release lifecycle: semantic versioning, conventional commits, automated changelog generation, release readiness gates, hotfix procedures, and rollback triggers |
 | [`running-release-checklists`](./skills/platform/running-release-checklists/SKILL.md) | platform | core | Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification |
 | [`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md) | platform | core | Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks |
+| [`adversarial-code-review`](./skills/security-reliability/adversarial-code-review/SKILL.md) | security-reliability | supporting | Forces genuine critical code review through three hostile personas — Saboteur, New Hire, and Security Auditor — each required to find at least one real issue |
+| [`audit-context-building`](./skills/security-reliability/audit-context-building/SKILL.md) | security-reliability | supporting | Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting |
 | [`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md) | security-reliability | core | Audits secret handling, environment configuration, rotation practices, and accidental exposure risks |
 | [`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md) | security-reliability | supporting | Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases |
 | [`differential-review`](./skills/security-reliability/differential-review/SKILL.md) | security-reliability | supporting | Security-focused differential review of code changes (PRs, commits, diffs) |
 | [`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md) | security-reliability | core | Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations |
 | [`insecure-defaults`](./skills/security-reliability/insecure-defaults/SKILL.md) | security-reliability | supporting | Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production |
+| [`managing-secrets-infrastructure`](./skills/security-reliability/managing-secrets-infrastructure/SKILL.md) | security-reliability | supporting | Designs and audits secrets infrastructure at scale: HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager |
 | [`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md) | security-reliability | core | Reviews how systems fail under dependency outages, partial writes, retries, and degraded states |
 | [`semgrep-rule-creator`](./skills/security-reliability/semgrep-rule-creator/SKILL.md) | security-reliability | supporting | Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns |
 | [`setting-slos-and-alerts`](./skills/security-reliability/setting-slos-and-alerts/SKILL.md) | security-reliability | core | Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus |
@@ -97,6 +103,8 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `pr review`, `code review`, `diff review`, `merge risk`, `review comments`
 - **[`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md)** — Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.
   · triggers: `subagents`, `parallel work`, `agent coordination`, `task decomposition`
+- **[`spec-driven-development`](./skills/ai-productivity/spec-driven-development/SKILL.md)** — Enforces writing a complete specification before any implementation begins. Use when starting a new feature, API, or subsystem — especially when working with AI coding agents that over-implement. Produces a nine-section spec with RFC 2119 requirements, acceptance criteria, and test stubs before a single line of code is written. Catches scope creep and ambiguity early. Different from designing-workflow-skills (which designs skills) and designing-rest-apis (which designs API contracts).
+  · triggers: `spec before code`, `spec-driven`, `write spec first`, `acceptance criteria`, `requirements before coding`, `spec then implement`
 - **[`turning-runbooks-into-skills`](./skills/ai-productivity/turning-runbooks-into-skills/SKILL.md)** — Converts operational runbooks into reusable skills with standing instructions, validator loops, and safe invocation controls. Use when a manual checklist is repeated often enough to automate guidance.
   · triggers: `runbook to skill`, `operational checklist`, `codify process`, `repeatable workflow`
 
@@ -171,6 +179,8 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
 
 ### platform
 
+- **[`docker-optimization`](./skills/platform/docker-optimization/SKILL.md)** — Optimizes Dockerfiles and docker-compose configurations for image size, build speed, layer caching, and security hardening. Use when Dockerfiles are slow to build, images are bloated, containers run as root, or docker-compose files need production hardening. Covers multi-stage builds, .dockerignore strategy, secret handling, non-root users, healthchecks, and base-image selection for Node.js, Python, and compiled binaries. Different from shipping-containerized-services which handles deployment readiness.
+  · triggers: `dockerfile optimization`, `slow docker build`, `docker image size`, `multi-stage build`, `docker security hardening`, `docker compose production`
 - **[`hardening-ci-pipelines`](./skills/platform/hardening-ci-pipelines/SKILL.md)** — Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation. Use when builds are slow, flaky, expensive, or hard to trust.
   · triggers: `ci pipeline`, `github actions`, `flaky build`, `test matrix`, `build caching`
 - **[`improving-developer-experience`](./skills/platform/improving-developer-experience/SKILL.md)** — Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow. Use when repos are hard to bootstrap, inconsistent, or slow to work in.
@@ -179,6 +189,8 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `monorepo`, `workspace graph`, `nx`, `turbo`, `package boundaries`
 - **[`managing-infrastructure-as-code`](./skills/platform/managing-infrastructure-as-code/SKILL.md)** — Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns. Use when working with Terraform, Pulumi, or cloud templates.
   · triggers: `terraform review`, `pulumi`, `iac`, `infrastructure module`, `cloud deploy`
+- **[`release-lifecycle-manager`](./skills/platform/release-lifecycle-manager/SKILL.md)** — Manages the full software release lifecycle: semantic versioning, conventional commits, automated changelog generation, release readiness gates, hotfix procedures, and rollback triggers. Use when shipping a versioned release, coordinating a hotfix, writing a changelog, or establishing a release process for a team. Different from running-release-checklists which executes a single pre-release checklist. Covers Git Flow, trunk-based, and GitHub Flow workflows.
+  · triggers: `semantic versioning`, `conventional commits`, `changelog generation`, `hotfix procedure`, `release process`, `bump version`
 - **[`running-release-checklists`](./skills/platform/running-release-checklists/SKILL.md)** — Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification. Use when preparing staging or production releases.
   · triggers: `release checklist`, `go live`, `rollback plan`, `launch readiness`
 - **[`shipping-containerized-services`](./skills/platform/shipping-containerized-services/SKILL.md)** — Packages services for containers with lean images, safe defaults, environment strategy, and deployment readiness checks. Use when containerizing APIs, workers, or internal tools.
@@ -186,6 +198,10 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
 
 ### security-reliability
 
+- **[`adversarial-code-review`](./skills/security-reliability/adversarial-code-review/SKILL.md)** — Forces genuine critical code review through three hostile personas — Saboteur, New Hire, and Security Auditor — each required to find at least one real issue. Eliminates rubber-stamp reviews and self-review blind spots. Use when reviewing your own code, when a second opinion is needed before merging, or when standard review missed issues in production. Different from generating-pr-reviews (which is collaborative feedback) and differential-review (which is security-change-focused).
+  · triggers: `adversarial review`, `hostile code review`, `find issues in my code`, `critical review`, `second opinion on code`, `break this code`
+- **[`audit-context-building`](./skills/security-reliability/audit-context-building/SKILL.md)** — Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting. Use before security audits, threat modeling sessions, or any deep code review where superficial understanding risks missing subtle bugs. Five-phase: orientation, micro-analysis per function, global system reconstruction, stability rules, integration. Do NOT use for generating vulnerability findings — this is the pre-audit context phase only.
+  · triggers: `security audit context`, `deep code analysis`, `audit context`, `architectural context`, `line-by-line analysis`, `pre-audit analysis`
 - **[`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md)** — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
   · triggers: `secrets audit`, `env vars`, `credential exposure`, `config hygiene`, `secret rotation`
 - **[`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md)** — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases. Use when adding lint coverage for a vulnerability class, codifying a postmortem, or building taint rules for user-input-to-sink flows.
@@ -196,6 +212,8 @@ _66 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `observability`, `tracing`, `structured logs`, `metrics`, `instrumentation`
 - **[`insecure-defaults`](./skills/security-reliability/insecure-defaults/SKILL.md)** — Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production. Distinguishes fail-open (CRITICAL: app runs with weak secret) from fail-secure (SAFE: app crashes if missing). Use when auditing security, reviewing config management, or analyzing environment variable handling.
   · triggers: `insecure defaults`, `fail-open`, `hardcoded secrets`, `weak auth defaults`, `environment variable security`
+- **[`managing-secrets-infrastructure`](./skills/security-reliability/managing-secrets-infrastructure/SKILL.md)** — Designs and audits secrets infrastructure at scale: HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager. Use when moving beyond .env files to production secrets management — dynamic credentials, automatic rotation, audit logging, and CI/CD integration without long-lived tokens. Covers AppRole auth, Kubernetes pod identities, dynamic database credentials, certificate lifecycle, and 15-minute emergency rotation procedures. Different from auditing-secrets-and-config which audits existing code-level practices.
+  · triggers: `hashicorp vault`, `secrets manager`, `dynamic credentials`, `secret rotation`, `vault setup`, `secrets infrastructure`
 - **[`reviewing-failure-modes`](./skills/security-reliability/reviewing-failure-modes/SKILL.md)** — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states. Use when services coordinate remote calls, queues, or critical transactions.
   · triggers: `failure mode`, `partial outage`, `degraded mode`, `retry storm`, `fallback`
 - **[`semgrep-rule-creator`](./skills/security-reliability/semgrep-rule-creator/SKILL.md)** — Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns. Use when writing Semgrep rules for specific bug patterns, security vulnerabilities, or coding standard enforcement. Covers taint mode, false positive control, test structure, and production-quality validation. Different from running existing rulesets.
