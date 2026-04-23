@@ -61,6 +61,11 @@
           "type": "string",
           "enum": ["core", "supporting", "experimental"]
         },
+        "stage": {
+          "type": "string",
+          "enum": ["experiment", "build", "harden", "launch", "scale"],
+          "description": "The primary project phase where this skill earns its keep. experiment=pre-commitment design/spec; build=active feature construction; harden=pre-ship security and coverage; launch=CI/CD, release, observability; scale=post-launch performance and infra."
+        },
         "description": {
           "type": "string",
           "maxLength": 1024,

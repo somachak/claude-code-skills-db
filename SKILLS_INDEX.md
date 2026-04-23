@@ -2,7 +2,7 @@
 
 _72 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-04-23` · **Last generated:** `2026-04-23T06:19:50.811553Z`
+**Version:** `2026-04-23` · **Last generated:** `2026-04-23T11:08:51.166534Z`
 
 ## Quick search
 

@@ -32,6 +32,7 @@ STUB_MARKERS = (
 )
 
 REQUIRED = {"name", "title", "category", "audience", "priority", "description", "trigger_phrases", "skill_body"}
+VALID_STAGES = {"experiment", "build", "harden", "launch", "scale"}
 
 
 def main() -> int:
@@ -65,6 +66,12 @@ def main() -> int:
 
         if len(s.get("trigger_phrases", [])) < 3:
             errors.append(f"{name}: needs at least 3 trigger_phrases")
+
+        stage = s.get("stage")
+        if not stage:
+            warnings.append(f"{name}: missing 'stage' field (add one of: {sorted(VALID_STAGES)})")
+        elif stage not in VALID_STAGES:
+            errors.append(f"{name}: invalid stage '{stage}' (must be one of {sorted(VALID_STAGES)})")
 
         for rel, content in (s.get("supporting_files") or {}).items():
             if not content or not content.strip():

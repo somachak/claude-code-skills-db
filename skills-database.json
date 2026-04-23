@@ -1,6 +1,6 @@
 {
   "version": "2026-04-23",
-  "generated_at": "2026-04-23T06:19:50.811553Z",
+  "generated_at": "2026-04-23T11:08:51.166534Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -66,7 +66,8 @@
       "skill_body": "## Documentation for AI Integration\n\nRAG (Retrieval-Augmented Generation) systems fetch relevant docs to answer questions. Good RAG docs are searchable, structured, and comprehensive. The skill is organizing documentation so AI can retrieve and use it.\n\n### When to Use\n\n- Building a chatbot or AI assistant\n- Existing docs are disorganized or scattered\n- Need to enable AI to answer codebase questions\n\n### Decision Framework\n\n1. **Structure for retrieval.** Docs are chunked by topic (API endpoints, configuration options). AI can retrieve relevant chunks.\n2. **Headings are descriptive.** \"Authentication\" is vague; \"JWT Token Rotation and Expiry\" is specific. Improves retrieval relevance.\n3. **Examples are concrete.** Code snippets, curl requests, expected responses. AI can extract and reuse.\n4. **Cross-references are links.** Markdown links to related docs. Helps AI navigate.\n5. **Metadata helps indexing.** Tags (frontend, backend, security) or categories. Narrows search space.\n\n### Anti-patterns to Avoid\n\n- Unstructured docs. Walls of text. Hard to retrieve relevant section.\n- No examples. AI doesn't know how to use API or config.\n- Scattered docs. README, wiki, Notion, wiki.js\u2014docs everywhere. AI doesn't know where to look.\n\n### Checklist\n\n- [ ] Docs are organized by topic (API, config, deployment, troubleshooting)\n- [ ] Each doc has descriptive headings (not generic)\n- [ ] Examples are included (code snippets, curl requests, expected output)\n- [ ] Docs are linked (cross-references via markdown)\n- [ ] Docs are searchable (indexed in RAG system)\n- [ ] Metadata (tags, categories) helps retrieval\n- [ ] Docs are up-to-date (reviewed quarterly)\n- [ ] AI can retrieve and accurately answer questions using docs\n\n",
       "frontmatter_overrides": {
         "when_to_use": "rag docs, retrieval, chunking"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "cataloging-codebase-patterns",
@@ -88,7 +89,8 @@
       "skill_body": "## Mining Code for Reusable Patterns\n\nLarge codebases have repeated patterns (API endpoint structure, form handling, error management). The skill is identifying and documenting patterns so new code follows them consistently.\n\n### When to Use\n\n- Codebase is >100K LOC with inconsistent patterns\n- Onboarding is slow due to unclear patterns\n- Code review repeats \"we usually do this differently\"\n\n### Decision Framework\n\n1. **Pattern is explicit, not implicit.** \"Use react-query for API fetching\" vs. \"some use fetch, some axios, some react-query.\" Explicit wins.\n2. **Pattern is documented with examples.** Not just \"use error boundary for error handling.\" Show example, explain, show wrong way.\n3. **Pattern is enforced by linting or convention.** Auto-enforcement is preferred (linting); manual review is fallback (conventions doc).\n4. **Pattern is discoverable.** Developers know where to find it (ENGINEERING.md, Storybook, wiki).\n5. **Pattern evolves.** \"We used to do X; now we do Y\" is documented. Reduces confusion.\n\n### Anti-patterns to Avoid\n\n- Implicit patterns. Experienced dev knows; new dev guesses.\n- Inconsistent enforcement. Some code follows pattern; some doesn't. Confusing.\n- Outdated patterns. \"Old code uses middleware; new code uses hooks.\" Docs don't clarify which is preferred.\n\n### Checklist\n\n- [ ] Patterns are identified (API endpoints, form handling, error handling, etc.)\n- [ ] Patterns are documented with examples (good and bad code)\n- [ ] Examples are from actual codebase (not pseudocode)\n- [ ] New code follows patterns (enforced in code review)\n- [ ] Patterns are versioned (deprecated patterns are marked)\n- [ ] Patterns are discoverable (linked from ENGINEERING.md)\n- [ ] New dev learns patterns from docs, not osmosis\n\n",
       "frontmatter_overrides": {
         "when_to_use": "codebase patterns, preferred patterns, repository conventions"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "claude-api",
@@ -117,7 +119,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "curating-team-conventions",
@@ -138,7 +141,8 @@
       "skill_body": "## Documentation, Linting, and Standardization\n\nTeam conventions (code style, PR size, file organization) scale culture. The skill is documenting conventions, automating enforcement, and evolving them.\n\n### When to Use\n\n- Onboarding new team member\n- Code review becomes repetitive (\"use const, not var\")\n- Merging teams or codebases with different standards\n\n### Decision Framework\n\n1. **Conventions are enforceable.** Use linters (ESLint, Ruff), formatters (Prettier, Black), TypeScript strict mode. Don't rely on code review alone.\n2. **Conventions are documented.** CONTRIBUTING.md, ENGINEERING.md. New dev reads once; no questions.\n3. **Conventions evolve.** Quarterly review. Does the convention still make sense? Vote, update, commit.\n4. **Conventions are optional or required.** Style (const vs var)? Enforced by linter. Architecture? Manual review. Clarity on which is which.\n5. **Conventions reflect tech stack.** React conventions differ from Next.js (Server Components). Document both.\n\n### Anti-patterns to Avoid\n\n- Undocumented conventions. Tribal knowledge. New dev doesn't know.\n- Manual enforcement. Code review becomes nag-fest.\n- Stale conventions. \"We used to do that; ignore it.\"\n\n### Checklist\n\n- [ ] CONTRIBUTING.md or ENGINEERING.md documents conventions\n- [ ] Linters enforce style (ESLint, Ruff, Prettier)\n- [ ] Pre-commit hooks prevent violations\n- [ ] PR template includes checklist (conventions checklist)\n- [ ] Examples of good/bad code for conventions\n- [ ] Conventions are reviewed and updated quarterly\n- [ ] New dev can contribute without \"unwritten rules\"\n- [ ] CI enforces linters (CI fails if violation)\n\n",
       "frontmatter_overrides": {
         "when_to_use": "team conventions, engineering standards, best practices"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "designing-workflow-skills",
@@ -165,7 +169,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "evaluating-tooling-choices",
@@ -186,7 +191,8 @@
       "skill_body": "## Decision Framework for Build Tools and Dependencies\n\nChoosing the right tool (bundler, testing framework, ORM) affects productivity and maintenance burden for years. The skill is evaluating options systematically and documenting decisions.\n\n### When to Use\n\n- Choosing tech for new project\n- Auditing existing tools (are they still the best choice?)\n- Team is considering migration (webpack \u2192 Vite, Jest \u2192 Vitest)\n\n### Decision Framework\n\n1. **Evaluation criteria.** Performance, maintainability, community, learning curve, cost. Weight by importance to project.\n2. **Trade-offs are explicit.** Webpack is slower than Vite, but has more loaders. Vitest is newer but faster. Document tradeoffs.\n3. **Proof of concept.** Don't commit based on docs. Build prototype with candidate tool. Measure, compare.\n4. **Decision record.** ADR (Architecture Decision Record) documents: what was the decision, why this tool, alternatives considered, tradeoffs. Helps future decisions.\n5. **Sunsetting strategy.** If switching tools later, is it easy? If tool is proprietary, can you escape? Low switching cost preferred.\n\n### Anti-patterns to Avoid\n\n- Trendy choice. \"Everyone uses X.\" X might not suit your project.\n- One person decides. Tool is imposed on team. Resistance and resentment.\n- No tradeoff analysis. Choose based on one metric (speed, not maintainability).\n\n### Checklist\n\n- [ ] Evaluation criteria are defined and weighted\n- [ ] Candidates are evaluated against criteria\n- [ ] Proof of concept is built (not just research)\n- [ ] Decision is documented (ADR format)\n- [ ] Team understands tradeoffs and rationale\n- [ ] Migration cost is estimated (if switching later)\n- [ ] Tool is evaluated annually (still best choice?)\n\n",
       "frontmatter_overrides": {
         "when_to_use": "tool comparison, library choice, framework evaluation"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "extracting-reusable-skills",
@@ -208,7 +214,8 @@
       "skill_body": "## From Task to Reusable Skill\n\nRepeated tasks should become reusable skills. The skill is recognizing when to extract, designing skill interfaces, and authoring clear, stack-specific documentation.\n\n### When to Use\n\n- Task is repeated across projects or team members\n- Task is complex and domain-specific\n- Pattern emerges in multiple codebases\n\n### Decision Framework for Claude Code Skills\n\n1. **Skill is self-contained and focused.** Not \"do everything,\" but \"generate SQL migration\" or \"audit component accessibility.\"\n2. **Skill interface is clear.** Input (code snippet, requirements), output (generated artifact, audit report). Use Claude's first-class integration: read files, run commands, return markdown.\n3. **Stack specificity.** Skill for React + TypeScript + Tailwind has different guidance than generic Vue. Reference specific patterns, libraries, tools.\n4. **Skill body is 400-2500 chars.** Substantive, not boilerplate. Include \"when to use,\" \"decision framework,\" \"anti-patterns,\" \"checklist.\"\n5. **Reference supporting files.** Complex checklists, examples, patterns \u2192 separate markdown files. Linked from skill body.\n\n### Anti-patterns to Avoid\n\n- Generic skill. \"Help me code\" + generic advice. Not useful.\n- Bloated skill. 5000 chars of examples. Split into supporting files.\n- No context. Skill doesn't mention React, Node, or databases. Sounds random.\n\n### Checklist\n\n- [ ] Skill solves a repeated problem (not one-off task)\n- [ ] Skill is focused (one primary action, not many)\n- [ ] Skill body is 400-2500 chars with decision framework and anti-patterns\n- [ ] Skill references specific tech (React, FastAPI, Tailwind, etc.)\n- [ ] Trigger phrases are natural (words engineers use)\n- [ ] Supporting files are separate, linked from body\n- [ ] Example usage is concrete (real code, not pseudocode)\n- [ ] Skill is tested by running it on real codebase\n\n",
       "frontmatter_overrides": {
         "when_to_use": "create a skill, extract workflow, reuse this process"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "generating-pr-reviews",
@@ -231,7 +238,8 @@
       "skill_body": "## Systematic Code Review\n\nCode review is knowledge transfer and quality gate. The skill is reviewing efficiently, catching real issues (not style), and providing actionable feedback.\n\n### When to Use\n\n- Every PR (before merge)\n- Code review becomes time-consuming\n- Need to scale review across team\n\n### Decision Framework for Code Review\n\n1. **Automate style; review substance.** Linter catches style. Reviewer focuses on logic, performance, security.\n2. **Review checklist is explicit.** Does code change have tests? Is error handling present? Are edge cases covered? Use checklist to stay consistent.\n3. **Comment is actionable.** Not \"bad variable name.\" \"Variable `x` is unclear; use `paymentAmount` instead.\"\n4. **Approve with conditions.** \"Approve once you add test for edge case X\" is clearer than \"request changes\" without hope of resolution.\n5. **Review is timely.** PR waiting 3 days for review = slow merge, merge conflicts. Target 24-hour reviews.\n\n### Anti-patterns to Avoid\n\n- Nitpicky review. Style issues that linter should catch. Wastes time.\n- No structure. Review comments are random. Reviewer missed security issue because distracted by naming.\n- Slow reviews. PR sits for days; context is lost.\n\n### Checklist\n\n- [ ] Linter passes (code style is automated)\n- [ ] Tests are included (unit, integration, or E2E)\n- [ ] Error handling is present (no silent failures)\n- [ ] Security considerations (auth, input validation, no secrets)\n- [ ] Performance is reasonable (no N+1 queries, no memory leaks)\n- [ ] Documentation is updated (code comments, README)\n- [ ] Commit messages are clear (not \"WIP\" or \"fix stuff\")\n- [ ] Edge cases are handled (null, empty, boundary conditions)\n- [ ] PR is under 400 lines (reviewable in <30min)\n\n",
       "frontmatter_overrides": {
         "when_to_use": "pr review, code review, diff review"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "planning-multi-agent-work",
@@ -253,7 +261,8 @@
       "skill_body": "## Delegation and Async Coordination\n\nMulti-agent systems (multiple Claude instances or team members working simultaneously) require clear specs, ownership, and sync points. The skill is decomposing tasks so agents can work in parallel.\n\n### When to Use\n\n- Large codebase changes requiring multiple agents/people\n- Parallel work streams (API + web + database)\n- Urgent tasks needing rapid execution\n\n### Decision Framework for Claude Code Skills and Agents\n\n1. **Spec is written first.** Agent reads spec; executes independently. No back-and-forth.\n2. **Ownership is clear.** Agent A builds API endpoints; Agent B builds UI; Agent C integrates. No overlap or duplication.\n3. **Interfaces are stable.** Agent B needs to know API contract (endpoint, request/response shape). Defined in spec, not emergent.\n4. **Async by default.** Agents work on different files/systems; no waiting. Reduces coordination overhead.\n5. **Sync points are explicit.** After API is built, Agent B starts UI. Spec defines these dependencies.\n\n### Anti-patterns to Avoid\n\n- Vague spec. \"Build something.\" Agent wastes time guessing intent.\n- Overlapping ownership. Two agents build same component; merge conflict.\n- Synchronous work. Agent A builds API, Agent B waits. Serialize work unnecessarily.\n\n### Checklist\n\n- [ ] Spec is written and shared (clear intent, requirements)\n- [ ] Ownership is assigned (Agent A: API, Agent B: UI)\n- [ ] Interfaces are defined (API contract, data format)\n- [ ] Dependencies are documented (A finishes before B starts)\n- [ ] Agents work on different files/systems (no conflicts)\n- [ ] Sync points are scheduled (integration check-in)\n- [ ] Progress is tracked (status updates)\n- [ ] Integration testing is planned (all components together)\n\n",
       "frontmatter_overrides": {
         "when_to_use": "subagents, parallel work, agent coordination"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "spec-driven-development",
@@ -281,7 +290,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "turning-runbooks-into-skills",
@@ -302,7 +312,8 @@
       "skill_body": "## Automation from Manual Procedures\n\nRunbooks are procedures (incident response, deployment, backups). Skills automate them. The skill is identifying automation opportunities and building reliable automation.\n\n### When to Use\n\n- Runbook is followed >1x/month\n- Runbook is error-prone (forgotten steps, manual mistakes)\n- Runbook is long (>10 steps)\n\n### Decision Framework\n\n1. **Runbook step \u2192 skill command.** Manual: \"SSH to server, check logs, restart.\" Skill: \"Check logs for errors, alert if restart needed.\"\n2. **Idempotency is essential.** Skill runs twice (accidental re-trigger)? Same result. No side effects.\n3. **Observability is built-in.** Skill logs actions taken (what was done, why, result). On-call can see what happened.\n4. **Fallback is manual.** Skill automates happy path. If something's wrong, escalate to human. Don't blindly execute.\n5. **Skill is tested in staging first.** Before trusting automation in production, test on staging.\n\n### Anti-patterns to Avoid\n\n- Blind automation. Skill executes without validation. Corrupt state = disaster.\n- Non-idempotent automation. Skill runs twice; creates duplicate entries or state conflict.\n- No visibility. Skill silently fails. Team doesn't know until user complains.\n\n### Checklist\n\n- [ ] Runbook is well-documented (each step is clear)\n- [ ] Runbook is error-prone (manual steps, easy to forget)\n- [ ] Skill implements key steps (not all\u2014keep human in loop for validation)\n- [ ] Skill is idempotent (safe to run twice)\n- [ ] Skill logs actions taken\n- [ ] Skill validates state before acting (no blindly executing)\n- [ ] Skill has fallback to manual (escalates if something's wrong)\n- [ ] Skill is tested in staging before production\n\n",
       "frontmatter_overrides": {
         "when_to_use": "runbook to skill, operational checklist, codify process"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "building-background-jobs",
@@ -324,7 +335,8 @@
       "frontmatter_overrides": {
         "when_to_use": "queue worker, retry logic, idempotency",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "building-event-driven-services",
@@ -346,7 +358,8 @@
       "frontmatter_overrides": {
         "when_to_use": "event driven, kafka, queue design",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "configuring-modern-python-projects",
@@ -374,7 +387,8 @@
         "captured_at": "2026-04-15T07:13:55.104753Z",
         "rewritten": true,
         "hunter_notes": "Adapted from trailofbits/skills. Rewrote for FastAPI/Django focus; tightened anti-pattern table; added worked example."
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "designing-graphql-apis",
@@ -397,7 +411,8 @@
       "frontmatter_overrides": {
         "when_to_use": "graphql schema, resolver performance, n+1",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "designing-rest-apis",
@@ -420,7 +435,8 @@
       "frontmatter_overrides": {
         "when_to_use": "rest api, http api, pagination",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "documenting-api-contracts",
@@ -443,7 +459,8 @@
       "frontmatter_overrides": {
         "when_to_use": "openapi, api docs, integration guide",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "handling-webhooks",
@@ -466,7 +483,8 @@
       "frontmatter_overrides": {
         "when_to_use": "webhook, signature verification, replay attack",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "hardening-file-uploads",
@@ -489,7 +507,8 @@
       "frontmatter_overrides": {
         "when_to_use": "file upload, content type, virus scan",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "implementing-auth-flows",
@@ -513,7 +532,8 @@
       "frontmatter_overrides": {
         "when_to_use": "oauth, sso, session",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "reviewing-backend-concurrency",
@@ -535,7 +555,8 @@
       "frontmatter_overrides": {
         "when_to_use": "race condition, deadlock, concurrency bug",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "reviewing-caching-strategies",
@@ -558,7 +579,8 @@
       "frontmatter_overrides": {
         "when_to_use": "cache invalidation, redis, ttl",
         "allowed-tools": "Read Grep Bash"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "designing-database-schemas",
@@ -582,7 +604,8 @@
       "frontmatter_overrides": {
         "when_to_use": "database schema, table design, foreign keys",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "designing-search-and-indexes",
@@ -607,7 +630,8 @@
       "frontmatter_overrides": {
         "when_to_use": "search index, elasticsearch, meilisearch",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "implementing-postgres-vector-search",
@@ -654,7 +678,8 @@
           "uniqueness": 10
         },
         "note": "Rewritten by Opus 4.6 hunter; expanded with HNSW tuning parameters, anti-patterns table, re-ranking pattern."
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "modeling-analytics-events",
@@ -678,7 +703,8 @@
       "frontmatter_overrides": {
         "when_to_use": "tracking plan, analytics events, event naming",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "planning-data-migrations",
@@ -701,7 +727,8 @@
       "frontmatter_overrides": {
         "when_to_use": "migration plan, backfill, zero downtime migration",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "reviewing-sql-performance",
@@ -725,7 +752,8 @@
       "frontmatter_overrides": {
         "when_to_use": "slow query, sql tuning, index",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "validating-etl-pipelines",
@@ -748,7 +776,8 @@
       "frontmatter_overrides": {
         "when_to_use": "etl validation, schema drift, pipeline freshness",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "animating-react-components-with-motion",
@@ -793,7 +822,8 @@
           "uniqueness": 10
         },
         "note": "Source is a well-structured SKILL.md. Rewritten by Opus 4.6 hunter; condensed decision tree, added anti-patterns, kept all code examples."
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "avoiding-nextjs-app-router-anti-patterns",
@@ -840,7 +870,8 @@
           "uniqueness": 10
         },
         "note": "Rewritten by Opus 4.6 hunter; source content verified and expanded with Next.js 15 async params, migration table."
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "building-accessible-ui",
@@ -865,7 +896,8 @@
         "when_to_use": "accessibility audit, keyboard navigation, aria",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "building-nextjs-shadcn-interfaces",
@@ -912,7 +944,8 @@
           "uniqueness": 10
         },
         "note": "Rewritten by Opus 4.6 hunter; expanded with Server Actions in forms, design principles, common mistakes checklist."
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "debugging-react-rendering",
@@ -935,7 +968,8 @@
         "when_to_use": "rerender, useeffect bug, memoization",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "designing-component-systems",
@@ -960,7 +994,8 @@
         "when_to_use": "component library, design system, props api",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "frontend-design",
@@ -989,7 +1024,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "hardening-forms-and-validation",
@@ -1013,7 +1049,8 @@
         "when_to_use": "form validation, error states, submit flow",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "modern-css-architecture",
@@ -1036,7 +1073,8 @@
         "when_to_use": "tailwind conventions, css architecture, design tokens",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "optimizing-bundle-performance",
@@ -1061,7 +1099,8 @@
         "when_to_use": "bundle size, code splitting, hydration",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "reviewing-frontend-security",
@@ -1085,7 +1124,8 @@
         "when_to_use": "xss, unsafe html, token storage",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "verifying-responsive-layouts",
@@ -1108,7 +1148,8 @@
         "when_to_use": "responsive bug, breakpoints, mobile layout",
         "paths": "**/*.tsx, **/*.ts, **/*.jsx, **/*.js",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "docker-optimization",
@@ -1136,7 +1177,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "hardening-ci-pipelines",
@@ -1160,7 +1202,8 @@
       "frontmatter_overrides": {
         "when_to_use": "ci pipeline, github actions, flaky build",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "improving-developer-experience",
@@ -1183,7 +1226,8 @@
       "frontmatter_overrides": {
         "when_to_use": "developer experience, onboarding, dev setup",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "experiment"
     },
     {
       "name": "maintaining-monorepos",
@@ -1206,7 +1250,8 @@
       "frontmatter_overrides": {
         "when_to_use": "monorepo, workspace graph, nx",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "managing-infrastructure-as-code",
@@ -1229,7 +1274,8 @@
       "frontmatter_overrides": {
         "when_to_use": "terraform review, pulumi, iac",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "scale"
     },
     {
       "name": "release-lifecycle-manager",
@@ -1257,7 +1303,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "running-release-checklists",
@@ -1280,7 +1327,8 @@
       "frontmatter_overrides": {
         "when_to_use": "release checklist, go live, rollback plan",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "shipping-containerized-services",
@@ -1303,7 +1351,8 @@
       "frontmatter_overrides": {
         "when_to_use": "dockerfile, container image, kubernetes deploy",
         "allowed-tools": "Bash Read"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "adversarial-code-review",
@@ -1331,7 +1380,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "audit-context-building",
@@ -1359,7 +1409,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "auditing-secrets-and-config",
@@ -1383,7 +1434,8 @@
       "frontmatter_overrides": {
         "when_to_use": "secrets audit, env vars, credential exposure",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "authoring-semgrep-rules",
@@ -1411,7 +1463,8 @@
         "captured_at": "2026-04-15T07:13:55.104753Z",
         "rewritten": true,
         "hunter_notes": "Adapted from trailofbits/skills. Rewrote worked example around FastAPI open-redirect to match our stack; kept the 'rationalizations to reject' frame which is distinctive."
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "differential-review",
@@ -1438,7 +1491,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "improving-observability",
@@ -1461,7 +1515,8 @@
       "frontmatter_overrides": {
         "when_to_use": "observability, tracing, structured logs",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "insecure-defaults",
@@ -1488,7 +1543,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "managing-secrets-infrastructure",
@@ -1516,7 +1572,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-23T06:19:50.811553Z"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "reviewing-failure-modes",
@@ -1540,7 +1597,8 @@
       "frontmatter_overrides": {
         "when_to_use": "failure mode, partial outage, degraded mode",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "semgrep-rule-creator",
@@ -1567,7 +1625,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "setting-slos-and-alerts",
@@ -1590,7 +1649,8 @@
       "frontmatter_overrides": {
         "when_to_use": "slo, alert fatigue, slis",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "sharp-edges",
@@ -1618,7 +1678,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "threat-modeling-features",
@@ -1643,7 +1704,8 @@
       "frontmatter_overrides": {
         "when_to_use": "threat model, attack surface, security review",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "validating-backup-and-restore",
@@ -1666,7 +1728,8 @@
       "frontmatter_overrides": {
         "when_to_use": "backup restore, recovery drill, rpo rto",
         "allowed-tools": "Read Grep"
-      }
+      },
+      "stage": "launch"
     },
     {
       "name": "designing-integration-tests",
@@ -1689,7 +1752,8 @@
       "frontmatter_overrides": {
         "when_to_use": "integration test, service contract, testcontainers",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "designing-property-based-tests",
@@ -1717,7 +1781,8 @@
         "captured_at": "2026-04-15T07:13:55.104753Z",
         "rewritten": true,
         "hunter_notes": "Adapted from trailofbits/skills. Added fast-check + Hypothesis worked examples on TS/Python stack; removed smart-contract priority row (off-stack)."
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "generating-unit-tests",
@@ -1740,7 +1805,8 @@
       "frontmatter_overrides": {
         "when_to_use": "unit tests, edge case tests, regression test",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "build"
     },
     {
       "name": "property-based-testing",
@@ -1767,7 +1833,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "reproducing-bugs-from-logs",
@@ -1790,7 +1857,8 @@
       "frontmatter_overrides": {
         "when_to_use": "reproduce bug, logs to test, incident reproduction",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "reviewing-test-coverage",
@@ -1813,7 +1881,8 @@
       "frontmatter_overrides": {
         "when_to_use": "coverage gaps, missing tests, risk-based testing",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "snapshot-regression-checks",
@@ -1835,7 +1904,8 @@
       "frontmatter_overrides": {
         "when_to_use": "snapshot testing, golden file, approval testing",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "stabilizing-e2e-tests",
@@ -1859,7 +1929,8 @@
       "frontmatter_overrides": {
         "when_to_use": "playwright flake, cypress flake, e2e instability",
         "allowed-tools": "Read Bash(npm run test*) Bash(pytest*)"
-      }
+      },
+      "stage": "harden"
     },
     {
       "name": "webapp-testing",
@@ -1887,7 +1958,8 @@
         "stars": 0,
         "forks": 0,
         "captured_at": "2026-04-22T13:55:42.316960Z"
-      }
+      },
+      "stage": "build"
     }
   ],
   "maintenance_policy": {

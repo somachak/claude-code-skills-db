@@ -375,6 +375,7 @@ def candidate_to_skill(c: Candidate, name: Optional[str] = None) -> dict[str, An
         "category": c.category,
         "audience": ["full-stack"],
         "priority": "supporting",
+        "stage": _infer_stage(c.category),
         "description": c.description or f"{c.title}. Imported by the daily hunter.",
         "trigger_phrases": sorted(set(c.tags + [c.name]))[:6] or [c.name, c.title.lower()],
         "skill_body": c.body.strip() or f"# {c.title}\n\nImported from {c.source_url}. Needs enrichment.\n",
@@ -387,6 +388,19 @@ def candidate_to_skill(c: Candidate, name: Optional[str] = None) -> dict[str, An
             "captured_at": dt.datetime.utcnow().isoformat() + "Z",
         },
     }
+
+
+def _infer_stage(category: str) -> str:
+    """Heuristic stage assignment for hunter-imported skills. Opus overrides during quality gate."""
+    return {
+        "frontend": "build",
+        "backend": "build",
+        "data": "build",
+        "testing": "harden",
+        "platform": "launch",
+        "security-reliability": "harden",
+        "ai-productivity": "experiment",
+    }.get(category, "build")
 
 
 # ---------- orchestration ----------
