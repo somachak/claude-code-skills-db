@@ -8,6 +8,7 @@ CI/CD, containers, infrastructure as code, monorepos, release workflows, and dev
 - [`hardening-ci-pipelines/`](./hardening-ci-pipelines/) — Improves CI pipelines for speed, reliability, caching, matrix strategy, and failure isolation.
 - [`improving-developer-experience/`](./improving-developer-experience/) — Improves local setup, scripts, docs, task runners, and onboarding paths for faster developer flow.
 - [`maintaining-monorepos/`](./maintaining-monorepos/) — Maintains monorepos through workspace boundaries, task graph design, ownership rules, and incremental validation.
+- [`managing-feature-flag-lifecycle/`](./managing-feature-flag-lifecycle/) — Treats feature flags as a controlled lifecycle (design → ship → ramp → cleanup → archive) instead of throwaway if-statements.
 - [`managing-infrastructure-as-code/`](./managing-infrastructure-as-code/) — Reviews infrastructure code for modularity, environment separation, drift risk, secret handling, and safe rollout patterns.
 - [`release-lifecycle-manager/`](./release-lifecycle-manager/) — Manages the full software release lifecycle: semantic versioning, conventional commits, automated changelog generation, release readiness gates, hotfix procedures, and rollback triggers.
 - [`running-release-checklists/`](./running-release-checklists/) — Runs release preparation checklists covering quality gates, migrations, rollback readiness, communication, and post-release verification.

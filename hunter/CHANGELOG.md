@@ -195,3 +195,41 @@ Mode: full discovery + Opus quality gate. Discovered 715 candidates (github sear
 - `carmack-council`, `orchestkit`, `agency-agents`, `editor-pro-max` — Interesting architectures but no standalone skill authoring quality.
 - `alirezarezvani/claude-skills/*` (all at score 60) — Shallow bodies; "POWERFUL" branding with thin decision content. Compliance scores 10-15, below 15 minimum.
 - `insecure-defaults-from-gstack`, `ctxvault`, `claude-agent-team-manager`, `beagle` — Below threshold.
+
+
+## 2026-06-23 [opus-4.6] RECOVERY COMMIT — +7 new / ~0 updated
+
+Backfill commit. The scheduled task has been running daily since 2026-04-23 and silently failing `git push` every time because the sandbox has no GitHub credentials. ~60 days of curation work lived only in ephemeral `/tmp` until the sandbox was wiped.
+
+This commit restores the work that survived in two saved-to-disk patches plus today's session, deduplicating across overlapping runs.
+
+### Recovered from disk (5)
+
+- [recovered] `clarifying-underspecified-requests` (ai-productivity/core/experiment) — source patch `2026-05-04`
+- [recovered] `optimizing-llm-spend` (ai-productivity/supporting/scale) — source patch `2026-05-25` (preferred over May 4's `optimizing-llm-api-costs` per user choice)
+- [recovered] `writing-session-handoffs` (ai-productivity/supporting/build) — source patch `2026-05-25`
+- [recovered] `running-chaos-experiments` (security-reliability/supporting/scale) — source patch `2026-05-25`
+- [recovered] `scanning-with-codeql` (security-reliability/supporting/harden) — source patch `2026-05-25` (preferred over May 4's `running-codeql-scans`)
+
+### Created today (2)
+
+- [create] `asking-clarifying-questions` (ai-productivity/supporting/experiment) — 6-axis test + 1–5 question template + stack-specific hot spots. Source: trailofbits.
+- [create] `managing-feature-flag-lifecycle` (platform/core/launch) — 4-type taxonomy, ring-based rollout, provider picker. Source: alirezarezvani.
+
+### Dropped (collision resolution)
+
+- `designing-chaos-experiments` (today, drafted in session) — dropped in favour of recovered `running-chaos-experiments`.
+- `optimizing-llm-api-costs` (May 4 patch) — superseded by recovered May 25 `optimizing-llm-spend`.
+- `running-codeql-scans` (May 4 patch) — superseded by recovered May 25 `scanning-with-codeql`.
+
+### Truly lost (full bodies gone, only transcript descriptions remain)
+
+- `2026-05-11`: `typescript-react-patterns`, `building-fastapi-clean-architecture`, `authoring-yara-rules`, `running-codeql-analysis`, `building-kubernetes-operators`.
+- `2026-04-27`: `authoring-yara-detection-rules`.
+- `2026-05-18` / `2026-06-01`: net zero new (all overlapped with recovered).
+
+Possible to re-do later by re-running today's hunter on the relevant upstream repos.
+
+### Root cause / fix
+
+The scheduled task runs in an ephemeral sandbox with no `GITHUB_TOKEN`, no SSH key, no `gh` CLI. Every run cloned fresh from origin, made the commit, and the `git push` quietly failed. Fix: add a fine-scoped GitHub PAT to the scheduled task env and clone via `https://${GITHUB_TOKEN}@github.com/somachak/claude-code-skills-db.git`.

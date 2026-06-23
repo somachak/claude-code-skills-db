@@ -13,6 +13,8 @@ Threat modeling, secrets/config audits, observability, SLOs, failure modes, and 
 - [`insecure-defaults/`](./insecure-defaults/) — Detects fail-open insecure defaults (hardcoded secrets, weak auth, permissive security) that allow apps to run insecurely in production.
 - [`managing-secrets-infrastructure/`](./managing-secrets-infrastructure/) — Designs and audits secrets infrastructure at scale: HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, GCP Secret Manager.
 - [`reviewing-failure-modes/`](./reviewing-failure-modes/) — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states.
+- [`running-chaos-experiments/`](./running-chaos-experiments/) — Plans and runs disciplined chaos experiments against Node, FastAPI, and Django services: defining steady state, sizing blast radius, choosing fault injection tools, and writing the abort criteria before the experiment starts.
+- [`scanning-with-codeql/`](./scanning-with-codeql/) — Sets up CodeQL on TypeScript/JavaScript and Python repositories to find injection bugs, auth bypasses, and unsafe deserialization that pattern-based linters miss.
 - [`semgrep-rule-creator/`](./semgrep-rule-creator/) — Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns.
 - [`setting-slos-and-alerts/`](./setting-slos-and-alerts/) — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus.
 - [`sharp-edges/`](./sharp-edges/) — Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes.

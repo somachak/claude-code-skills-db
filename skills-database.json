@@ -1,6 +1,6 @@
 {
-  "version": "2026-04-23",
-  "generated_at": "2026-04-23T11:08:51.166534Z",
+  "version": "2026-06-23",
+  "generated_at": "2026-06-23T11:33:37.197912Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -45,6 +45,40 @@
     "ai-productivity": "Skill extraction, conventions, PR review, agent orchestration, docs, and codebase intelligence."
   },
   "skills": [
+    {
+      "name": "asking-clarifying-questions",
+      "title": "Asking Clarifying Questions Before You Code",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack",
+        "ai",
+        "frontend",
+        "backend"
+      ],
+      "priority": "supporting",
+      "stage": "experiment",
+      "description": "A 6-axis underspecification test paired with a 1\u20135 question template and a `defaults` fast-path. Use before a Next.js migration, FastAPI/Django endpoint change, schema migration, or any work that touches user data. Complements `clarifying-underspecified-requests` with stack-specific hot spots (RSC boundary, pydantic v1/v2, Tailwind tokens, Postgres online migration).",
+      "trigger_phrases": [
+        "clarify scope",
+        "underspecified",
+        "ambiguous request",
+        "before I start",
+        "scope check",
+        "stack version"
+      ],
+      "skill_body": "## Asking Clarifying Questions Before You Code\n\nMost failed sessions are failures of interpretation, not execution. Run the 6-axis test before editing any file; ask the smallest set of questions that eliminates whole branches of wrong work.\n\n### The 6-Axis Underspecification Test\n\n1. **Objective** \u2014 what should change vs. stay the same.\n2. **Done** \u2014 acceptance criteria, examples, edge cases.\n3. **Scope** \u2014 which files, routes, components, users are in/out.\n4. **Constraints** \u2014 compatibility, performance, dependency budget.\n5. **Environment** \u2014 Node/Python versions, framework version (Next 14 vs 15? FastAPI 0.110 vs 0.115?), package manager.\n6. **Safety** \u2014 data migration, rollout, rollback, blast radius.\n\nTwo or more fuzzy axes \u2192 underspecified.\n\n### Question Template (1\u20135 only)\n\n```text\n1) Scope?\n   a) Just `/app/(auth)/login`\n   b) All routes under `/app/(auth)/`\n   c) Every place we read the session  **(default)**\n\n2) Behaviour on existing rows?\n   a) Backfill with default  **(default)**\n   b) Leave NULL; gate at app layer\n   c) Refuse migration if any NULLs\n\nReply `defaults` or e.g. `1c 2a`.\n```\n\n### Stack-Specific Hot Spots\n\n- **Next.js**: server vs. client boundary, app router vs. pages router, RSC caching strategy.\n- **FastAPI / Django**: sync vs. async, pydantic v1 vs v2, ORM session lifecycle.\n- **Tailwind / shadcn**: arbitrary values vs. tokens, dark-mode strategy.\n- **Postgres**: online migration with default vs. NOT NULL; index build CONCURRENTLY.\n\n### Anti-Patterns\n\n- Wall-of-paragraph questions. Bullets and numbered options always win.\n- More than 5 questions \u2014 ship a short PRD instead.\n- Long \"discovery\" reads that silently commit you to a direction.\n- Proceeding on unstated assumptions when the user says \"just go\".\n\n### Checklist\n\n- [ ] All six axes have a concrete answer.\n- [ ] Questions are numbered, multiple-choice, with a default.\n- [ ] Included a one-word fast-path (`defaults`).\n- [ ] Restated the goal before opening any file for edit.\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Ambiguous request, multiple plausible interpretations, scope/criteria unclear, touches data/auth/migrations, or version/runtime unknown."
+      },
+      "provenance": {
+        "source_url": "https://github.com/trailofbits/skills/blob/main/plugins/ask-questions-if-underspecified/skills/ask-questions-if-underspecified/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-06-23T11:33:37.197797Z",
+        "confidence": 0.9
+      }
+    },
     {
       "name": "building-rag-ready-docs",
       "title": "RAG-Ready Documentation Builder",
@@ -91,6 +125,38 @@
         "when_to_use": "codebase patterns, preferred patterns, repository conventions"
       },
       "stage": "experiment"
+    },
+    {
+      "name": "clarifying-underspecified-requests",
+      "title": "Clarifying Underspecified Requests Before Implementing",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack"
+      ],
+      "priority": "core",
+      "stage": "experiment",
+      "description": "Forces a structured clarification pass before any code is written when a request has multiple plausible interpretations \u2014 the most common cause of wasted Claude work in TS/React/Next and FastAPI/Django repos. Use when scope, acceptance criteria, target framework version, data shape, or rollback plan are unclear. Pushes the agent to ask 1-5 must-have questions with multiple-choice answers and a `defaults` shortcut, then restate the requirements before starting. SKIP when the request is already concrete or a 30-second discovery read can answer the open questions.",
+      "trigger_phrases": [
+        "clarify requirements",
+        "ask questions first",
+        "underspecified",
+        "ambiguous request",
+        "before implementing",
+        "scope unclear",
+        "acceptance criteria"
+      ],
+      "skill_body": "# Clarifying Underspecified Requests\n\nThe single biggest source of wasted agent work is implementing the wrong thing confidently. This skill is the gate: before code, before commands, before a long plan, decide whether the request is specified well enough to act on. If not, ask the smallest set of questions that eliminate whole branches of wrong work.\n\n## Decide: is this underspecified?\n\nTreat the request as underspecified if any of these are unclear after a quick read:\n\n- **Objective** \u2014 what changes vs stays the same\n- **Done** \u2014 acceptance criteria, examples, edge cases\n- **Scope** \u2014 which files / components / users / endpoints are in or out\n- **Constraints** \u2014 framework version (Next.js 14 vs 15 vs 16, Pydantic v1 vs v2, Django 4 vs 5), perf budget, style guide, dependency limits\n- **Environment** \u2014 runtime, package manager, build/test runner, deployment target\n- **Safety** \u2014 data migration, rollout/rollback, blast radius\n\nIf two reasonable engineers would build different things, it's underspecified.\n\n## Don't ask what you can quickly read\n\nCheap discovery beats clarifying questions. Before asking, do these in seconds:\n\n- `package.json` / `pyproject.toml` for framework + version\n- `tsconfig.json` `target`, `strict`, `paths`\n- `next.config.js` for App vs Pages router signal\n- Existing test file for the convention (vitest? pytest? jest?)\n- A representative neighbour file for the style\n\nIf discovery answers a question, do not ask it.\n\n## Ask 1-5 must-have questions\n\nOptimize the questions for low friction:\n\n- Numbered, short \u2014 not paragraphs\n- Multiple choice with sensible defaults marked **bold**\n- Include a \"Not sure \u2014 use default\" option\n- Provide a `defaults` shortcut so the user can reply with one word\n- Compact decision format \u2014 user can answer `1b 2a 3default`\n\n### Template\n\n```text\nBefore I start, I need:\n\n1) Scope?\n   a) **Just the bug fix in `src/api/auth.ts`** (default)\n   b) Refactor the whole auth module while I'm in there\n   c) Not sure \u2014 use default\n\n2) Compatibility?\n   a) **Stay on Next.js 15** (default)\n   b) Bump to 16 as part of this change\n   c) Not sure \u2014 use default\n\n3) Tests?\n   a) **Add a Vitest case for the regression** (default)\n   b) Skip tests for now\n   c) Not sure \u2014 use default\n\nReply with `defaults` to accept all, or e.g. `1a 2b 3a`.\n```\n\n## Pause until answers arrive\n\nUntil must-have answers come back:\n\n- **Don't** run shell commands that mutate state, edit files, or write a long plan that depends on the unknowns.\n- **Do** allow yourself a clearly labeled, low-risk discovery read \u2014 inspecting repo structure, opening config, reading the relevant function. State that this is discovery, not commitment.\n\nIf the user explicitly says \"just go\" without answering:\n\n1. State assumptions as a numbered list (\"I'll assume Next.js 15 stays, scope is `src/api/auth.ts` only, add a Vitest regression test\").\n2. Ask one final confirmation.\n3. Proceed only after `yes` / corrections.\n\n## Confirm interpretation, then build\n\nOnce answers arrive, restate the requirements in 1-3 sentences. Include the answers chosen and the success criterion. Then start work.\n\nExample: *\"Got it: fix the cookie-domain bug in `src/api/auth.ts` only, stay on Next.js 15, add a Vitest case that fails on the current code and passes after the fix. Starting now.\"*\n\n## Anti-patterns\n\n| Don't | Do Instead |\n|---|---|\n| Open with \"I'll start by ...\" on an ambiguous request | Run the underspecified gate first |\n| Ask 8 paragraph-length questions | Ask 1-5 numbered, multiple-choice, with defaults |\n| Ask things you could read from `package.json` in 2 seconds | Discover first, ask only what's truly unknown |\n| Proceed silently with assumptions when blocked | State assumptions, ask one confirmation, then proceed |\n| Treat user pushback (\"just do it\") as a license to skip restating | Always restate the interpretation before writing code |\n| Lock the conversation \u2014 the user can't bypass questions | Always provide a `defaults` shortcut and a \"Not sure\" option |\n\n## Checklist\n\n- [ ] Read the request twice; listed missing dimensions explicitly\n- [ ] Did the cheap discovery pass (configs, neighbour files) before asking\n- [ ] Asked \u2264 5 questions, all multiple-choice with defaults\n- [ ] Offered `defaults` shortcut and \"Not sure\" option\n- [ ] No state-mutating commands run while waiting for answers\n- [ ] Restated requirements in 1-3 sentences after answers arrived\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Use whenever a request has multiple plausible interpretations or scope/acceptance/version/rollback details are missing. Skip when the request is already concrete or a 30-second config read answers the open questions."
+      },
+      "provenance": {
+        "source_url": "https://github.com/trailofbits/skills/blob/main/plugins/ask-questions-if-underspecified/skills/ask-questions-if-underspecified/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 0,
+        "forks": 0,
+        "captured_at": "2026-05-04T06:20:01.649564Z",
+        "confidence": 0.93
+      }
     },
     {
       "name": "claude-api",
@@ -242,6 +308,36 @@
       "stage": "harden"
     },
     {
+      "name": "optimizing-llm-spend",
+      "title": "LLM Cost Architecture for Production Apps",
+      "category": "ai-productivity",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "scale",
+      "description": "Designs the LLM cost layer for Node and FastAPI services so AI features don't bleed margin: model routing, prompt caching, response streaming with early termination, request batching, and per-tenant budgets. Use when an AI endpoint is being scoped, when the monthly bill jumps, or when picking between Claude Haiku/Sonnet/Opus and OpenAI/Gemini for a workload.",
+      "trigger_phrases": [
+        "llm cost",
+        "token optimization",
+        "prompt caching",
+        "model routing",
+        "ai spend",
+        "anthropic vs openai cost"
+      ],
+      "skill_body": "## LLM Cost Architecture for Production Apps\n\nToken cost is an architectural concern, not a billing line item. The decisions that matter (model choice, caching, streaming, request shape) are made when the endpoint is designed \u2014 retrofitting them after launch is 3x harder.\n\n### When to Use\n\n- Scoping a new AI endpoint in a FastAPI/Node service \u2014 model choice and prompt shape are about to be locked in\n- Monthly Anthropic/OpenAI bill grew faster than usage and you need to find the leak\n- A user-facing feature is too slow because Opus/GPT-5 was used where Haiku/4o-mini would have sufficed\n- Multi-tenant app where one customer's usage shouldn't blow up shared margin\n\n### When NOT to Use\n\n- One-off internal tooling where dev time costs more than tokens \u2014 premature optimization\n- A pure embeddings workload (RAG indexing) \u2014 different cost profile, see `building-rag-ready-docs`\n\n### Decision Framework\n\n1. **Route by complexity, not by default.** Cheap-first routing (Haiku/4o-mini handles \u2192 escalate to Sonnet/4o \u2192 escalate to Opus/o-series) cuts spend 60-80% on classification, extraction, and short summarization. Implement the router as middleware, not in each endpoint.\n2. **Cache the prompt prefix.** Anthropic prompt caching and OpenAI response caching pay back within hours when system prompts are >1k tokens. Put cacheable content (system, tools, retrieved context) before per-request content.\n3. **Stream and allow early termination.** A user who closes the tab at token 200 should stop generation. Wire `AbortController` (Node) or `asyncio.CancelledError` (FastAPI) through the SDK call.\n4. **Batch async workloads.** Anthropic Message Batches API and OpenAI Batch API are 50% cheaper for non-interactive work (overnight summarization, embedding refreshes, daily classification).\n5. **Set per-tenant budgets at the gateway.** Track tokens per `x-tenant-id` in Redis, hard-stop at the budget, soft-warn at 80%. Don't trust app code to enforce limits \u2014 race conditions will blow the cap.\n\n### Anti-patterns\n\n- Picking the most capable model and \"optimizing later\" \u2014 the prompts and prompts-of-prompts will be designed around it\n- Logging full prompts/responses to your APM at INFO \u2014 that's a second cost line (storage, egress) and a PII liability\n- Disabling caching during dev because \"it's confusing\" \u2014 your team forgets to re-enable it before launch\n- Trusting client-side token counts \u2014 count server-side after the model returns; clients lie\n\n### Worked Example \u2014 Express middleware router\n\n```typescript\n// chooseModel.ts\nexport function chooseModel(req: ChatRequest): ModelId {\n  const tokens = estimateTokens(req.input);\n  if (req.task === \"classify\" || req.task === \"extract\") return \"claude-haiku-4-5\";\n  if (tokens < 4_000 && !req.requires_reasoning) return \"claude-sonnet-4-6\";\n  return \"claude-opus-4-6\"; // long context + hard reasoning only\n}\n```\n\n### Validation Loop\n\n- [ ] Dashboard shows tokens-in/tokens-out by route, by model, by tenant\n- [ ] Prompt caching hit-rate measured weekly (target >40% for system prompt tokens)\n- [ ] Streaming endpoints abort generation on client disconnect (test with `curl --max-time`)\n- [ ] Per-tenant budgets fire alerts at 80% and hard-stop at 100%\n- [ ] Quarterly model audit: would Haiku handle this today? (often yes, after capability bumps)\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Scoping a new LLM endpoint, debugging a sudden cost spike, or choosing between Anthropic, OpenAI, and Gemini for a specific workload."
+      },
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/llm-cost-optimizer/skills/llm-cost-optimizer/SKILL.md",
+        "source_type": "github-repo",
+        "captured_at": "2026-05-25T06:18:29.767413Z",
+        "confidence": 0.9
+      }
+    },
+    {
       "name": "planning-multi-agent-work",
       "title": "Multi-Agent Work Planner",
       "category": "ai-productivity",
@@ -314,6 +410,37 @@
         "when_to_use": "runbook to skill, operational checklist, codify process"
       },
       "stage": "scale"
+    },
+    {
+      "name": "writing-session-handoffs",
+      "title": "Session Handoffs Between Claude Agents",
+      "category": "ai-productivity",
+      "audience": [
+        "back-end",
+        "front-end",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "build",
+      "description": "Compacts a long Claude session into a handoff document the next agent (or your future self) can resume from cleanly. Use when ending a long pairing session, switching from research to implementation, splitting work across subagents, or when context is filling up and you need to checkpoint before the model loses the early decisions.",
+      "trigger_phrases": [
+        "handoff doc",
+        "session handoff",
+        "compact context",
+        "resume later",
+        "agent handoff",
+        "checkpoint conversation"
+      ],
+      "skill_body": "## Session Handoffs Between Claude Agents\n\nA handoff is not a chat transcript. It's the minimum context the next agent needs to make the same decisions you would, written so a fresh model session can pick up without re-deriving everything.\n\n### When to Use\n\n- Context window is past 60% and the early decisions matter more than the recent token churn\n- Switching from research/spec mode to implementation mode (different mental model, different tools)\n- Splitting work into parallel subagents that each need a slice of the context\n- End of a long pairing session that will resume tomorrow or by a different teammate\n\n### When NOT to Use\n\n- The current session is short and the task is finishing \u2014 just finish it\n- Pure exploration with no decisions yet to preserve \u2014 `/clear` is cheaper than a handoff\n\n### Decision Framework\n\n1. **State the goal in one sentence.** \"Ship the FastAPI endpoint that returns paginated invoices for tenant X by Friday.\" Everything else hangs off this.\n2. **List decisions made and the reasoning.** Not \"we use Postgres\" \u2014 \"we use Postgres because the existing tenant DB is Postgres and adding another store would double the on-call surface.\" The reasoning is what the next agent needs to know whether to revisit.\n3. **Capture open questions explicitly.** If the original session deferred a decision, name it as `OPEN:` so the next agent knows it's still in play.\n4. **Pin the files that matter.** Absolute paths to the 3-10 files the next agent will read first. Don't list every file touched \u2014 list the entry points.\n5. **Redact secrets before write.** API keys, tokens, customer data \u2014 strip them. Handoffs get committed, mailed, pasted into other tools.\n\n### Anti-patterns\n\n- Dumping the chat transcript verbatim \u2014 wastes the new context window on conversation overhead\n- Skipping the open questions because they feel embarrassing \u2014 those are exactly what the next agent needs to know\n- Writing the handoff to the project root \u2014 clutters the repo and risks committing secrets. Use `.handoff/` (gitignored) or `/tmp/`.\n- Listing 200 files \"for context\" \u2014 the next agent reads 5. Pick the 5.\n\n### Worked Example \u2014 handoff template\n\n```markdown\n# Handoff: invoices-pagination-endpoint\nDate: 2026-05-25  Agent: Claude Opus 4.6\n\n## Goal\nShip GET /api/invoices?tenant_id=&cursor= for the billing service by Fri 2026-05-29.\n\n## Decisions made\n- Cursor pagination, not offset (table is 8M rows, ORDER BY id DESC + WHERE id < cursor)\n- Tenant isolation enforced in middleware (existing `require_tenant`), NOT re-checked in handler\n- Response shape matches /api/orders for SDK consistency\n\n## OPEN questions\n- OPEN: do we expose `total_count`? Adds a second query \u2014 defer unless UX needs it\n- OPEN: rate limit at 60 RPM per tenant or per API key? Asked product, no answer yet\n\n## Entry-point files\n- src/api/invoices.py \u2014 new handler goes here\n- src/middleware/tenant.py \u2014 already does isolation, just use it\n- tests/api/test_orders.py \u2014 copy as test scaffold\n\n## Next concrete step\nWrite the handler signature + one happy-path test, then run pytest tests/api/test_invoices.py.\n```\n\n### Validation Loop\n\n- [ ] Goal sentence is concrete and time-bound\n- [ ] Every decision has a one-line \"because\u2026\"\n- [ ] Open questions are named, not buried\n- [ ] File paths are absolute and exist\n- [ ] No secrets present (grep `sk_`, `xoxb-`, `AKIA`, etc. before writing)\n- [ ] Next concrete step is a single command or a single file edit\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Ending a long session, switching modes (spec\u2192build), or splitting work across parallel subagents."
+      },
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/productivity/handoff/skills/handoff/SKILL.md",
+        "source_type": "github-repo",
+        "captured_at": "2026-05-25T06:18:29.767413Z",
+        "confidence": 0.88
+      }
     },
     {
       "name": "building-background-jobs",
@@ -1254,6 +1381,42 @@
       "stage": "scale"
     },
     {
+      "name": "managing-feature-flag-lifecycle",
+      "title": "Feature Flag Lifecycle",
+      "category": "platform",
+      "audience": [
+        "backend",
+        "platform",
+        "full-stack"
+      ],
+      "priority": "core",
+      "stage": "launch",
+      "description": "Treats feature flags as a controlled lifecycle (design \u2192 ship \u2192 ramp \u2192 cleanup \u2192 archive) instead of throwaway if-statements. Use in Next.js / Node / FastAPI / Django apps when adding a flag, planning a progressive rollout, designing a kill switch, choosing between LaunchDarkly / GrowthBook / Statsig / Unleash / Flipt / homegrown, or auditing flag debt.",
+      "trigger_phrases": [
+        "feature flag",
+        "ship behind a flag",
+        "rollout plan",
+        "kill switch",
+        "flag debt",
+        "launchdarkly",
+        "growthbook",
+        "statsig",
+        "unleash"
+      ],
+      "skill_body": "## Feature Flag Lifecycle\n\nA flag is not an `if`-statement \u2014 it is a **lifecycle**: design \u2192 ship \u2192 ramp \u2192 cleanup \u2192 archive. Skip any step and you accumulate flag debt.\n\n### The 4 Flag Types\n\n| Type | Purpose | Lifespan | Cleanup trigger |\n|---|---|---|---|\n| **Release** | Hide unfinished work | days\u2013weeks | 100% rollout reached |\n| **Experiment** | A/B test variants | weeks | Experiment concludes |\n| **Operational** | Kill switches, region toggles | indefinite | Tier-1 incident retired |\n| **Permission** | Per-customer / per-plan gating | indefinite | Move to entitlements service |\n\n### Ring-Based Rollout\n\n```\nRing 0  internal       1%   24h\nRing 1  power users    5%   48h\nRing 2  small cohort  20%   72h\nRing 3  half pop      50%   72h\nRing 4  everyone     100%   \u2500\n```\nPromote only if error rate within \u00b110%, p95 latency not >20% worse, on-call ack rate steady.\n\n### Provider Picker\n\n- **LaunchDarkly** \u2014 enterprise SDKs, audit logs. Pick for SOC2/customer-rule targeting.\n- **GrowthBook** \u2014 OSS, strong experiment stats. Pick when experimentation is primary.\n- **Statsig** \u2014 generous free tier, Pulse analytics. Pick for flags+analytics in one pane.\n- **Unleash / Flipt** \u2014 fully self-hosted. Pick for data residency / air-gap.\n- **Homegrown config table** \u2014 only fine for \u226410 flags total, no experimentation.\n\n### Kill-Switch Requirements\n\n1. Single env var / remote-config key disables path in <60s.\n2. Documented owner and Slack channel.\n3. Smoke test that the kill switch actually kills the path.\n4. Fallback behaviour is safe and known.\n\n### Stack-Specific Notes\n\n- **Next.js** \u2014 Read flags in a Server Component or at the edge in middleware. Never read client-side without a stable user id.\n- **FastAPI / Django** \u2014 Resolve in a request-scoped dependency / middleware; cache per-request, not per-call.\n- **Node services** \u2014 Use streaming SDK update mode so a kill flip propagates in seconds.\n\n### Anti-Patterns\n\n- `if (flag)` and `if (!flag)` both untested \u2014 one branch ships, one rots.\n- Same flag read in 30 places \u2014 centralise in a typed wrapper.\n- Long-lived release flag \u2014 set expiry at creation; >90 days at 100% is debt.\n\n### Cleanup Checklist\n\n- [ ] Flag type classified.\n- [ ] Rollout ring plan documented before flip.\n- [ ] Kill switch verified in staging.\n- [ ] Owner + Slack channel listed.\n- [ ] Cleanup ticket auto-filed N days after 100%.\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Adding, ramping, killing, or retiring a feature flag; auditing flag debt; choosing between LaunchDarkly, GrowthBook, Statsig, Unleash, Flipt, homegrown."
+      },
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/feature-flags-architect/skills/feature-flags-architect/SKILL.md",
+        "source_type": "github-repo",
+        "stars": 18756,
+        "forks": 0,
+        "captured_at": "2026-06-23T11:33:37.197844Z",
+        "confidence": 0.85
+      }
+    },
+    {
       "name": "managing-infrastructure-as-code",
       "title": "Infrastructure as Code Review",
       "category": "platform",
@@ -1599,6 +1762,66 @@
         "allowed-tools": "Read Grep"
       },
       "stage": "harden"
+    },
+    {
+      "name": "running-chaos-experiments",
+      "title": "Chaos Experiments for Production Web Services",
+      "category": "security-reliability",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "scale",
+      "description": "Plans and runs disciplined chaos experiments against Node, FastAPI, and Django services: defining steady state, sizing blast radius, choosing fault injection tools, and writing the abort criteria before the experiment starts. Use when preparing a GameDay, validating a new failover path, or stress-testing a freshly deployed service before peak traffic.",
+      "trigger_phrases": [
+        "chaos engineering",
+        "gameday plan",
+        "fault injection",
+        "blast radius",
+        "steady state",
+        "resilience test"
+      ],
+      "skill_body": "## Chaos Experiments for Production Web Services\n\nChaos engineering only buys you something if the experiment is designed with falsifiable hypotheses and bounded blast radius. Random pod kills aren't an experiment \u2014 they're outages with extra steps.\n\n### When to Use\n\n- You shipped a new failover path (read replica, queue retry, circuit breaker) and want to prove it works before traffic does\n- A FastAPI or Express service depends on a third-party API and you don't know how it behaves under that dependency's latency\n- A retro called out a failure mode no one had simulated (e.g. \"we'd never tested losing the cache\") and you want to retire that risk\n- Pre-launch capacity planning \u2014 running a controlled experiment before Black Friday beats a real one during it\n\n### When NOT to Use\n\n- The system has known unfixed bugs \u2014 fix those first, chaos will just reproduce them expensively\n- Observability is missing \u2014 you can't read the result of an experiment you can't measure\n- No on-call rotation can respond if the experiment escapes the blast radius\n\n### Decision Framework\n\n1. **Steady state first.** Write down the metric that defines \"healthy\" before injecting anything \u2014 p95 latency, success rate, queue depth. The experiment is a comparison, not an observation.\n2. **Hypothesis is falsifiable.** \"The checkout API stays under 800ms p95 when the primary database loses 100ms of latency\" \u2014 measurable, time-boxed, and the experiment can disprove it.\n3. **Blast radius is the smallest set of users that lets you learn.** Start in staging with synthetic traffic. Graduate to one canary pod with 1% real traffic. Only run on full production traffic when the first two passed.\n4. **Abort criteria written before start.** Two SLOs and a kill switch: error rate breaches X, latency breaches Y, or any P1 alert fires \u2192 roll back. This goes in the experiment doc, not the heads of the people running it.\n5. **Pick the right tool for the failure.** Network latency \u2192 Toxiproxy or `tc netem`. Pod kill \u2192 Chaos Mesh or `kubectl delete pod`. Region outage \u2192 only with leadership sign-off and a customer comms plan.\n\n### Anti-patterns\n\n- Running chaos without observability \u2014 you'll only learn that you can't see anything\n- \"Surprise GameDay\" with no warning \u2014 on-call burns out, and the lesson is that chaos = ambush\n- Rolling experiments forward when steady state drifts \u2014 pause, reset, then continue\n- Treating green dashboards as a pass \u2014 also check error budget burn and downstream queue depth\n\n### Worked Example \u2014 payment service GameDay\n\n```\nHypothesis: orders/checkout p95 stays under 800ms when Stripe API responds at +500ms latency.\nSteady state: 99.5% checkout success, 600ms p95, queue depth <50.\nBlast radius: 5% of traffic via Envoy weight, US-East region only, 30 minutes.\nFault: Toxiproxy adds 500ms latency to api.stripe.com (sidecar in canary pods).\nAbort: success <99%, p95 >900ms, or on-call pages \u2192 revert Envoy weight to 0%.\nObservation: queue retries doubled within 8 minutes, breached abort threshold, reverted.\nFinding: retry backoff was 100ms (configured) but Stripe's recommended backoff is 1s+jitter \u2014 fix scheduled.\n```\n\n### Validation Loop\n\n- [ ] Steady-state SLOs measured for 24h prior to experiment\n- [ ] Abort criteria documented and the kill-switch tested in staging\n- [ ] Comms posted in #incidents 15 minutes before start, again at start, again at end\n- [ ] Findings filed within 48h (bugs, dashboard gaps, missing alerts)\n- [ ] Each finding has an owner and a deadline before the next experiment\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Before a GameDay, post-launch resilience check, or validating a new failover path under controlled fault injection."
+      },
+      "provenance": {
+        "source_url": "https://github.com/alirezarezvani/claude-skills/blob/main/engineering/chaos-engineering/skills/chaos-engineering/SKILL.md",
+        "source_type": "github-repo",
+        "captured_at": "2026-05-25T06:18:29.767413Z",
+        "confidence": 0.85
+      }
+    },
+    {
+      "name": "scanning-with-codeql",
+      "title": "CodeQL Taint Analysis for Web Codebases",
+      "category": "security-reliability",
+      "audience": [
+        "back-end",
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "harden",
+      "description": "Sets up CodeQL on TypeScript/JavaScript and Python repositories to find injection bugs, auth bypasses, and unsafe deserialization that pattern-based linters miss. Use when adding pre-merge security scanning to a Node, Next.js, FastAPI, or Django service, when triaging SARIF output from GitHub code scanning, or when writing custom queries for an internal API misuse class.",
+      "trigger_phrases": [
+        "codeql",
+        "taint analysis",
+        "code scanning",
+        "sarif review",
+        "custom security query",
+        "find injection bugs"
+      ],
+      "skill_body": "## CodeQL Taint Analysis for Web Codebases\n\nCodeQL is the right tool when a vulnerability class needs interprocedural data flow \u2014 Semgrep's intra-procedural taint stops at function boundaries. Reach for CodeQL when you're hunting injection, SSRF, prototype pollution, or insecure deserialization across module boundaries.\n\n### When to Use\n\n- A Node/Next.js or FastAPI/Django service is going through security review and you want a second opinion beyond ESLint/Bandit\n- A bug class crossed module boundaries (e.g. tainted query param flowed three calls deep into `child_process.exec`) and you want to detect siblings\n- You're triaging GitHub's default `security-extended` SARIF and need to tell true positives from noise\n- You need a custom query for a project-specific sink \u2014 e.g. a wrapper around `subprocess.run` or a hand-rolled SQL builder\n\n### When NOT to Use\n\n- Style or single-line patterns \u2014 use Semgrep, ESLint, or ruff (10x faster, easier to author)\n- Pure secret scanning \u2014 use gitleaks or trufflehog\n- C/C++ memory safety (off-stack here; use sanitizers + fuzzing instead)\n\n### Decision Framework\n\n1. **Pick the right suite first.** `security-and-quality` is the default safety net; `security-extended` adds heuristics with more false positives; `security-experimental` for bleeding-edge queries. Don't enable `security-experimental` in blocking CI.\n2. **Build the database from the same commit CI tests.** A stale database produces alerts that point at deleted code. Use `codeql database create db --language=javascript --source-root=. --command='npm ci && npm run build'` to capture the real build.\n3. **JS and TS share a database.** Use `--language=javascript` even for TypeScript repos \u2014 the JS extractor handles `.ts` files. Python extracts cleanly with `--language=python` and needs no build step.\n4. **Triage SARIF by sink, not by rule.** Group findings by the destination function (`exec`, `eval`, `os.system`, raw SQL). Each sink class shares a remediation pattern, so one fix can resolve many alerts.\n5. **For custom queries, model first.** A data extension YAML that adds your internal `db.queryRaw(...)` as a SQL sink usually catches more bugs than a hand-rolled `.ql` query and is easier to maintain.\n\n### Anti-patterns\n\n- Enabling every suite and treating the result as ground truth \u2014 review the catalog and turn off rules that don't apply (e.g. `js/jquery-deprecated-symbols` in a React app).\n- Running CodeQL on every push to `feat/*` branches \u2014 it's a 5-20 minute job. Run on `pull_request` to `main` and a nightly full scan instead.\n- Treating an empty database extraction as success. Always assert the build step actually compiled \u2014 silently empty databases find zero issues.\n\n### Worked Example \u2014 adding a custom Express sink\n\n```yaml\n# my-org-codeql/javascript/sinks.model.yml\nextensions:\n  - addsTo:\n      pack: codeql/javascript-all\n      extensible: sinkModel\n    data:\n      - [\"my-org-sdk\", \"Member[runShell].Argument[0]\", \"command-injection\"]\n```\n\nThen in workflow:\n\n```yaml\n- uses: github/codeql-action/init@v3\n  with:\n    languages: javascript\n    config: |\n      packs: [my-org/my-org-codeql]\n```\n\n### Validation Loop\n\n- [ ] Database build command matches CI build (no skipped TS files)\n- [ ] At least one known-good alert survives triage (proves the pipeline runs)\n- [ ] SARIF is uploaded to GitHub or stored as an artifact for 90 days\n- [ ] Custom queries have a `test/` directory with `.expected` files committed alongside\n- [ ] Severity gating: `error`-level findings block the PR; `warning` is informational\n",
+      "frontmatter_overrides": {
+        "when_to_use": "Hardening a Node/Next.js/FastAPI/Django service before launch, or triaging SARIF from GitHub code scanning."
+      },
+      "provenance": {
+        "source_url": "https://github.com/trailofbits/skills/blob/main/plugins/static-analysis/skills/codeql/SKILL.md",
+        "source_type": "github-repo",
+        "captured_at": "2026-05-25T06:18:29.767413Z",
+        "confidence": 0.9
+      }
     },
     {
       "name": "semgrep-rule-creator",
