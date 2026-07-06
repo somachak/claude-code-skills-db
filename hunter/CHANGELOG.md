@@ -2,6 +2,52 @@
 
 Append-only log of every daily run. Every decision the hunter makes — create, overwrite, skip, reject — is logged here with its score so a human can audit the library's evolution after the fact.
 
+## 2026-07-06 [opus-4.6] NO-OP — +0 new / ~0 updated
+
+Mode: full discovery + Opus 4.6 quality gate. Discovered **969 candidates** (10 GitHub searches + 4 curated repos + 3 RSS feeds). Heuristic flagged **160 create / 0 overwrite / 3 skip / 806 reject**. After applying the human-grade quality gate: **0 accepted, 160 rejected/skipped.** No commit to the skills library — audit trail only.
+
+The heuristic over-flags because its uniqueness dimension scores on candidate name/title/description similarity, not body-level overlap with the incumbent library. Every flagged "create" fell into one of four buckets:
+
+### Skipped — duplicate territory already in DB (17 curated SKILL.md)
+- `claude-api` → **claude-api** (same anthropics source; incumbent faithful)
+- `ask-questions-if-underspecified` → **asking-clarifying-questions** / **clarifying-underspecified-requests**
+- `audit-context-building` → **audit-context-building** (created 2026-04-23)
+- `modern-python` → **configuring-modern-python-projects**
+- `semgrep-rule-creator` → **semgrep-rule-creator**; `semgrep-rule-variant-creator` → **authoring-semgrep-rules**
+- `codeql` → **scanning-with-codeql**
+- `adversarial-reviewer` → **adversarial-code-review** (created 2026-04-23)
+- `chaos-engineering` → **running-chaos-experiments**
+- `docker-development` → **docker-optimization** (created 2026-04-23)
+- `llm-cost-optimizer` → **optimizing-llm-spend**
+- `secrets-vault-manager` → **managing-secrets-infrastructure** (created 2026-04-23)
+- `spec-driven-workflow` / `spec-to-repo` → **spec-driven-development**
+- `handoff` → **writing-session-handoffs**
+- `codebase-onboarding` → **cataloging-codebase-patterns** (also thin, 2.2k chars)
+
+### Rejected — off-stack (trailofbits + alirezarezvani)
+- Blockchain: `algorand/cairo/solana/substrate/ton-vulnerability-scanner`, `spec-to-code-compliance`, `dimensional-analysis`, `vector-forge`, `crypto-protocol-diagram`, `mermaid-to-proverif`
+- Systems languages: `c-review`, `rust-review`, `address-sanitizer`, `yara-rule-authoring` (C/C++/malware)
+- `kubernetes-operator` — genuinely high-quality (reconcile-loop correctness, finalizers, CRD/RBAC design, OperatorHub capability levels) but niche Go/controller-runtime infra authoring; off the React/Node/Python web stack and not an always-on category. Reject on stack-relevance, not quality.
+- `red-team` — offensive-security engagement planning (MITRE ATT&CK kill-chains, OPSEC, crown-jewel targeting). Cross-refs pentest/threat-detection/IR skills absent from this library; it's security-operations, not web-appsec. Off-stack.
+- `diagramming-code` — generic mermaid-from-code utility; content Claude already knows, no decision framework. Reject on depth/genericness.
+
+### Rejected — off-scope role/business skills (alirezarezvani)
+- Business/ops: `capacity-planner`, `internal-comms`, `knowledge-ops`, `process-mapper`, `procurement-optimizer`, `vendor-management`, `channel-economics`, `partnerships-architect`, `pricing-strategist`, `chief-ai-officer-advisor`
+- Marketing (previously rejected): `ab-test-setup`, `churn-prevention`, `copy-editing`, `free-tool-strategy`, `onboarding-cro`, `pricing-strategy`, `experiment-designer`
+- Medical/research: `fda-consultant-specialist`, `risk-management-specialist`, `clinical-research`, `market-research`, `product-research`, `research-finance`
+- Broad role descriptions (like previously-rejected senior-devops): `senior-fullstack`, `senior-devops`, `azure-cloud-architect`, `gcp-cloud-architect`, `behuman`
+- Off-scope novelties: `interpreting-culture-index` (HR), `let-fate-decide` (tarot), `genotoxic` / `graph-evolution` (bio), `testing-handbook-generator` (meta-skill)
+
+### Rejected — 91 bare-repo README candidates (not executable skills)
+awesome-lists (`awesome-python`, `awesome-go`, `awesome-selfhosted`, `awesome-llm-apps`, `awesome-mcp-servers`, `awesome-quant`, `awesome-neovim`, `awesome-nlp`, `awesome-web-security`, `awesome-agent-skills`, `awesome-openclaw-skills`, …), knowledge repos (`coding-interview-university`, `professional-programming`), tool/app READMEs (`firecrawl`, `browser-use`, `spec-kit`, `encore`, `cc-switch`), and starter templates / SEO-manufactured skill orgs (`open-saas`, `gstack`, `skybridge`, `agency-agents`, `ai-website-cloner-template`, `code-review-skill`, `ui-ux-pro-max-skill`, `styleseed`, `oh-my-design`, `lovcode`, …). None ship a standalone quality SKILL.md body.
+
+### Discovery failure modes
+- RSS feeds 403 as always (medium.com/feed/tag/claude-code, medium.com/feed/tag/anthropic, anthropic.com/news/rss.xml).
+- X / Exa queries skipped (no X_BEARER_TOKEN / EXA_API_KEY).
+- GitHub core/search rate limits healthy (5000 / 30 remaining). Discovery is slow (~200 sequential raw fetches) but completed via warm cache.
+
+**Net: the curated sources (anthropics, trailofbits, alirezarezvani) are fully mined by prior runs; no net-new, stack-relevant, non-duplicate, high-quality skill surfaced today. Library unchanged at 79 skills.**
+
 ## 2026-04-23 [opus-4.6] APPLIED — +6 new / ~0 updated
 
 Mode: full discovery + Opus 4.6 quality gate. Discovered 716 candidates (github search + 4 curated repos + 3 RSS feeds). Heuristic flagged 119 creates. After quality gate: 6 accepted, 113 rejected, 0 overwrites.
