@@ -15,3 +15,4 @@ Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhook
 - [`implementing-auth-flows/`](./implementing-auth-flows/) — Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions.
 - [`reviewing-backend-concurrency/`](./reviewing-backend-concurrency/) — Reviews concurrent backend code for race conditions, deadlocks, ordering bugs, lock contention, and inconsistent side effects.
 - [`reviewing-caching-strategies/`](./reviewing-caching-strategies/) — Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks.
+- [`structuring-fastapi-clean-architecture/`](./structuring-fastapi-clean-architecture/) — Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable.

@@ -1,6 +1,6 @@
 {
-  "version": "2026-06-23",
-  "generated_at": "2026-06-23T11:33:37.197912Z",
+  "version": "2026-07-13",
+  "generated_at": "2026-07-13T06:25:07.502492Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -487,6 +487,36 @@
         "allowed-tools": "Read Grep Bash"
       },
       "stage": "build"
+    },
+    {
+      "name": "structuring-fastapi-clean-architecture",
+      "title": "FastAPI Clean Architecture",
+      "category": "backend",
+      "audience": [
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable. Use when starting a FastAPI service meant to last, adding a second entry point (queue consumer, scheduled job) beside HTTP, or refactoring a main.py-with-everything app into thin endpoints backed by use cases.",
+      "trigger_phrases": [
+        "fastapi architecture",
+        "fastapi clean architecture",
+        "structure fastapi project",
+        "fastapi use case",
+        "fastapi layers",
+        "thin endpoints"
+      ],
+      "skill_body": "## FastAPI Clean Architecture\n\nFastAPI makes it trivially easy to put business logic in the route handler \u2014 and that is exactly why FastAPI services rot. As soon as a second transport appears (a queue consumer, a scheduled job, an internal RPC), logic that lives in `@router.post` has to be copy-pasted or awkwardly imported. This skill encodes a layered structure that keeps endpoints thin and business logic transport-agnostic, so the same use case runs from HTTP, a NATS consumer, or a cron task without change.\n\n### When to Use\n\n- Starting a new FastAPI service that will outlive a prototype\n- A service that already has (or will grow) a second entry point: background worker, message consumer, scheduled job\n- Refactoring a `main.py`-with-everything FastAPI app into something testable\n- You keep repeating auth, validation, or DB-session wiring in every endpoint\n\n### Layer Boundaries (dependencies point inward)\n\n1. **domain/** \u2014 entities, value objects, and repository *protocols* (interfaces). Zero imports from FastAPI, SQLAlchemy, or Pydantic. Pure Python.\n2. **application/** \u2014 use cases: one class per business operation with an `execute()` method. Depends only on domain protocols. Returns domain objects or a `Result`, never a `Response`.\n3. **infrastructure/** \u2014 concrete adapters: SQLAlchemy repositories, HTTP clients, message publishers. Implements the domain protocols.\n4. **presentation/** \u2014 FastAPI routers, Pydantic request/response schemas, dependency wiring. Translates transport input into a use case call and the result back into a `Response`. The only layer that imports FastAPI.\n\nThe one pragmatic exception worth documenting: `application/` may import the DB session type for transaction control. Everything else stays strictly inward.\n\n### Decision Framework\n\n1. **Endpoints translate, never decide.** A handler parses the request schema, calls one use case, and serializes the result. If a handler contains an `if` about business rules, that logic belongs in `application/`.\n2. **One use case = one operation.** `RegisterUser`, `PublishArticle`, `CancelSubscription`. Constructor takes repositories/services (injected); `execute(command)` does the work. This is the unit your queue consumer and cron job also call.\n3. **Depend on protocols, inject implementations.** Define `class UserRepository(Protocol)` in `domain/`; the SQLAlchemy version lives in `infrastructure/`. Use cases accept the protocol, so unit tests pass a fake and integration tests pass the real one.\n4. **Wire dependencies once, at the edge.** Use FastAPI `Depends` (or a DI container like `dishka`) to build repositories and use cases. Attach auth at the *router* level (`APIRouter(dependencies=[Depends(require_user)])`), grouping routers by audience (`public/`, `user/`, `admin/`) so it is structurally impossible to forget auth on an endpoint.\n5. **Async all the way down.** `async def` handlers, `AsyncSession`, `httpx.AsyncClient`. A single sync `requests.get` or blocking DB driver in a handler stalls the event loop for every concurrent request.\n\n### Anti-patterns\n\n| Avoid | Use Instead |\n|-------|-------------|\n| Business logic inside `@router.post` | A use case in `application/`, called by the handler |\n| Importing `Session`/SQLAlchemy models in a router | Repository protocol injected into the use case |\n| Returning ORM models directly from endpoints | Explicit Pydantic response schema |\n| Re-adding `Depends(get_current_user)` on every route | Router-level `dependencies=[...]`, grouped by audience |\n| `requests`/`psycopg2` (sync) in an async handler | `httpx.AsyncClient` / `asyncpg` + `AsyncSession` |\n| Catching `Exception` in the handler to shape errors | Domain exceptions + one `exception_handler` per type |\n| Testing only through the HTTP layer | Unit-test use cases directly; reserve HTTP tests for wiring |\n\n### Worked Example \u2014 a use case reused across transports\n\n```python\n# domain/repositories.py\nclass UserRepository(Protocol):\n    async def by_email(self, email: str) -> User | None: ...\n    async def add(self, user: User) -> None: ...\n\n# application/register_user.py\n@dataclass\nclass RegisterUser:\n    users: UserRepository\n    hasher: PasswordHasher\n    async def execute(self, cmd: RegisterCommand) -> User:\n        if await self.users.by_email(cmd.email):\n            raise EmailAlreadyUsed(cmd.email)\n        user = User.new(cmd.email, self.hasher.hash(cmd.password))\n        await self.users.add(user)\n        return user\n\n# presentation/http/users.py  (thin \u2014 translate only)\n@router.post(\"/users\", response_model=UserOut, status_code=201)\nasync def register(body: RegisterIn, uc: RegisterUser = Depends(get_register_user)):\n    user = await uc.execute(body.to_command())\n    return UserOut.from_domain(user)\n\n# the SAME use case, driven by a message consumer\nasync def on_signup_event(evt: SignupEvent, uc: RegisterUser):\n    await uc.execute(evt.to_command())   # zero duplicated logic\n```\n\n### Testing Layers\n\n- **Unit** \u2014 instantiate the use case with fake repositories; assert domain behavior. No FastAPI, no DB. Fast, covers business rules.\n- **Integration** \u2014 real SQLAlchemy repository against a `testcontainers` Postgres; verify the adapter honors the protocol.\n- **E2E** \u2014 drive the app with `httpx.AsyncClient(transport=ASGITransport(app=app))`; assert status codes and wiring, not business branches.\n\n### Checklist\n\n- [ ] No SQLAlchemy or FastAPI imports in `domain/` or `application/`\n- [ ] Every endpoint calls exactly one use case and returns an explicit response schema\n- [ ] Repositories are defined as protocols in `domain/`, implemented in `infrastructure/`\n- [ ] Auth is wired at the router level, routers grouped by audience\n- [ ] All I/O is async; no sync HTTP/DB drivers in handlers\n- [ ] Domain exceptions map to HTTP via `@app.exception_handler`, not per-route try/except\n- [ ] Use cases have direct unit tests; `testcontainers` covers the repository adapters",
+      "frontmatter_overrides": {
+        "when_to_use": "fastapi architecture, structure fastapi project, thin endpoints, use case layer",
+        "allowed-tools": "Read Grep Bash"
+      },
+      "stage": "build",
+      "provenance": {
+        "source_url": "https://github.com/ocbunknown/fastapi-clean-architecture-template",
+        "source_type": "github-repo",
+        "note": "Body authored from the clean/hexagonal FastAPI pattern (RequestBus/UseCase, DI, transport separation, layered testcontainers testing); not copied from source README.",
+        "captured_at": "2026-07-13T06:25:07.502468Z"
+      }
     },
     {
       "name": "configuring-modern-python-projects",

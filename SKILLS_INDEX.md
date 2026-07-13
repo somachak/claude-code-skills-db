@@ -1,8 +1,8 @@
 # Skills Index
 
-_79 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_80 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-06-23` · **Last generated:** `2026-06-23T11:33:37.197912Z`
+**Version:** `2026-07-13` · **Last generated:** `2026-07-13T06:25:07.502492Z`
 
 ## Quick search
 
@@ -34,6 +34,7 @@ _79 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`implementing-auth-flows`](./skills/backend/implementing-auth-flows/SKILL.md) | backend | core | Implements authentication and authorization flows across sessions, tokens, roles, and privileged actions |
 | [`reviewing-backend-concurrency`](./skills/backend/reviewing-backend-concurrency/SKILL.md) | backend | core | Reviews concurrent backend code for race conditions, deadlocks, ordering bugs, lock contention, and inconsistent side effects |
 | [`reviewing-caching-strategies`](./skills/backend/reviewing-caching-strategies/SKILL.md) | backend | core | Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks |
+| [`structuring-fastapi-clean-architecture`](./skills/backend/structuring-fastapi-clean-architecture/SKILL.md) | backend | core | Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable |
 | [`designing-database-schemas`](./skills/data/designing-database-schemas/SKILL.md) | data | core | Designs relational schemas, keys, constraints, and normalization tradeoffs for operational systems |
 | [`designing-search-and-indexes`](./skills/data/designing-search-and-indexes/SKILL.md) | data | core | Designs search schemas, indexing strategies, ranking tradeoffs, and query filters |
 | [`implementing-postgres-vector-search`](./skills/data/implementing-postgres-vector-search/SKILL.md) | data | supporting | Implements semantic, vector, and hybrid full-text search in PostgreSQL using pgvector and ParadeDB (pg_search) |
@@ -147,6 +148,8 @@ _79 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `race condition`, `deadlock`, `concurrency bug`, `parallel worker`, `lock contention`
 - **[`reviewing-caching-strategies`](./skills/backend/reviewing-caching-strategies/SKILL.md)** — Reviews cache key design, invalidation strategy, TTL choices, layering, and stale-read risks. Use when introducing Redis, CDN, query, or application-level caching.
   · triggers: `cache invalidation`, `redis`, `ttl`, `stale data`, `cache key`
+- **[`structuring-fastapi-clean-architecture`](./skills/backend/structuring-fastapi-clean-architecture/SKILL.md)** — Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable. Use when starting a FastAPI service meant to last, adding a second entry point (queue consumer, scheduled job) beside HTTP, or refactoring a main.py-with-everything app into thin endpoints backed by use cases.
+  · triggers: `fastapi architecture`, `fastapi clean architecture`, `structure fastapi project`, `fastapi use case`, `fastapi layers`, `thin endpoints`
 
 ### data
 

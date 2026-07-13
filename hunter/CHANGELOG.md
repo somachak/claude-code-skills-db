@@ -279,3 +279,21 @@ Possible to re-do later by re-running today's hunter on the relevant upstream re
 ### Root cause / fix
 
 The scheduled task runs in an ephemeral sandbox with no `GITHUB_TOKEN`, no SSH key, no `gh` CLI. Every run cloned fresh from origin, made the commit, and the `git push` quietly failed. Fix: add a fine-scoped GitHub PAT to the scheduled task env and clone via `https://${GITHUB_TOKEN}@github.com/somachak/claude-code-skills-db.git`.
+
+## 2026-07-13 [opus-4.6] APPLIED — +1 new / ~0 updated
+
+Pipeline: 972 candidates discovered, 161 heuristic `create` flags (all scored as "net-new" by the cheap fuzzy dedup, which over-credits novelty). Applied the manual quality gate; accepted 1.
+
+### Created (1)
+
+- [create] `structuring-fastapi-clean-architecture` (backend/core/build) — score 82. Net-new territory: the library had backend skills (REST/GraphQL design, auth, events, concurrency) but nothing on structuring a FastAPI service into domain/application/infrastructure/presentation layers with transport-agnostic use cases. Maximal stack fit (Python/FastAPI). Body authored fresh (5,929 chars) from the clean/hexagonal pattern — not copied from source. Source signal: ocbunknown/fastapi-clean-architecture-template + corroborating vstorm-co/production-stack-skills.
+
+### Rejected / skipped (notable)
+
+- [skip] `modern-python` (trailofbits, real SKILL.md) — near-duplicate of incumbent `configuring-modern-python-projects`, which already covers uv/ty/ruff/PEP 723/PEP 735 with a FastAPI worked example and is MORE stack-tailored. Candidate's only delta is `prek`; does not beat incumbent by 15%.
+- [skip] `motion-dev-animations-skill` (65★) — duplicate territory of incumbent `animating-react-components-with-motion` (Motion/Framer Motion for React/Next).
+- [skip] `claude-api` (anthropics) — this is our existing incumbent; not a new skill.
+- [reject] README-index repos with no focused body: `claude-code-nextjs-skills`, `claude-nextjs-skills`, `claude-code-python-stack`, `production-stack-skills`, `ai-design-components`, `oh-my-design`, `code-review-skill`, `styleseed` — multi-skill bundles whose contents overlap existing frontend/backend/nextjs/postgres skills; nothing net-new survives dedup.
+- [reject] Heuristic noise: awesome-lists (`awesome-python`, `awesome-go`, `awesome-mcp-servers`, `awesome-selfhosted`, `free-for-dev`, `coding-interview-university`, etc.) — link collections, not skills.
+- [reject] Off-stack: alirezarezvani business-ops / c-level / marketing / RA-QM skills; trailofbits blockchain vuln scanners (algorand/cairo/solana/substrate/ton) and non-stack languages (c-review, rust-review) — outside React/Next/TS, Node, Python, Tailwind/shadcn and the always-on categories.
+- [reject] Stub bodies (~54 chars, README pointers not real SKILL.md): alirezarezvani `chaos-engineering`, `docker-development`, `kubernetes-operator`, `secrets-vault-manager`, `spec-driven-workflow`.
