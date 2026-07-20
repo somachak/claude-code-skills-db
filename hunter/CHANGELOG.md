@@ -2,6 +2,29 @@
 
 Append-only log of every daily run. Every decision the hunter makes — create, overwrite, skip, reject — is logged here with its score so a human can audit the library's evolution after the fact.
 
+## 2026-07-20 [opus-4.6] NO-OP — +0 new / ~0 updated
+
+Mode: full discovery + Opus quality gate. Discovered **1015 candidates** (10 GitHub searches + 4 curated repos + 3 RSS feeds; 2 RSS feeds live, anthropic news feed 404). Heuristic flagged **161 create / 0 overwrite / 3 skip / 851 reject**. After the human-grade gate: **0 accepted, 161 rejected/skipped.** No library commit — audit trail only.
+
+Same structural over-flagging as prior runs: the heuristic's uniqueness dimension scores on candidate name/title similarity, not body-level overlap, so it scored known duplicates as `un10` (net-new). Of the 161:
+
+### Rejected wholesale — not authored skills (92 candidates)
+92 came from GitHub *repo* search and carry a README body, not a `SKILL.md` with frontmatter — they fail authoring-compliance (dimension 2) by construction. These are either curated awesome-lists (`awesome-python`, `awesome-go`, `awesome-mac`, `awesome-selfhosted`, `awesome-mcp-servers`, `awesome-llm-apps`, `awesome-nlp`, `awesome-neovim`, `awesome-quant`, `awesome-artificial-intelligence`, `free-for-dev`, `coding-interview-university`, `professional-programming`) or projects whose README is not a skill (`firecrawl`, `spec-kit`, `open-saas`, `superpowers`, `gstack`, `cc-switch`, `ruview`, `deepcode`, `deeptutor`, plus ~60 small low-signal `*-skill`/`*-kit` repos). Reject on dimension 2.
+
+### Skipped — duplicate territory already in DB (69 curated SKILL.md)
+The incumbent library was seeded from these same trailofbits/anthropics sources, so nearly every curated candidate maps to an existing skill: `semgrep-rule-creator`→**semgrep-rule-creator**; `semgrep-rule-variant-creator`→**authoring-semgrep-rules**; `codeql`→**scanning-with-codeql**; `audit-context-building`→**audit-context-building**; `adversarial-reviewer`→**adversarial-code-review**; `chaos-engineering`→**running-chaos-experiments**; `docker-development`→**docker-optimization**; `modern-python`→**configuring-modern-python-projects**; `claude-api`→**claude-api**; `ask-questions-if-underspecified`→**asking-clarifying-questions**; `spec-driven-workflow`/`spec-to-repo`→**spec-driven-development**; `llm-cost-optimizer`→**optimizing-llm-spend**; `secrets-vault-manager`→**managing-secrets-infrastructure**; `handoff`→**writing-session-handoffs**.
+
+### Rejected — off-stack (trailofbits + alirezarezvani)
+- Blockchain smart-contract security: `algorand/cairo/solana/substrate/ton-vulnerability-scanner`, `spec-to-code-compliance`.
+- Systems / malware / formal methods: `c-review`, `rust-review`, `address-sanitizer`, `yara-rule-authoring`, `crypto-protocol-diagram`, `mermaid-to-proverif`, `vector-forge`, `dimensional-analysis`, `red-team`.
+- `kubernetes-operator` — **reconsidered as a possible accept this run** (genuinely high-quality: reconcile-loop correctness, finalizers, status subresource, CRD/RBAC design, OperatorHub capability levels; and net-new — no k8s skill in the library). I drafted a rewritten entry, then **re-rejected to honor the 2026-07-06 precedent**: operator authoring is Go/controller-runtime, off the React/Node/Python web stack, and `platform` is not one of the three always-on categories (security-reliability, ai-productivity, testing). Consistency with the prior documented judgment wins over a one-off reversal. If the maintainer wants Go/infra authoring in scope, that's a stack-gate change to make deliberately, not silently.
+- `testing-handbook-generator`, `diagramming-code` — meta/generic; no decision framework beyond what Claude already knows.
+
+### Rejected — off-scope role/business skills (alirezarezvani)
+Business/ops (`capacity-planner`, `internal-comms`, `knowledge-ops`, `process-mapper`, `procurement-optimizer`, `vendor-management`, `channel-economics`, `partnerships-architect`, `pricing-strategist`, `chief-ai-officer-advisor`), marketing (`ab-test-setup`, `churn-prevention`, `copy-editing`, `free-tool-strategy`, `onboarding-cro`, `pricing-strategy`), medical/research (`fda-consultant-specialist`, `risk-management-specialist`, `clinical-research`, `market-research`, `product-research`, `research-finance`), broad role prompts (`senior-fullstack`, `senior-devops`, `azure-cloud-architect`, `gcp-cloud-architect`, `behuman`), and novelties (`interpreting-culture-index`, `let-fate-decide`, `genotoxic`, `graph-evolution`).
+
+Net: library unchanged at 80 skills. The candidate pool is now saturated against a mature library; future net-new value will require new sources or a deliberate stack-gate widening.
+
 ## 2026-07-06 [opus-4.6] NO-OP — +0 new / ~0 updated
 
 Mode: full discovery + Opus 4.6 quality gate. Discovered **969 candidates** (10 GitHub searches + 4 curated repos + 3 RSS feeds). Heuristic flagged **160 create / 0 overwrite / 3 skip / 806 reject**. After applying the human-grade quality gate: **0 accepted, 160 rejected/skipped.** No commit to the skills library — audit trail only.
