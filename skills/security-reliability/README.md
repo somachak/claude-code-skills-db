@@ -7,6 +7,7 @@ Threat modeling, secrets/config audits, observability, SLOs, failure modes, and 
 - [`adversarial-code-review/`](./adversarial-code-review/) — Forces genuine critical code review through three hostile personas — Saboteur, New Hire, and Security Auditor — each required to find at least one real issue.
 - [`audit-context-building/`](./audit-context-building/) — Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting.
 - [`auditing-secrets-and-config/`](./auditing-secrets-and-config/) — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks.
+- [`auditing-unit-consistency/`](./auditing-unit-consistency/) — Apply dimensional analysis to application code: assign units (cents, ms, percent, tokens) to every quantity, propagate them through arithmetic, and flag dimensionally impossible operations.
 - [`authoring-semgrep-rules/`](./authoring-semgrep-rules/) — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases.
 - [`differential-review/`](./differential-review/) — Security-focused differential review of code changes (PRs, commits, diffs).
 - [`improving-observability/`](./improving-observability/) — Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations.

@@ -10,6 +10,7 @@ Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work
 - [`clarifying-underspecified-requests/`](./clarifying-underspecified-requests/) — Forces a structured clarification pass before any code is written when a request has multiple plausible interpretations — the most common cause of wasted Claude work in TS/React/Next and FastAPI/Django repos.
 - [`claude-api/`](./claude-api/) — Build, debug, and optimize Claude API / Anthropic SDK apps.
 - [`curating-team-conventions/`](./curating-team-conventions/) — Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills.
+- [`designing-deep-modules/`](./designing-deep-modules/) — Design modules with small interfaces and deep implementations using a precise shared vocabulary (module, interface, seam, adapter, depth).
 - [`designing-workflow-skills/`](./designing-workflow-skills/) — Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure.
 - [`evaluating-tooling-choices/`](./evaluating-tooling-choices/) — Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden.
 - [`extracting-reusable-skills/`](./extracting-reusable-skills/) — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas.

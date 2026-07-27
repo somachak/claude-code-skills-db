@@ -1,6 +1,6 @@
 {
-  "version": "2026-07-13",
-  "generated_at": "2026-07-13T06:25:07.502492Z",
+  "version": "2026-07-27",
+  "generated_at": "2026-07-27T06:16:51.382277Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -209,6 +209,39 @@
         "when_to_use": "team conventions, engineering standards, best practices"
       },
       "stage": "experiment"
+    },
+    {
+      "name": "designing-deep-modules",
+      "title": "Designing Deep Modules",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack",
+        "back-end",
+        "front-end"
+      ],
+      "priority": "core",
+      "description": "Design modules with small interfaces and deep implementations using a precise shared vocabulary (module, interface, seam, adapter, depth). Use when designing or reviewing a module's interface, deciding where a seam goes, making code testable through its public surface, or collapsing pass-through layers in TypeScript or Python codebases.",
+      "trigger_phrases": [
+        "deep module",
+        "module interface design",
+        "where should the seam go",
+        "pass-through layer",
+        "make this testable",
+        "shallow abstraction",
+        "interface too big"
+      ],
+      "skill_body": "## Designing Deep Modules\n\nA module is deep when a large amount of behaviour sits behind a small interface. Deep modules give callers leverage (more capability per unit of interface learned) and maintainers locality (changes, bugs, and knowledge concentrate in one place). Shallow modules -- big interface, thin pass-through implementation -- are the dominant failure mode in both TypeScript service code and Python backends: wrapper classes that re-export a client, \"utils\" barrels, three-method services where each method mirrors one ORM call.\n\n### Vocabulary (use these terms exactly)\n\n- **Module** -- anything with an interface and an implementation: a function, class, package, React hook, or FastAPI router + use-case slice. Scale-agnostic. Avoid: unit, component, service.\n- **Interface** -- everything a caller must know to use the module correctly: type signature PLUS invariants, ordering constraints, error modes, required config, and performance characteristics. A TypeScript `interface` keyword is only the type-level sliver of this.\n- **Seam** -- the place where behaviour can be swapped without editing call sites; the location of the interface. Deciding where the seam goes is a separate design decision from what goes behind it. Avoid: boundary (collides with DDD bounded context).\n- **Adapter** -- a concrete thing satisfying an interface at a seam (Postgres repo, in-memory fake, Stripe gateway).\n\n### The tests that settle arguments\n\n1. **Deletion test.** Imagine deleting the module. If complexity simply vanishes, it was a pass-through -- inline it. If complexity reappears duplicated across N callers, it was earning its keep.\n2. **The interface is the test surface.** Callers and tests should cross the same seam. If a test needs to reach past the interface (spying on internals, patching private methods), the module is the wrong shape -- widen the behaviour behind the interface or move the seam.\n3. **One adapter means a hypothetical seam; two adapters means a real one.** Do not introduce an `IUserRepository` when only `PostgresUserRepository` will ever exist and no test uses a fake. Speculative seams are interface surface with no leverage.\n\n### Designing for testability\n\n- **Accept dependencies, don't construct them.** `processOrder(order, paymentGateway)` is testable; `new StripeGateway()` inside the function is not. In FastAPI, take dependencies through `Depends`/constructor injection; in TS, take them as parameters or a small context object -- not module-level singletons.\n- **Return results, don't mutate arguments.** `calculateDiscount(cart): Discount` beats `applyDiscount(cart): void`. Pure-core / imperative-shell keeps the deep part of the module trivially testable.\n- **Shrink the surface.** Fewer public methods means fewer tests needed and fewer invariants to document. Internal helpers can stay private and be exercised through the public interface.\n\n### Deepening moves\n\n- Collapse a cluster of shallow helpers that are always called together into one deep function with a domain name (`settleInvoice`, not `validateInvoice` + `computeTotals` + `markPaid` called in order by every caller).\n- Pull caller-side boilerplate (retry, pagination, error mapping) inside the module so it is written once.\n- A deep module may still have **internal seams** -- private parts swapped in its own tests -- without exposing them to callers.\n\n### Anti-patterns\n\n- **Pass-through layering:** controller calls service calls repository, each adding one line. Fails the deletion test twice.\n- **Config leakage:** an interface that requires callers to know retry counts, table names, or header formats is shallow no matter how few methods it has -- those facts are interface too.\n- **Interface = public methods:** if correct use requires calling `init()` before `run()`, that ordering constraint is part of the interface; either document it or redesign so misuse is impossible (make `run()` do init lazily, or return a ready object from a factory).\n- **Depth as line-count ratio:** rewards padding the implementation. Measure depth as leverage: behaviour exercised per interface fact learned.\n\n### Review checklist\n\n- [ ] Can the number of public methods or parameters shrink?\n- [ ] Does any caller knowledge (ordering, config, error handling) belong inside?\n- [ ] Does every seam have -- or concretely anticipate -- a second adapter?\n- [ ] Do tests cross only the public interface?\n- [ ] Would deleting the module scatter real complexity into callers?",
+      "frontmatter_overrides": {
+        "when_to_use": "module design, interface design, seams and adapters, testability review, collapsing pass-through layers",
+        "allowed-tools": "Read Grep Glob"
+      },
+      "stage": "build",
+      "provenance": {
+        "source_url": "https://github.com/mattpocock/skills/blob/main/skills/engineering/codebase-design/SKILL.md",
+        "source_type": "github-skill",
+        "note": "Rewritten from Matt Pocock's codebase-design skill (Ousterhout deep-modules + Feathers seams vocabulary). Restructured and tailored to TS/Python stack with deletion test, one-adapter rule, deepening moves, anti-patterns, and review checklist; not copied verbatim.",
+        "captured_at": "2026-07-27T06:16:51.382277Z"
+      }
     },
     {
       "name": "designing-workflow-skills",
@@ -489,36 +522,6 @@
       "stage": "build"
     },
     {
-      "name": "structuring-fastapi-clean-architecture",
-      "title": "FastAPI Clean Architecture",
-      "category": "backend",
-      "audience": [
-        "back-end"
-      ],
-      "priority": "core",
-      "description": "Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable. Use when starting a FastAPI service meant to last, adding a second entry point (queue consumer, scheduled job) beside HTTP, or refactoring a main.py-with-everything app into thin endpoints backed by use cases.",
-      "trigger_phrases": [
-        "fastapi architecture",
-        "fastapi clean architecture",
-        "structure fastapi project",
-        "fastapi use case",
-        "fastapi layers",
-        "thin endpoints"
-      ],
-      "skill_body": "## FastAPI Clean Architecture\n\nFastAPI makes it trivially easy to put business logic in the route handler \u2014 and that is exactly why FastAPI services rot. As soon as a second transport appears (a queue consumer, a scheduled job, an internal RPC), logic that lives in `@router.post` has to be copy-pasted or awkwardly imported. This skill encodes a layered structure that keeps endpoints thin and business logic transport-agnostic, so the same use case runs from HTTP, a NATS consumer, or a cron task without change.\n\n### When to Use\n\n- Starting a new FastAPI service that will outlive a prototype\n- A service that already has (or will grow) a second entry point: background worker, message consumer, scheduled job\n- Refactoring a `main.py`-with-everything FastAPI app into something testable\n- You keep repeating auth, validation, or DB-session wiring in every endpoint\n\n### Layer Boundaries (dependencies point inward)\n\n1. **domain/** \u2014 entities, value objects, and repository *protocols* (interfaces). Zero imports from FastAPI, SQLAlchemy, or Pydantic. Pure Python.\n2. **application/** \u2014 use cases: one class per business operation with an `execute()` method. Depends only on domain protocols. Returns domain objects or a `Result`, never a `Response`.\n3. **infrastructure/** \u2014 concrete adapters: SQLAlchemy repositories, HTTP clients, message publishers. Implements the domain protocols.\n4. **presentation/** \u2014 FastAPI routers, Pydantic request/response schemas, dependency wiring. Translates transport input into a use case call and the result back into a `Response`. The only layer that imports FastAPI.\n\nThe one pragmatic exception worth documenting: `application/` may import the DB session type for transaction control. Everything else stays strictly inward.\n\n### Decision Framework\n\n1. **Endpoints translate, never decide.** A handler parses the request schema, calls one use case, and serializes the result. If a handler contains an `if` about business rules, that logic belongs in `application/`.\n2. **One use case = one operation.** `RegisterUser`, `PublishArticle`, `CancelSubscription`. Constructor takes repositories/services (injected); `execute(command)` does the work. This is the unit your queue consumer and cron job also call.\n3. **Depend on protocols, inject implementations.** Define `class UserRepository(Protocol)` in `domain/`; the SQLAlchemy version lives in `infrastructure/`. Use cases accept the protocol, so unit tests pass a fake and integration tests pass the real one.\n4. **Wire dependencies once, at the edge.** Use FastAPI `Depends` (or a DI container like `dishka`) to build repositories and use cases. Attach auth at the *router* level (`APIRouter(dependencies=[Depends(require_user)])`), grouping routers by audience (`public/`, `user/`, `admin/`) so it is structurally impossible to forget auth on an endpoint.\n5. **Async all the way down.** `async def` handlers, `AsyncSession`, `httpx.AsyncClient`. A single sync `requests.get` or blocking DB driver in a handler stalls the event loop for every concurrent request.\n\n### Anti-patterns\n\n| Avoid | Use Instead |\n|-------|-------------|\n| Business logic inside `@router.post` | A use case in `application/`, called by the handler |\n| Importing `Session`/SQLAlchemy models in a router | Repository protocol injected into the use case |\n| Returning ORM models directly from endpoints | Explicit Pydantic response schema |\n| Re-adding `Depends(get_current_user)` on every route | Router-level `dependencies=[...]`, grouped by audience |\n| `requests`/`psycopg2` (sync) in an async handler | `httpx.AsyncClient` / `asyncpg` + `AsyncSession` |\n| Catching `Exception` in the handler to shape errors | Domain exceptions + one `exception_handler` per type |\n| Testing only through the HTTP layer | Unit-test use cases directly; reserve HTTP tests for wiring |\n\n### Worked Example \u2014 a use case reused across transports\n\n```python\n# domain/repositories.py\nclass UserRepository(Protocol):\n    async def by_email(self, email: str) -> User | None: ...\n    async def add(self, user: User) -> None: ...\n\n# application/register_user.py\n@dataclass\nclass RegisterUser:\n    users: UserRepository\n    hasher: PasswordHasher\n    async def execute(self, cmd: RegisterCommand) -> User:\n        if await self.users.by_email(cmd.email):\n            raise EmailAlreadyUsed(cmd.email)\n        user = User.new(cmd.email, self.hasher.hash(cmd.password))\n        await self.users.add(user)\n        return user\n\n# presentation/http/users.py  (thin \u2014 translate only)\n@router.post(\"/users\", response_model=UserOut, status_code=201)\nasync def register(body: RegisterIn, uc: RegisterUser = Depends(get_register_user)):\n    user = await uc.execute(body.to_command())\n    return UserOut.from_domain(user)\n\n# the SAME use case, driven by a message consumer\nasync def on_signup_event(evt: SignupEvent, uc: RegisterUser):\n    await uc.execute(evt.to_command())   # zero duplicated logic\n```\n\n### Testing Layers\n\n- **Unit** \u2014 instantiate the use case with fake repositories; assert domain behavior. No FastAPI, no DB. Fast, covers business rules.\n- **Integration** \u2014 real SQLAlchemy repository against a `testcontainers` Postgres; verify the adapter honors the protocol.\n- **E2E** \u2014 drive the app with `httpx.AsyncClient(transport=ASGITransport(app=app))`; assert status codes and wiring, not business branches.\n\n### Checklist\n\n- [ ] No SQLAlchemy or FastAPI imports in `domain/` or `application/`\n- [ ] Every endpoint calls exactly one use case and returns an explicit response schema\n- [ ] Repositories are defined as protocols in `domain/`, implemented in `infrastructure/`\n- [ ] Auth is wired at the router level, routers grouped by audience\n- [ ] All I/O is async; no sync HTTP/DB drivers in handlers\n- [ ] Domain exceptions map to HTTP via `@app.exception_handler`, not per-route try/except\n- [ ] Use cases have direct unit tests; `testcontainers` covers the repository adapters",
-      "frontmatter_overrides": {
-        "when_to_use": "fastapi architecture, structure fastapi project, thin endpoints, use case layer",
-        "allowed-tools": "Read Grep Bash"
-      },
-      "stage": "build",
-      "provenance": {
-        "source_url": "https://github.com/ocbunknown/fastapi-clean-architecture-template",
-        "source_type": "github-repo",
-        "note": "Body authored from the clean/hexagonal FastAPI pattern (RequestBus/UseCase, DI, transport separation, layered testcontainers testing); not copied from source README.",
-        "captured_at": "2026-07-13T06:25:07.502468Z"
-      }
-    },
-    {
       "name": "configuring-modern-python-projects",
       "title": "Modern Python Project Setup",
       "category": "backend",
@@ -738,6 +741,36 @@
         "allowed-tools": "Read Grep Bash"
       },
       "stage": "scale"
+    },
+    {
+      "name": "structuring-fastapi-clean-architecture",
+      "title": "FastAPI Clean Architecture",
+      "category": "backend",
+      "audience": [
+        "back-end"
+      ],
+      "priority": "core",
+      "description": "Structures a FastAPI service into domain/application/infrastructure/presentation layers so business logic stays transport-agnostic and testable. Use when starting a FastAPI service meant to last, adding a second entry point (queue consumer, scheduled job) beside HTTP, or refactoring a main.py-with-everything app into thin endpoints backed by use cases.",
+      "trigger_phrases": [
+        "fastapi architecture",
+        "fastapi clean architecture",
+        "structure fastapi project",
+        "fastapi use case",
+        "fastapi layers",
+        "thin endpoints"
+      ],
+      "skill_body": "## FastAPI Clean Architecture\n\nFastAPI makes it trivially easy to put business logic in the route handler \u2014 and that is exactly why FastAPI services rot. As soon as a second transport appears (a queue consumer, a scheduled job, an internal RPC), logic that lives in `@router.post` has to be copy-pasted or awkwardly imported. This skill encodes a layered structure that keeps endpoints thin and business logic transport-agnostic, so the same use case runs from HTTP, a NATS consumer, or a cron task without change.\n\n### When to Use\n\n- Starting a new FastAPI service that will outlive a prototype\n- A service that already has (or will grow) a second entry point: background worker, message consumer, scheduled job\n- Refactoring a `main.py`-with-everything FastAPI app into something testable\n- You keep repeating auth, validation, or DB-session wiring in every endpoint\n\n### Layer Boundaries (dependencies point inward)\n\n1. **domain/** \u2014 entities, value objects, and repository *protocols* (interfaces). Zero imports from FastAPI, SQLAlchemy, or Pydantic. Pure Python.\n2. **application/** \u2014 use cases: one class per business operation with an `execute()` method. Depends only on domain protocols. Returns domain objects or a `Result`, never a `Response`.\n3. **infrastructure/** \u2014 concrete adapters: SQLAlchemy repositories, HTTP clients, message publishers. Implements the domain protocols.\n4. **presentation/** \u2014 FastAPI routers, Pydantic request/response schemas, dependency wiring. Translates transport input into a use case call and the result back into a `Response`. The only layer that imports FastAPI.\n\nThe one pragmatic exception worth documenting: `application/` may import the DB session type for transaction control. Everything else stays strictly inward.\n\n### Decision Framework\n\n1. **Endpoints translate, never decide.** A handler parses the request schema, calls one use case, and serializes the result. If a handler contains an `if` about business rules, that logic belongs in `application/`.\n2. **One use case = one operation.** `RegisterUser`, `PublishArticle`, `CancelSubscription`. Constructor takes repositories/services (injected); `execute(command)` does the work. This is the unit your queue consumer and cron job also call.\n3. **Depend on protocols, inject implementations.** Define `class UserRepository(Protocol)` in `domain/`; the SQLAlchemy version lives in `infrastructure/`. Use cases accept the protocol, so unit tests pass a fake and integration tests pass the real one.\n4. **Wire dependencies once, at the edge.** Use FastAPI `Depends` (or a DI container like `dishka`) to build repositories and use cases. Attach auth at the *router* level (`APIRouter(dependencies=[Depends(require_user)])`), grouping routers by audience (`public/`, `user/`, `admin/`) so it is structurally impossible to forget auth on an endpoint.\n5. **Async all the way down.** `async def` handlers, `AsyncSession`, `httpx.AsyncClient`. A single sync `requests.get` or blocking DB driver in a handler stalls the event loop for every concurrent request.\n\n### Anti-patterns\n\n| Avoid | Use Instead |\n|-------|-------------|\n| Business logic inside `@router.post` | A use case in `application/`, called by the handler |\n| Importing `Session`/SQLAlchemy models in a router | Repository protocol injected into the use case |\n| Returning ORM models directly from endpoints | Explicit Pydantic response schema |\n| Re-adding `Depends(get_current_user)` on every route | Router-level `dependencies=[...]`, grouped by audience |\n| `requests`/`psycopg2` (sync) in an async handler | `httpx.AsyncClient` / `asyncpg` + `AsyncSession` |\n| Catching `Exception` in the handler to shape errors | Domain exceptions + one `exception_handler` per type |\n| Testing only through the HTTP layer | Unit-test use cases directly; reserve HTTP tests for wiring |\n\n### Worked Example \u2014 a use case reused across transports\n\n```python\n# domain/repositories.py\nclass UserRepository(Protocol):\n    async def by_email(self, email: str) -> User | None: ...\n    async def add(self, user: User) -> None: ...\n\n# application/register_user.py\n@dataclass\nclass RegisterUser:\n    users: UserRepository\n    hasher: PasswordHasher\n    async def execute(self, cmd: RegisterCommand) -> User:\n        if await self.users.by_email(cmd.email):\n            raise EmailAlreadyUsed(cmd.email)\n        user = User.new(cmd.email, self.hasher.hash(cmd.password))\n        await self.users.add(user)\n        return user\n\n# presentation/http/users.py  (thin \u2014 translate only)\n@router.post(\"/users\", response_model=UserOut, status_code=201)\nasync def register(body: RegisterIn, uc: RegisterUser = Depends(get_register_user)):\n    user = await uc.execute(body.to_command())\n    return UserOut.from_domain(user)\n\n# the SAME use case, driven by a message consumer\nasync def on_signup_event(evt: SignupEvent, uc: RegisterUser):\n    await uc.execute(evt.to_command())   # zero duplicated logic\n```\n\n### Testing Layers\n\n- **Unit** \u2014 instantiate the use case with fake repositories; assert domain behavior. No FastAPI, no DB. Fast, covers business rules.\n- **Integration** \u2014 real SQLAlchemy repository against a `testcontainers` Postgres; verify the adapter honors the protocol.\n- **E2E** \u2014 drive the app with `httpx.AsyncClient(transport=ASGITransport(app=app))`; assert status codes and wiring, not business branches.\n\n### Checklist\n\n- [ ] No SQLAlchemy or FastAPI imports in `domain/` or `application/`\n- [ ] Every endpoint calls exactly one use case and returns an explicit response schema\n- [ ] Repositories are defined as protocols in `domain/`, implemented in `infrastructure/`\n- [ ] Auth is wired at the router level, routers grouped by audience\n- [ ] All I/O is async; no sync HTTP/DB drivers in handlers\n- [ ] Domain exceptions map to HTTP via `@app.exception_handler`, not per-route try/except\n- [ ] Use cases have direct unit tests; `testcontainers` covers the repository adapters",
+      "frontmatter_overrides": {
+        "when_to_use": "fastapi architecture, structure fastapi project, thin endpoints, use case layer",
+        "allowed-tools": "Read Grep Bash"
+      },
+      "stage": "build",
+      "provenance": {
+        "source_url": "https://github.com/ocbunknown/fastapi-clean-architecture-template",
+        "source_type": "github-repo",
+        "note": "Body authored from the clean/hexagonal FastAPI pattern (RequestBus/UseCase, DI, transport separation, layered testcontainers testing); not copied from source README.",
+        "captured_at": "2026-07-13T06:25:07.502468Z"
+      }
     },
     {
       "name": "designing-database-schemas",
@@ -1629,6 +1662,39 @@
         "allowed-tools": "Read Grep"
       },
       "stage": "harden"
+    },
+    {
+      "name": "auditing-unit-consistency",
+      "title": "Auditing Unit Consistency",
+      "category": "security-reliability",
+      "audience": [
+        "back-end",
+        "data",
+        "security"
+      ],
+      "priority": "supporting",
+      "description": "Apply dimensional analysis to application code: assign units (cents, ms, percent, tokens) to every quantity, propagate them through arithmetic, and flag dimensionally impossible operations. Use when auditing pricing, billing, quota, scheduling, or analytics code for unit-mismatch bugs, mixed scales, precision loss, or money-in-floats problems that type checkers cannot catch.",
+      "trigger_phrases": [
+        "unit mismatch",
+        "dimensional analysis",
+        "cents vs dollars",
+        "milliseconds vs seconds",
+        "audit numeric code",
+        "precision loss",
+        "money in floats"
+      ],
+      "skill_body": "## Auditing Unit Consistency\n\nNumeric code that mixes units, scales, or precisions is a reliable source of severe, hard-to-spot bugs: cents added to dollars, milliseconds compared to seconds, percentages multiplied where basis points were meant, token amounts with 6 decimals combined with 18-decimal amounts. Type checkers don't catch these -- `number + number` and `int + int` are always well-typed. This skill applies dimensional analysis (the physics technique) to application code: assign every quantity a unit, propagate units through arithmetic, and flag operations that are dimensionally impossible.\n\n### Step 1: Build the unit vocabulary\n\nScan the code that does arithmetic (pricing, billing, quotas, scheduling, analytics, conversions) and write down the repo's actual units before judging anything:\n\n- **Base units:** `cents`, `usd`, `ms`, `s`, `bytes`, `tokens`, `rows`, `percent` (0-100), `ratio` (0-1), `bps`.\n- **Derived units:** `usd/token`, `req/s`, `bytes/row`.\n- **Scale prefixes:** fixed-point decimals (`e2` for cents, `e6`/`e18` for token amounts), `milli`, `kilo`.\n\nRecord the vocabulary in a short reference (comment block or `UNITS.md`) so later passes and other reviewers reuse the same names.\n\n### Step 2: Annotate anchors\n\nAnchor points are places where a unit is known for certain: API boundaries (\"Stripe amounts are integer cents\"), DB columns (`duration_ms INTEGER`), config (\"timeout in seconds\"), library contracts (`Date.now()` is ms, `time.time()` is float seconds). Annotate them with unit comments:\n\n```ts\nconst amountCents = invoice.total;      // unit: cents (Stripe)\nconst timeoutS = config.timeout;        // unit: s\nconst elapsed = Date.now() - startedAt; // unit: ms\n```\n\nPrefer encoding units in names (`amountCents`, `timeoutMs`) and, where the codebase supports it, in types (branded types in TS: `type Cents = number & { __brand: \"cents\" }`; `NewType` in Python).\n\n### Step 3: Propagate and check\n\nPush units through each expression using the algebra: addition/subtraction/comparison require identical units; multiplication/division combine them; assignment to an annotated target must match.\n\n- `cents + cents = cents` -- fine. `cents + usd` -- bug or missing conversion.\n- `usd/token * tokens = usd` -- fine. `usd/token * usd` -- dimensionally impossible; flag it.\n- `if (elapsedMs > timeoutS)` -- comparison across scales; near-certain bug.\n- `total * discountPercent` where `discountPercent` is 0-100 and result is used as a ratio -- off-by-100.\n\n### Red flags to hunt directly\n\n- `* 100`, `/ 100`, `* 1000`, `/ 1000` scattered near each other -- often one conversion too many or too few.\n- Floats holding money (`0.1 + 0.2 !== 0.3`); money should be integer cents/base units or a decimal type.\n- Two variables with the same name and different units in different files (`timeout` as ms in one module, s in another).\n- Division before multiplication on integers -- silent precision loss (`a / b * c` vs `a * c / b`).\n- JSON/DB round-trips that change scale (storing seconds, reading as ms).\n\n### Validate before reporting\n\nFor each suspected mismatch, reject rationalizations: \"it cancels out later\" and \"the values are small\" are not fixes. Confirm by tracing one concrete value end-to-end (e.g. a $12.34 invoice: 1234 cents in, what comes out?). Report each confirmed finding with the expression, the units of each operand, the expected unit, and the concrete wrong result.\n\n### Checklist\n\n- [ ] Unit vocabulary written down and reused\n- [ ] All external boundaries (APIs, DB, config, stdlib time) annotated\n- [ ] Every +, -, comparison checked for identical units\n- [ ] Every * and / produces a unit somebody actually wants\n- [ ] Money is integers or decimals, never binary floats\n- [ ] One worked numeric example per confirmed finding",
+      "frontmatter_overrides": {
+        "when_to_use": "auditing arithmetic-heavy code for unit mismatches, mixed scales, percent vs ratio confusion, or float-money bugs",
+        "allowed-tools": "Read Grep Glob Bash"
+      },
+      "stage": "harden",
+      "provenance": {
+        "source_url": "https://github.com/trailofbits/skills/blob/main/plugins/dimensional-analysis/skills/dimensional-analysis/SKILL.md",
+        "source_type": "github-skill",
+        "note": "Distilled from Trail of Bits' dimensional-analysis pipeline. Their version is a multi-subagent orchestration workflow; this rewrite extracts the core technique (vocabulary, anchor annotation, propagation, red flags, validation) as a single-context skill tailored to TS/Python application code; not copied verbatim.",
+        "captured_at": "2026-07-27T06:16:51.382277Z"
+      }
     },
     {
       "name": "authoring-semgrep-rules",

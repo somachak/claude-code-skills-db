@@ -1,8 +1,8 @@
 # Skills Index
 
-_80 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_82 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-07-13` · **Last generated:** `2026-07-13T06:25:07.502492Z`
+**Version:** `2026-07-27` · **Last generated:** `2026-07-27T06:16:51.382277Z`
 
 ## Quick search
 
@@ -14,6 +14,7 @@ _80 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`clarifying-underspecified-requests`](./skills/ai-productivity/clarifying-underspecified-requests/SKILL.md) | ai-productivity | core | Forces a structured clarification pass before any code is written when a request has multiple plausible interpretations — the most common cause of wasted Claude work in TS/React/Next and FastAPI/Django repos |
 | [`claude-api`](./skills/ai-productivity/claude-api/SKILL.md) | ai-productivity | supporting | Build, debug, and optimize Claude API / Anthropic SDK apps |
 | [`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md) | ai-productivity | core | Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills |
+| [`designing-deep-modules`](./skills/ai-productivity/designing-deep-modules/SKILL.md) | ai-productivity | core | Design modules with small interfaces and deep implementations using a precise shared vocabulary (module, interface, seam, adapter, depth) |
 | [`designing-workflow-skills`](./skills/ai-productivity/designing-workflow-skills/SKILL.md) | ai-productivity | supporting | Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure |
 | [`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md) | ai-productivity | core | Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden |
 | [`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md) | ai-productivity | core | Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas |
@@ -66,6 +67,7 @@ _80 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`adversarial-code-review`](./skills/security-reliability/adversarial-code-review/SKILL.md) | security-reliability | supporting | Forces genuine critical code review through three hostile personas — Saboteur, New Hire, and Security Auditor — each required to find at least one real issue |
 | [`audit-context-building`](./skills/security-reliability/audit-context-building/SKILL.md) | security-reliability | supporting | Builds ultra-granular architectural context through systematic line-by-line code analysis before vulnerability hunting |
 | [`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md) | security-reliability | core | Audits secret handling, environment configuration, rotation practices, and accidental exposure risks |
+| [`auditing-unit-consistency`](./skills/security-reliability/auditing-unit-consistency/SKILL.md) | security-reliability | supporting | Apply dimensional analysis to application code: assign units (cents, ms, percent, tokens) to every quantity, propagate them through arithmetic, and flag dimensionally impossible operations |
 | [`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md) | security-reliability | supporting | Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases |
 | [`differential-review`](./skills/security-reliability/differential-review/SKILL.md) | security-reliability | supporting | Security-focused differential review of code changes (PRs, commits, diffs) |
 | [`improving-observability`](./skills/security-reliability/improving-observability/SKILL.md) | security-reliability | core | Improves logging, metrics, tracing, and diagnostic context for faster debugging and healthier operations |
@@ -105,6 +107,8 @@ _80 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `claude api`, `anthropic sdk`, `prompt caching`, `managed agents`, `claude model`, `tool use`...
 - **[`curating-team-conventions`](./skills/ai-productivity/curating-team-conventions/SKILL.md)** — Curates coding conventions, architectural defaults, and review standards into structured reference material that can later become skills. Use when teams repeat style, design, or workflow guidance.
   · triggers: `team conventions`, `engineering standards`, `best practices`, `coding guidelines`
+- **[`designing-deep-modules`](./skills/ai-productivity/designing-deep-modules/SKILL.md)** — Design modules with small interfaces and deep implementations using a precise shared vocabulary (module, interface, seam, adapter, depth). Use when designing or reviewing a module's interface, deciding where a seam goes, making code testable through its public surface, or collapsing pass-through layers in TypeScript or Python codebases.
+  · triggers: `deep module`, `module interface design`, `where should the seam go`, `pass-through layer`, `make this testable`, `shallow abstraction`...
 - **[`designing-workflow-skills`](./skills/ai-productivity/designing-workflow-skills/SKILL.md)** — Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure. Use when creating skills with sequential pipelines, routing patterns, safety gates, task tracking, phased execution, or any multi-step workflow. Also applies when reviewing or refactoring existing workflow skills for quality.
   · triggers: `workflow skill`, `skill design`, `multi-step skill`, `phased execution`, `subagent delegation`, `skill authoring`
 - **[`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md)** — Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden. Use when deciding between tools for frontend, backend, testing, or infrastructure work.
@@ -224,6 +228,8 @@ _80 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `security audit context`, `deep code analysis`, `audit context`, `architectural context`, `line-by-line analysis`, `pre-audit analysis`
 - **[`auditing-secrets-and-config`](./skills/security-reliability/auditing-secrets-and-config/SKILL.md)** — Audits secret handling, environment configuration, rotation practices, and accidental exposure risks. Use when reviewing repositories, deployment configs, CI, or incident follow-up.
   · triggers: `secrets audit`, `env vars`, `credential exposure`, `config hygiene`, `secret rotation`
+- **[`auditing-unit-consistency`](./skills/security-reliability/auditing-unit-consistency/SKILL.md)** — Apply dimensional analysis to application code: assign units (cents, ms, percent, tokens) to every quantity, propagate them through arithmetic, and flag dimensionally impossible operations. Use when auditing pricing, billing, quota, scheduling, or analytics code for unit-mismatch bugs, mixed scales, precision loss, or money-in-floats problems that type checkers cannot catch.
+  · triggers: `unit mismatch`, `dimensional analysis`, `cents vs dollars`, `milliseconds vs seconds`, `audit numeric code`, `precision loss`...
 - **[`authoring-semgrep-rules`](./skills/security-reliability/authoring-semgrep-rules/SKILL.md)** — Writes, tests, and ships custom Semgrep rules that catch project-specific security bugs and anti-patterns in TypeScript, Node, Python, FastAPI, and Django codebases. Use when adding lint coverage for a vulnerability class, codifying a postmortem, or building taint rules for user-input-to-sink flows.
   · triggers: `semgrep rule`, `custom static analysis`, `taint mode`, `codify a postmortem`, `lint for security bug`, `semgrep --test`
 - **[`differential-review`](./skills/security-reliability/differential-review/SKILL.md)** — Security-focused differential review of code changes (PRs, commits, diffs). Adapts analysis depth to codebase size, uses git history for context, calculates blast radius, checks test coverage, and generates comprehensive markdown reports. Automatically detects security regressions. Risk-first: focuses on auth, crypto, value transfer, external calls.

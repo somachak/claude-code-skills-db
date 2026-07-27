@@ -320,3 +320,24 @@ Pipeline: 972 candidates discovered, 161 heuristic `create` flags (all scored as
 - [reject] Heuristic noise: awesome-lists (`awesome-python`, `awesome-go`, `awesome-mcp-servers`, `awesome-selfhosted`, `free-for-dev`, `coding-interview-university`, etc.) — link collections, not skills.
 - [reject] Off-stack: alirezarezvani business-ops / c-level / marketing / RA-QM skills; trailofbits blockchain vuln scanners (algorand/cairo/solana/substrate/ton) and non-stack languages (c-review, rust-review) — outside React/Next/TS, Node, Python, Tailwind/shadcn and the always-on categories.
 - [reject] Stub bodies (~54 chars, README pointers not real SKILL.md): alirezarezvani `chaos-engineering`, `docker-development`, `kubernetes-operator`, `secrets-vault-manager`, `spec-driven-workflow`.
+
+## 2026-07-27 [opus-4.6] APPLIED — +2 new / ~0 updated
+
+Pipeline: 997 candidates discovered, 163 heuristic `create` flags, 0 overwrite. Manual quality gate accepted 2.
+
+### Created (2)
+
+- [create] `designing-deep-modules` (ai-productivity/core/build) — score ~85. Net-new: nothing in the library covered module/interface design (deep vs shallow, seams, adapters, deletion test, one-adapter rule, testability-through-the-interface). Rewritten from mattpocock/skills `codebase-design` (high-signal author, real SKILL.md with glossary + rejected framings); body authored fresh (4.6KB), tailored to TS/Python with deepening moves, anti-patterns, and checklist.
+- [create] `auditing-unit-consistency` (security-reliability/supporting/harden) — score ~85. Net-new: no incumbent covers unit/dimension auditing of arithmetic code (cents vs dollars, ms vs s, percent vs bps, float money). Distilled from trailofbits `dimensional-analysis`; source is a multi-subagent orchestration pipeline unusable standalone, so the core technique (vocabulary → anchor annotation → propagation → red flags → validation with rationalization rejection) was rewritten (4.1KB) as a single-context skill for TS/Python app code.
+
+### Rejected / skipped (notable)
+
+- [skip] mattpocock `domain-modeling` — decent but thin (3.4KB), similarity 0.4–0.6 to `curating-team-conventions`/`clarifying-underspecified-requests` territory; glossary-maintenance value is modest. Candidate for supporting-file treatment later.
+- [reject] mattpocock `resolving-merge-conflicts` — 921-char stub, fails depth gate.
+- [reject] trailofbits `testing-handbook-generator` — meta-skill requiring their handbook repo checkout; not portable. `spec-to-code-compliance` — blockchain/whitepaper-flavored, overlaps `differential-review` + `documenting-api-contracts`. `address-sanitizer`, `c-review`, `rust-review`, blockchain vuln scanners, `yara`, `codeql` (incumbent exists), trailmark diagram skills — off-stack or duplicate.
+- [reject] `ui-ux-pro-max-skill` (85) — value lives in its CSV rule datasets + scripts, not rewritable without wholesale copying; overlaps `frontend-design`/`building-nextjs-shadcn-interfaces`.
+- [reject] `claude-osint` (82) — offensive recon tradecraft (dorks, credential validators); out of library scope.
+- [reject] `ruview` (81) — WiFi sensing project; heuristic scored the README, pure noise. Same for `html-anything`, `skybridge`, `open-saas`, `dify`, `codepilot`, `gstack`, `spec-kit` (product READMEs, not skills; `spec-driven-development` incumbent already covers spec-kit's methodology).
+- [reject] Bundles/indexes: `superpowers`, `carmack-council`, `agent-skills`, `builder-skills`, `software-dev-ai-claude-toolkit`, `anthropic-cybersecurity-skills`, `agency-agents`, `awesome-*` lists, `free-for-dev`, `coding-interview-university`, `professional-programming` — README indexes, not focused skills.
+- [reject] alirezarezvani business-ops/c-level/marketing/RA-QM sub-skills (~30 flagged at 60) — off-stack, same verdict as 2026-07-13.
+- Note: heuristic uniqueness scoring still over-credits novelty (163 "net-new" flags); manual gate remains essential.
