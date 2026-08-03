@@ -14,7 +14,7 @@ Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work
 - [`designing-workflow-skills/`](./designing-workflow-skills/) — Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure.
 - [`evaluating-tooling-choices/`](./evaluating-tooling-choices/) — Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden.
 - [`extracting-reusable-skills/`](./extracting-reusable-skills/) — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas.
-- [`generating-pr-reviews/`](./generating-pr-reviews/) — Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability.
+- [`generating-pr-reviews/`](./generating-pr-reviews/) — Runs a four-phase pull request review (context, high-level, line-by-line, verdict) with severity-labeled feedback and stack-specific checkpoints for React/Next, TypeScript/Node, and Python/FastAPI/Django.
 - [`optimizing-llm-spend/`](./optimizing-llm-spend/) — Designs the LLM cost layer for Node and FastAPI services so AI features don't bleed margin: model routing, prompt caching, response streaming with early termination, request batching, and per-tenant budgets.
 - [`planning-multi-agent-work/`](./planning-multi-agent-work/) — Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows.
 - [`spec-driven-development/`](./spec-driven-development/) — Enforces writing a complete specification before any implementation begins.

@@ -1,8 +1,8 @@
 # Skills Index
 
-_82 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
+_83 skills across 7 categories. Generated from `skills-database.json` — do not edit by hand._
 
-**Version:** `2026-07-27` · **Last generated:** `2026-07-27T06:16:51.382277Z`
+**Version:** `2026-08-03` · **Last generated:** `2026-08-03T06:17:31.008749Z`
 
 ## Quick search
 
@@ -18,7 +18,7 @@ _82 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`designing-workflow-skills`](./skills/ai-productivity/designing-workflow-skills/SKILL.md) | ai-productivity | supporting | Guides design and structuring of workflow-based Claude Code skills with multi-step phases, decision trees, subagent delegation, and progressive disclosure |
 | [`evaluating-tooling-choices`](./skills/ai-productivity/evaluating-tooling-choices/SKILL.md) | ai-productivity | core | Evaluates libraries, frameworks, and platform choices using adoption fit, migration cost, risk, and operational burden |
 | [`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md) | ai-productivity | core | Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas |
-| [`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md) | ai-productivity | core | Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability |
+| [`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md) | ai-productivity | core | Runs a four-phase pull request review (context, high-level, line-by-line, verdict) with severity-labeled feedback and stack-specific checkpoints for React/Next, TypeScript/Node, and Python/FastAPI/Django |
 | [`optimizing-llm-spend`](./skills/ai-productivity/optimizing-llm-spend/SKILL.md) | ai-productivity | supporting | Designs the LLM cost layer for Node and FastAPI services so AI features don't bleed margin: model routing, prompt caching, response streaming with early termination, request batching, and per-tenant budgets |
 | [`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md) | ai-productivity | core | Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows |
 | [`spec-driven-development`](./skills/ai-productivity/spec-driven-development/SKILL.md) | ai-productivity | supporting | Enforces writing a complete specification before any implementation begins |
@@ -49,6 +49,7 @@ _82 skills across 7 categories. Generated from `skills-database.json` — do not
 | [`building-nextjs-shadcn-interfaces`](./skills/frontend/building-nextjs-shadcn-interfaces/SKILL.md) | frontend | supporting | Builds production-grade Next.js 15 + shadcn/ui interfaces: project setup, file organisation, route groups, async params migration, CSS variable theming, and component composition rules |
 | [`debugging-react-rendering`](./skills/frontend/debugging-react-rendering/SKILL.md) | frontend | core | Diagnoses unnecessary renders, stale closures, memoization mistakes, and state propagation issues in React applications |
 | [`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md) | frontend | core | Designs reusable UI component systems, prop APIs, composition rules, and state boundaries |
+| [`enforcing-design-consistency`](./skills/frontend/enforcing-design-consistency/SKILL.md) | frontend | supporting | Keeps AI-built UIs looking designed across screens and sessions: lock design decisions (accent, type scale, spacing, radius, motion) in a committed DESIGN.md with tokens-only enforcement, ban the nameable tells of AI-generated UI (default indigo, emoji icons, even card grids, pure-black backgrounds), and run a score-then-fix loop with rendered visual verification before any screen ships |
 | [`frontend-design`](./skills/frontend/frontend-design/SKILL.md) | frontend | supporting | Create distinctive, production-grade frontend interfaces with high design quality |
 | [`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md) | frontend | core | Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment |
 | [`modern-css-architecture`](./skills/frontend/modern-css-architecture/SKILL.md) | frontend | core | Improves CSS architecture, token usage, layout consistency, and responsive styling strategy |
@@ -115,8 +116,8 @@ _82 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `tool comparison`, `library choice`, `framework evaluation`, `build vs buy`
 - **[`extracting-reusable-skills`](./skills/ai-productivity/extracting-reusable-skills/SKILL.md)** — Turns repeated successful workflows into reusable skills with proper names, descriptions, support files, and evaluation ideas. Use when recurring tasks reveal stable patterns worth codifying.
   · triggers: `create a skill`, `extract workflow`, `reuse this process`, `codify this pattern`
-- **[`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md)** — Reviews pull requests for correctness, risk, test gaps, migration impact, and maintainability. Use when preparing PR feedback, self-reviewing changes, or training reviewers.
-  · triggers: `pr review`, `code review`, `diff review`, `merge risk`, `review comments`
+- **[`generating-pr-reviews`](./skills/ai-productivity/generating-pr-reviews/SKILL.md)** — Runs a four-phase pull request review (context, high-level, line-by-line, verdict) with severity-labeled feedback and stack-specific checkpoints for React/Next, TypeScript/Node, and Python/FastAPI/Django. Use when reviewing PRs, self-reviewing before merge, establishing team review standards, or mentoring reviewers.
+  · triggers: `pr review`, `code review`, `diff review`, `review this pull request`, `merge risk`, `review comments`
 - **[`optimizing-llm-spend`](./skills/ai-productivity/optimizing-llm-spend/SKILL.md)** — Designs the LLM cost layer for Node and FastAPI services so AI features don't bleed margin: model routing, prompt caching, response streaming with early termination, request batching, and per-tenant budgets. Use when an AI endpoint is being scoped, when the monthly bill jumps, or when picking between Claude Haiku/Sonnet/Opus and OpenAI/Gemini for a workload.
   · triggers: `llm cost`, `token optimization`, `prompt caching`, `model routing`, `ai spend`, `anthropic vs openai cost`
 - **[`planning-multi-agent-work`](./skills/ai-productivity/planning-multi-agent-work/SKILL.md)** — Plans work decomposition, task boundaries, handoffs, and validation points for multi-agent development workflows. Use when parallelizing large refactors, research, or incident investigations.
@@ -186,6 +187,8 @@ _82 skills across 7 categories. Generated from `skills-database.json` — do not
   · triggers: `rerender`, `useeffect bug`, `memoization`, `stale closure`, `react performance`
 - **[`designing-component-systems`](./skills/frontend/designing-component-systems/SKILL.md)** — Designs reusable UI component systems, prop APIs, composition rules, and state boundaries. Use when creating or refactoring design systems, shared UI packages, or component libraries.
   · triggers: `component library`, `design system`, `props api`, `slot patterns`, `headless ui`
+- **[`enforcing-design-consistency`](./skills/frontend/enforcing-design-consistency/SKILL.md)** — Keeps AI-built UIs looking designed across screens and sessions: lock design decisions (accent, type scale, spacing, radius, motion) in a committed DESIGN.md with tokens-only enforcement, ban the nameable tells of AI-generated UI (default indigo, emoji icons, even card grids, pure-black backgrounds), and run a score-then-fix loop with rendered visual verification before any screen ships. Use when UI drifts between pages, when output 'looks AI-generated', or when starting a project that must stay visually coherent without a design team.
+  · triggers: `design consistency`, `design system drift`, `looks ai generated`, `design tokens`, `ui coherence`, `design lock`
 - **[`frontend-design`](./skills/frontend/frontend-design/SKILL.md)** — Create distinctive, production-grade frontend interfaces with high design quality. Use when building web components, pages, artifacts, or applications (websites, landing pages, dashboards, React components, HTML/CSS layouts). Avoids generic AI-slop aesthetics — commits to bold aesthetic direction (brutalist, editorial, luxury, organic, etc.) with intentional typography, color, motion, and spatial composition.
   · triggers: `frontend design`, `ui design`, `distinctive ui`, `production grade design`, `design aesthetic`, `avoid ai aesthetics`...
 - **[`hardening-forms-and-validation`](./skills/frontend/hardening-forms-and-validation/SKILL.md)** — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment. Use when shipping login, checkout, onboarding, profile, or settings forms.

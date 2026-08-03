@@ -341,3 +341,26 @@ Pipeline: 997 candidates discovered, 163 heuristic `create` flags, 0 overwrite. 
 - [reject] Bundles/indexes: `superpowers`, `carmack-council`, `agent-skills`, `builder-skills`, `software-dev-ai-claude-toolkit`, `anthropic-cybersecurity-skills`, `agency-agents`, `awesome-*` lists, `free-for-dev`, `coding-interview-university`, `professional-programming` — README indexes, not focused skills.
 - [reject] alirezarezvani business-ops/c-level/marketing/RA-QM sub-skills (~30 flagged at 60) — off-stack, same verdict as 2026-07-13.
 - Note: heuristic uniqueness scoring still over-credits novelty (163 "net-new" flags); manual gate remains essential.
+
+## 2026-08-03 — opus-4.6 run (manual quality gate over dry-run heuristics)
+
+Runner discovered 1003 candidates; heuristics flagged 164 create / 0 overwrite. Opus gate accepted 2, rejected/skipped the rest.
+
+### Accepted
+- **OVERWRITE `generating-pr-reviews`** ← awesome-skills/code-review-skill (1,594★, pushed 2026-07). Incumbent was 1.7k chars of generic advice; rewrite distills the source's four-phase timed process, six-level severity taxonomy, question/suggest feedback technique, reuse audit, and adds React/Next, TS/Node, Python/FastAPI/Django line-review checkpoints. Clear ≥15% improvement.
+- **CREATE `enforcing-design-consistency`** (frontend) ← bitjaru/styleseed (863★, pushed 2026-07-31). Net-new territory vs `frontend-design` (creation-time aesthetics): this covers lifetime consistency — committed DESIGN.md decision lock, tokens-only rule, banned AI-look tells, 0–100 score-then-fix gate, rendered verification, cross-session drift prevention. Body rewritten, not copied.
+
+### Skipped (adjacent but not materially better than incumbents)
+- ui-ux-pro-max-skill (112k★): value lives in CSV data assets (161 rules/84 styles), not distillable into single-file form without wholesale copying; frontend-design + new consistency skill cover the actionable core.
+- oh-my-design (406★): DESIGN.md installer/reference collection; method territory now covered by enforcing-design-consistency.
+- claude-nextjs-skills, claude-code-nextjs-skills, fastapi-claude-template, production-stack-skills, motion-dev-animations-skill, modern-python, semgrep-rule-creator/variant, ask-questions-if-underspecified, claude-api, audit-context-building, chaos-engineering, docker-development, kubernetes-operator, secrets-vault-manager, codeql: territory already held by existing skills (nextjs anti-patterns, fastapi clean architecture, motion, configuring-modern-python-projects, semgrep×2, clarifying-underspecified-requests, claude-api, docker-optimization, running-chaos-experiments, managing-secrets-infrastructure, scanning-with-codeql).
+
+### Rejected (with reasoning, grouped)
+- Awesome/curated lists, not skills: awesome-python, awesome-go, awesome-selfhosted, awesome-mac, awesome-neovim, awesome-nlp, awesome-quant, awesome-mcp-servers, awesome-llm-apps, awesome-artificial-intelligence, free-for-dev, professional-programming, coding-interview-university, awesome-agent-skills, agentic-awesome-skills, awesome-openclaw-skills.
+- Products/tools/templates whose README scored as a "skill": html-anything, firecrawl, dify, spec-kit, cc-switch, open-saas, skybridge, codepilot, superpowers, gstack, ecc, claw-code, openmontage, cli-anything, deeptutor, aihelms, cc-haha, ai-website-cloner-template, ruview, medusa, appgenesisforge, weft, registry, a2ui-adk, cometchat-skills, pharaohfolio, posthog-superpower, andrej-karpathy-skills, open-generative-ai, tezgah.
+- Multi-skill collections without a single distillable winner beyond what we took: orchestkit, agency-agents(-zh), ai-design-components, builder-skills, abu-cowork, agent-skills, skills (mattpocock), skills (anthropics — already mined), claude-skills (alirezarezvani — already mined; its business-ops/c-level/marketing sub-skills are off-stack for a dev library), skills-hub, skillnote, skilllens, lovcode, pm-skills, agentbro, maia-skill, editor-pro-max, carmack-council (51★ personal framework; orchestration covered by planning-multi-agent-work).
+- Off-stack: blockchain vuln scanners (algorand/cairo/solana/substrate/ton), yara-rule-authoring, c-review, rust-review, qt/swift/kotlin-only material, claude-osint, anthropic-cybersecurity-skills (unofficial mirror repo, provenance concerns), interpreting-culture-index, genotoxic, graph-evolution, let-fate-decide, vibe-coding-rules, and remaining low-star (<20★) repos below the social floor.
+
+### Notes / failure modes
+- Medium + Anthropic RSS feeds returned 403 (blocked); two curated-list seed URLs 404. No X_BEARER_TOKEN / EXA_API_KEY, so X and web-search sources skipped.
+- Heuristic uniqueness scoring (name/title/desc trigram) badly over-approves: 164 "creates" against an 82-skill library where nearly all were duplicates-by-territory, products, or lists. Consider adding a "repo is a skill, not a product/list" classifier signal (e.g. SKILL.md present at root, README/skill ratio).
