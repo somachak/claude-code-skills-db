@@ -16,6 +16,7 @@ Threat modeling, secrets/config audits, observability, SLOs, failure modes, and 
 - [`reviewing-failure-modes/`](./reviewing-failure-modes/) — Reviews how systems fail under dependency outages, partial writes, retries, and degraded states.
 - [`running-chaos-experiments/`](./running-chaos-experiments/) — Plans and runs disciplined chaos experiments against Node, FastAPI, and Django services: defining steady state, sizing blast radius, choosing fault injection tools, and writing the abort criteria before the experiment starts.
 - [`scanning-with-codeql/`](./scanning-with-codeql/) — Sets up CodeQL on TypeScript/JavaScript and Python repositories to find injection bugs, auth bypasses, and unsafe deserialization that pattern-based linters miss.
+- [`securing-postgres-row-level-security/`](./securing-postgres-row-level-security/) — Designs and reviews Postgres Row Level Security for multi-tenant apps: enabling and forcing RLS, writing policies that are both correct and fast (the select-wrapped auth.
 - [`semgrep-rule-creator/`](./semgrep-rule-creator/) — Creates custom Semgrep rules for detecting security vulnerabilities, bug patterns, and code patterns.
 - [`setting-slos-and-alerts/`](./setting-slos-and-alerts/) — Designs service-level objectives, indicators, and actionable alerts that reduce noise and improve operational focus.
 - [`sharp-edges/`](./sharp-edges/) — Identifies error-prone APIs, dangerous configurations, and footgun designs that enable security mistakes.

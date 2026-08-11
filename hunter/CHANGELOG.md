@@ -364,3 +364,29 @@ Runner discovered 1003 candidates; heuristics flagged 164 create / 0 overwrite. 
 ### Notes / failure modes
 - Medium + Anthropic RSS feeds returned 403 (blocked); two curated-list seed URLs 404. No X_BEARER_TOKEN / EXA_API_KEY, so X and web-search sources skipped.
 - Heuristic uniqueness scoring (name/title/desc trigram) badly over-approves: 164 "creates" against an 82-skill library where nearly all were duplicates-by-territory, products, or lists. Consider adding a "repo is a skill, not a product/list" classifier signal (e.g. SKILL.md present at root, README/skill ratio).
+
+## 2026-08-11T13:55Z APPLIED — +4 / ~0 [opus-4.6 quality gate]
+
+Heuristic runner: 1002 candidates discovered, 163 flagged create, 0 overwrite, 2 skip, 837 reject. Opus gate read the flagged set and overrode heavily — the heuristic list was dominated by non-skill repos and inflated-star spam. RSS sources all 403'd (Medium x2, anthropic.com); GitHub search + curated repos supplied everything.
+
+### Created (4)
+- [create] `implementing-nextjs-cache-components` score=90 (25/25/10/20/10) — rewritten from laguagu/claude-code-nextjs-skills cache-components (SKILL+PATTERNS, 39K chars → 5K). Net-new: nothing in library covered 'use cache'/PPR/cacheTag semantics.
+- [create] `building-vercel-ai-sdk-agents` score=90 (25/25/10/20/10) — rewritten from laguagu ai-sdk-7 + references. Net-new: zero AI SDK coverage despite ai-productivity category. v7 architecture decision + migration traps.
+- [create] `optimizing-nextjs-seo` score=90 (25/25/10/20/10) — rewritten from laguagu nextjs-seo + metadata-api/json-ld refs. Net-new: no SEO/metadata skill existed. Kept 2026-current facts (FAQPage rich-results removal, lastmod discipline, RFC 9309).
+- [create] `securing-postgres-row-level-security` score=77 (25/20/10/12/10) — rewritten from laguagu supabase-postgres references (rls-basics/rls-performance/privileges). Net-new: data skills had no RLS/privilege coverage. Always-on security category.
+
+### Notable skips/rejects (individually reviewed)
+- [skip] trailofbits/modern-python — incumbent `configuring-modern-python-projects` already adapted from this exact source (2026-04); delta since is only pre-commit→prek, far under the 15% overwrite bar. Noted for a future refresh.
+- [skip] wsimmonds/claude-nextjs-skills — incumbent `avoiding-nextjs-app-router-anti-patterns` already sourced from this repo; remaining files are narrow eval-targeted variants of covered territory.
+- [reject] trailofbits/testing-handbook-generator — meta-skill requiring a cloned handbook repo; not a standalone library skill.
+- [reject] trailofbits/yara-rule-authoring — excellent content but malware-ops domain; no practical fit for a web full-stack library even under the always-on security exemption.
+- [reject] trailofbits c-review, rust-review, lean-proofs, blockchain vuln scanners (algorand/cairo/solana/substrate/ton), address-sanitizer — off-stack (C/Rust/crypto).
+- [reject] semgrep-rule-creator, chaos-engineering, internal-comms, capacity-planner et al. (alirezarezvani) — duplicate territory already in library, or business-role skills off this library's engineering purpose.
+- [reject] awesome-skills/code-review-skill — 21K-line multi-language review collection; library already holds generating-pr-reviews / adversarial-code-review / differential-review; progressive-disclosure format doesn't compress into one skill body.
+- [reject] ancoleman/ai-design-components, laguagu repo README, mattpocock/skills, anthropics/skills README — collections/indexes, not skills.
+
+### Bulk rejects (by class)
+- ~40 awesome-lists & mega-repos (awesome-go/-python/-mac/-selfhosted, free-for-dev, coding-interview-university, professional-programming, awesome-mcp-servers…) — link lists, zero skill content.
+- ~30 products/tools misclassified as skills (dify, firecrawl, spec-kit, open-saas, cc-switch, superpowers-as-README…) — install-me repos, not authoring content.
+- ~50 low-signal or implausible-star repos (ecc "★239K", claw-code "★195K", gstack, ruview, ui-ux-pro-max-skill, anthropic-cybersecurity-skills clone…) — star counts inconsistent with repo reality; treated as spam/SEO repos and rejected on content regardless.
+- Remainder: shallow READMEs (<600 useful chars) or duplicate-territory candidates below the uniqueness bar.

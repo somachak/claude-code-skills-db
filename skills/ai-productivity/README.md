@@ -6,6 +6,7 @@ Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work
 
 - [`asking-clarifying-questions/`](./asking-clarifying-questions/) — A 6-axis underspecification test paired with a 1–5 question template and a `defaults` fast-path.
 - [`building-rag-ready-docs/`](./building-rag-ready-docs/) — Restructures documentation for retrieval quality with chunk-friendly sections, explicit metadata, and stable terminology.
+- [`building-vercel-ai-sdk-agents/`](./building-vercel-ai-sdk-agents/) — Builds AI features and agents in TypeScript with the Vercel AI SDK v7: generateText/streamText, structured output via Output.
 - [`cataloging-codebase-patterns/`](./cataloging-codebase-patterns/) — Catalogs recurring codebase patterns, preferred implementations, and anti-patterns so future skills and prompts can reference real repository behavior.
 - [`clarifying-underspecified-requests/`](./clarifying-underspecified-requests/) — Forces a structured clarification pass before any code is written when a request has multiple plausible interpretations — the most common cause of wasted Claude work in TS/React/Next and FastAPI/Django repos.
 - [`claude-api/`](./claude-api/) — Build, debug, and optimize Claude API / Anthropic SDK apps.

@@ -1,6 +1,6 @@
 {
-  "version": "2026-08-03",
-  "generated_at": "2026-08-03T06:17:31.008749Z",
+  "version": "2026-08-11",
+  "generated_at": "2026-08-11T12:39:49.728843Z",
   "purpose": "A growing source-backed database of high-value developer skills for teams using Claude Code. It is optimized for turning repeated front-end, back-end, data, testing, platform, security, and AI-assisted workflows into reusable skills that follow the official skill format.",
   "skill_blueprint": {
     "required_fields": [
@@ -102,6 +102,44 @@
         "when_to_use": "rag docs, retrieval, chunking"
       },
       "stage": "experiment"
+    },
+    {
+      "name": "building-vercel-ai-sdk-agents",
+      "title": "Building Agents with the Vercel AI SDK",
+      "category": "ai-productivity",
+      "audience": [
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "build",
+      "description": "Builds AI features and agents in TypeScript with the Vercel AI SDK v7: generateText/streamText, structured output via Output.object, ToolLoopAgent for in-memory tool loops, WorkflowAgent for durable resumable runs, runtimeContext/toolsContext separation, toolApproval for sensitive tools, and v6-to-v7 breaking changes (instructions vs system, isStepCount, aggregated usage, finalStep). Use when adding LLM features to a Next.js/Node app or migrating AI SDK major versions.",
+      "trigger_phrases": [
+        "vercel ai sdk",
+        "ToolLoopAgent",
+        "streamText",
+        "generateText",
+        "ai agents typescript",
+        "ai sdk migration"
+      ],
+      "skill_body": "## Vercel AI SDK v7: Agents and Core Functions\n\nFirst step, always: confirm the installed major version (`node_modules/ai/package.json`) before writing code - v6 and v7 APIs differ in breaking ways, and AI SDK APIs move too fast to trust memory. v7 requires Node >= 22 and is ESM-only.\n\n### Choosing an Agent Architecture\n\n- **`ToolLoopAgent` (from `ai`)** - ordinary app-server agents where losing in-memory state on restart is acceptable. Exposes `generate()`/`stream()`.\n- **`WorkflowAgent` (from `@ai-sdk/workflow`)** - runs that must survive process restarts, deploys, interrupted streams, or delayed human approval. Stream-first (`stream()` only); durable tools are marked `'use step'`; state must stay serializable.\n- **`HarnessAgent` (from `@ai-sdk/harness/agent`)** - wraps an external agent runtime (Claude Code, Codex) with sandboxing. Experimental; keep adapter code easy to swap.\n\n### Core v7 Patterns\n\n```ts\nimport { generateText, isStepCount, Output } from 'ai';\nimport { z } from 'zod';\n\nconst result = await generateText({\n  model,                       // resolve from project config; never hard-code from memory\n  instructions: 'Answer concisely.',   // NOT `system` (deprecated in v7)\n  prompt: 'Classify this ticket.',\n  stopWhen: isStepCount(3),            // renamed from stepCountIs\n  timeout: { totalMs: 60_000, stepMs: 15_000 },\n  output: Output.object({ schema: z.object({ priority: z.enum(['low','medium','high']) }) }),\n});\nresult.output;              // structured result - never JSON.parse(result.text)\n```\n\n### Context: Two Channels, Different Jobs\n\n`runtimeContext` carries loop-wide state (tenant ID, feature flags, request ID) and reaches `prepareStep`, callbacks, and telemetry. `toolsContext` carries per-tool secrets/config: each tool declares a `contextSchema` and receives only its own validated `context` in `execute`. Anything the model must reason about goes in messages or `instructions` instead - context is invisible to the model.\n\n### Tool Approvals\n\nAny tool that mutates data, spends money, runs commands, or reads private data gets a `toolApproval` entry (`'user-approval'`, or a function inspecting parsed input and context that returns approved/denied/user-approval). When the browser controls chat history, sign approvals with `experimental_toolApprovalSecret` so they are HMAC-verified server-side before execution. Workflow agents use tool-level `needsApproval` instead.\n\n### v6 -> v7 Migration Traps\n\n- `system` -> top-level `instructions`; system messages inside `messages` are rejected by default.\n- `experimental_output` -> `output`; read `result.output`.\n- `result.usage` (and `toolCalls`, `content`, etc.) now aggregate **all** steps; use `result.finalStep.usage` for the old behavior. For `streamText`, await `result.finalStep` first.\n- `fullStream` -> `stream`; `onChunk` receives all part types, so guard on `part.type`.\n- Lifecycle renames: `onFinish` -> `onEnd`, `onStepFinish` -> `onStepEnd`, `experimental_telemetry` -> `telemetry`.\n- Result helper methods are deprecated: use stateless `toUIMessageStream` + `createUIMessageStreamResponse`.\n\n### Checklist\n\n- Installed `ai` major version verified; ESM imports throughout.\n- Structured output uses `Output.object`, not manual JSON parsing.\n- Every loop has `stopWhen` and a `timeout`; long-latency tools get per-tool `toolMs` overrides.\n- Sensitive tools gated by approvals; secrets flow through `toolsContext`, never interpolated into prompts.\n- Durable flows use `WorkflowAgent` with serializable context; resume state persisted from `detach()`/`stop()`, not by replaying UI history.\n- Type safety: export `InferAgentUIMessage<typeof agent>` for typed useChat integration.",
+      "frontmatter_overrides": {
+        "when_to_use": "Use when implementing LLM features or agents in a TypeScript/Node/Next.js app with the Vercel AI SDK, choosing between ToolLoopAgent and WorkflowAgent, wiring tool approvals, or migrating v6 code to v7."
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/ai-sdk-7",
+        "source_type": "github-repo",
+        "captured_at": "2026-08-11T12:39:49.728843Z",
+        "rewritten": true,
+        "hunter_notes": "Rewritten from laguagu/claude-code-nextjs-skills ai-sdk-7 SKILL.md + references (core-functions, agents). Net-new: library had zero AI SDK coverage despite ai-productivity category. Condensed to architecture decision + migration traps + checklist.",
+        "hunter_score": 90,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 20,
+          "uniqueness": 10
+        }
+      }
     },
     {
       "name": "cataloging-codebase-patterns",
@@ -1284,6 +1322,44 @@
       "stage": "harden"
     },
     {
+      "name": "implementing-nextjs-cache-components",
+      "title": "Implementing Next.js Cache Components",
+      "category": "frontend",
+      "audience": [
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "build",
+      "description": "Implements Next.js Cache Components and Partial Prerendering (PPR): the 'use cache' directive, cacheLife() lifetimes, cacheTag() tagging, updateTag()/revalidateTag() invalidation, and static-shell vs streaming-dynamic composition. Use when a Next.js 15/16 project has cacheComponents enabled, when deciding what to cache vs stream through Suspense, or when replacing deprecated segment config like `export const revalidate`.",
+      "trigger_phrases": [
+        "use cache",
+        "cache components",
+        "partial prerendering",
+        "cacheTag",
+        "revalidateTag",
+        "nextjs caching"
+      ],
+      "skill_body": "## Next.js Cache Components\n\nCache Components shift caching from segment configuration to compositional code. Instead of `export const revalidate = 3600` controlling a whole route, each component or data function declares its own cache behavior with `'use cache'`, and everything else streams dynamically through Suspense. The result is Partial Prerendering: a static shell sent immediately, cached regions filled from the cache, and dynamic regions streamed per-request.\n\nDetect the mode before applying any of this: check `next.config.ts` for `cacheComponents: true`. Without it, these directives are unavailable and classic segment config still applies.\n\n### The Caching Decision, in Order\n\n1. **Does the component fetch data or do I/O?** No: it is a pure component, nothing to decide.\n2. **Does it read request context** (`cookies()`, `headers()`, `searchParams`)? No: go to 3. Yes: go to 4.\n3. **Is the data identical across users?** Yes: add `'use cache'` plus `cacheTag()` and `cacheLife()`. No: wrap the render in `<Suspense>` and let it stream.\n4. **Can the request-specific value be hoisted out as an argument?** Read `cookies()`/`headers()` outside the cached scope and pass the plain value into a `'use cache'` function; wrap the dynamic caller in `<Suspense>`. Only if compliance forbids cross-request sharing, fall back to `'use cache: private'` (experimental) - still inside Suspense.\n\nThe one-line rule: `'use cache'` is for data that is the same for everyone; user-specific data stays dynamic and streams.\n\n### Core Pattern: Static + Cached + Dynamic\n\n```tsx\nasync function FeaturedPosts() {\n  'use cache'\n  cacheTag('posts')\n  cacheLife('hours')\n  const posts = await db.posts.findMany({ where: { featured: true } })\n  return <PostGrid posts={posts} />\n}\n\nexport default async function HomePage() {\n  return (\n    <>\n      <Header />                       {/* static shell */}\n      <FeaturedPosts />                {/* cached, in shell */}\n      <Suspense fallback={<FeedSkeleton />}>\n        <PersonalizedFeed />           {/* dynamic, streams */}\n      </Suspense>\n    </>\n  )\n}\n```\n\n### Invalidation: Tag at Multiple Granularities\n\nTag cached scopes with both a broad tag and a narrow one (`cacheTag('posts', `post-${id}`)`), then invalidate the narrowest tag that covers the mutation. In Server Actions use `updateTag()` for read-your-own-writes (the user who mutated sees fresh data immediately); use `revalidateTag()` for background freshness where brief staleness is fine. Reusable cached data fetchers (`getUser`, `getPostsByCategory`) belong in `lib/data.ts` with their tags and lifetimes co-located.\n\n### Anti-Patterns\n\n- **Server Actions for data fetching.** `'use server'` functions are mutations only. A `getProducts()` marked `'use server'` becomes a public POST endpoint and skips caching entirely. Fetch in Server Components or `'use cache'` functions.\n- **Reading `cookies()` inside `'use cache'`.** Request APIs are unavailable in cached scopes; hoist the value out and pass it as an argument (it becomes part of the cache key).\n- **Keeping `export const revalidate` / `dynamic = 'force-static'`** alongside Cache Components. These are the deprecated configuration style; replace with `cacheLife()` and Suspense boundaries.\n- **One giant cached page.** Caching the whole page throws away PPR's benefit; cache the shareable regions and let personalization stream.\n- **Non-serializable arguments to cached functions.** Arguments form the cache key; pass IDs and scalars, not class instances or closures.\n\n### Review Checklist\n\n- `cacheComponents: true` confirmed before using directives.\n- Every `'use cache'` scope has an explicit `cacheLife()` and at least one `cacheTag()`.\n- Mutations call `updateTag()` (user-facing) or `revalidateTag()` (background) on the narrowest sufficient tag.\n- User-specific reads sit inside `<Suspense>`, not inside cached scopes.\n- No `'use server'` functions that only read data.\n- Build output shows the expected static shell; unexpected fully-dynamic pages usually mean an unhoisted request API.",
+      "frontmatter_overrides": {
+        "when_to_use": "Use when writing Server Components or data fetchers in a Next.js project with cacheComponents: true, when caching decisions (cache vs stream) come up, or when migrating off segment-level revalidate/dynamic exports."
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/cache-components",
+        "source_type": "github-repo",
+        "captured_at": "2026-08-11T12:39:49.728843Z",
+        "rewritten": true,
+        "hunter_notes": "Rewritten from laguagu/claude-code-nextjs-skills cache-components SKILL.md + PATTERNS.md. Condensed 39K chars of source into decision framework + anti-patterns + checklist. Net-new territory: library covered App Router anti-patterns but nothing on 'use cache'/PPR semantics.",
+        "hunter_score": 90,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 20,
+          "uniqueness": 10
+        }
+      }
+    },
+    {
       "name": "modern-css-architecture",
       "title": "Modern CSS Architecture",
       "category": "frontend",
@@ -1332,6 +1408,44 @@
         "allowed-tools": "Read Grep"
       },
       "stage": "scale"
+    },
+    {
+      "name": "optimizing-nextjs-seo",
+      "title": "Optimizing Next.js SEO and Metadata",
+      "category": "frontend",
+      "audience": [
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "launch",
+      "description": "Implements and audits SEO in Next.js App Router apps: the Metadata API and generateMetadata, separate viewport export, OG/Twitter image file conventions, app/sitemap.ts and app/robots.ts, canonical URLs and hreflang alternates, JSON-LD structured data with XSS-safe serialization, and current (2026) rich-results reality like the FAQPage deprecation. Use when adding metadata to routes, generating sitemaps, debugging indexing problems, or running a pre-launch SEO audit.",
+      "trigger_phrases": [
+        "nextjs seo",
+        "generateMetadata",
+        "sitemap robots",
+        "json-ld",
+        "open graph images",
+        "meta tags"
+      ],
+      "skill_body": "## Next.js App Router SEO\n\nSEO in App Router is file-convention driven: `metadata`/`generateMetadata` exports, `app/sitemap.ts`, `app/robots.ts`, and image file conventions replace hand-rolled `<head>` management. The skill is knowing which knobs matter in 2026 and which are cargo cult.\n\n### Metadata Essentials\n\nRoot layout: set `metadataBase`, a `title` object with `default` + `template` ('%s | Site'), a compelling description (~150-160 chars is a guideline, not a limit), `openGraph`, `twitter`, `alternates.canonical`, and `robots`. Two rules people miss:\n\n- **`viewport` (with `themeColor`/`colorScheme`) must be a separate export** - inside `metadata` it is silently unsupported.\n- **Skip `keywords`** - Google ignores the tag entirely.\n\nDynamic routes use `generateMetadata({ params }, parent)`. `params` is a Promise - await it. Extend parent OG images via `(await parent).openGraph?.images` rather than clobbering. `fetch()` is memoized between `generateMetadata` and the page; wrap DB/ORM loaders in React's `cache()` to avoid double queries. `notFound()`/`redirect()` work inside `generateMetadata` for missing entities.\n\n### Social Images\n\nPrefer the file convention over URL-syncing: drop `opengraph-image.png` / `twitter-image.png` into a route segment and Next.js emits the full tag set; deeper segments override shallower ones. For dynamic images use `ImageResponse` in `opengraph-image.tsx`. Standard size 1200x630.\n\n### Sitemap and Robots\n\n`app/sitemap.ts` returns entries from your CMS/DB. `lastModified` must be the content's real change date - `new Date()` on every build teaches Google to ignore your lastmod entirely. Omit `changeFrequency` and `priority`; Google ignores both. In `app/robots.ts`: never disallow `/_next/` (crawlers need render-critical CSS/JS), and if you add bot-specific rule groups, repeat all disallows - named groups do not inherit `*` rules (RFC 9309). The non-standard `host` directive is ignored; declare the preferred host with canonicals and 301s.\n\n### JSON-LD\n\nSerialize with XSS protection and render in the component tree:\n\n```tsx\n<script type=\"application/ld+json\"\n  dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\\\u003c') }} />\n```\n\nKnow the 2026 rich-results landscape: **FAQPage rich results are gone** (fully removed May 2026) - keep the markup only as an AI-search extraction signal. Still productive: Organization, Article, BreadcrumbList, and Product. Product markup is two experiences: product snippets (editorial pages, ratings/pros-cons, no price needed) vs merchant listings (purchasable pages - require `offers` with price + availability; add `shippingDetails` and `hasMerchantReturnPolicy`). Variants use `ProductGroup` with `hasVariant`. Structured data must match visible page content or Google discards it.\n\n### Anti-Patterns\n\n- Viewport/themeColor inside the `metadata` object (silently dropped).\n- `new Date()` as blanket `lastModified` in sitemaps.\n- Disallowing `/_next/` or `/static/` in robots.\n- Duplicating parent OG config in every page instead of the template + file conventions (metadata merging is shallow - nested objects replace, not merge).\n- Adding a web app manifest \"for SEO\" - it is a PWA nicety with zero ranking effect.\n\n### Pre-Launch Audit\n\n- `curl /robots.txt` and `/sitemap.xml` return real content.\n- Page source shows correct title/description/canonical per route, one `application/ld+json` per entity.\n- OG preview correct in a card validator; images 1200x630.\n- Core Web Vitals: check field data via Search Console/PageSpeed Insights - Lighthouse is lab-only and cannot measure INP.\n- Search Console: no \"Discovered - currently not indexed\" pileup; if present, fix internal linking and content depth before touching technical knobs.",
+      "frontmatter_overrides": {
+        "when_to_use": "Use when implementing metadata, sitemaps, robots rules, social images, or structured data in a Next.js App Router app, or when auditing a site before launch / diagnosing Search Console indexing issues."
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/nextjs-seo",
+        "source_type": "github-repo",
+        "captured_at": "2026-08-11T12:39:49.728843Z",
+        "rewritten": true,
+        "hunter_notes": "Rewritten from laguagu/claude-code-nextjs-skills nextjs-seo SKILL.md + references (metadata-api, json-ld). Net-new: library had no SEO/metadata coverage. Kept the sharp 2026-current facts (FAQPage removal, lastmod discipline, RFC 9309 group inheritance) that generic knowledge gets wrong.",
+        "hunter_score": 90,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 25,
+          "social": 10,
+          "depth": 20,
+          "uniqueness": 10
+        }
+      }
     },
     {
       "name": "reviewing-frontend-security",
@@ -1958,6 +2072,44 @@
         "source_type": "github-repo",
         "captured_at": "2026-05-25T06:18:29.767413Z",
         "confidence": 0.9
+      }
+    },
+    {
+      "name": "securing-postgres-row-level-security",
+      "title": "Securing Postgres with Row Level Security",
+      "category": "security-reliability",
+      "audience": [
+        "full-stack"
+      ],
+      "priority": "supporting",
+      "stage": "harden",
+      "description": "Designs and reviews Postgres Row Level Security for multi-tenant apps: enabling and forcing RLS, writing policies that are both correct and fast (the select-wrapped auth.uid() pattern), SECURITY DEFINER helper functions with locked-down search_path and revoked EXECUTE, least-privilege role grants, and the indexes RLS policies need. Use when adding tenant isolation, reviewing Supabase/Postgres policies, or debugging slow RLS queries.",
+      "trigger_phrases": [
+        "row level security",
+        "RLS policy",
+        "multi-tenant isolation",
+        "supabase security",
+        "postgres roles",
+        "security definer"
+      ],
+      "skill_body": "## Postgres Row Level Security\n\nApplication-level filtering (`where user_id = $current`) is one forgotten WHERE clause away from a data breach. RLS moves tenant isolation into the database: once enabled, every query against the table is filtered by policy, no matter which code path issued it.\n\n### Enabling Correctly\n\n```sql\nalter table orders enable row level security;\nalter table orders force row level security;  -- applies to the table owner too\n\ncreate policy orders_user_policy on orders\n  for all\n  to authenticated\n  using ((select auth.uid()) = user_id);\n```\n\n`force` matters: without it, the table owner (often your migration/admin role) silently bypasses every policy. Scope policies to roles (`to authenticated`) so anonymous roles get nothing by default. In non-Supabase Postgres, the equivalent identity source is a session setting: `current_setting('app.current_user_id')::bigint`, set per-connection by the app.\n\n### The Performance Trap Everyone Hits\n\n`using (auth.uid() = user_id)` calls the function **once per row** - on a million-row table that is a million calls. Wrapping it in a scalar subquery makes Postgres evaluate it once and cache it:\n\n```sql\nusing ((select auth.uid()) = user_id)   -- 100x+ faster on large tables\n```\n\nThis one-character-class change is the highest-leverage RLS review comment you can make. Pair it with an index on every column a policy references (`create index on orders (user_id)`) - policies are predicates, and unindexed predicates are sequential scans.\n\n### Complex Checks: SECURITY DEFINER Helpers\n\nTeam/org membership checks that join other tables belong in a helper function, not inline in the policy. But SECURITY DEFINER functions run with the creator's privileges and bypass RLS on tables they touch, so they need three guardrails:\n\n```sql\ncreate or replace function private.is_team_member(team_id bigint)\nreturns boolean language sql security definer\nset search_path = ''            -- 1. pin search_path against hijacking\nas $$\n  select exists (\n    select 1 from public.team_members\n    where team_id = $1 and user_id = (select auth.uid())  -- 2. explicit identity check inside\n  );\n$$;\nrevoke execute on function private.is_team_member(bigint)\n  from PUBLIC, anon, authenticated, service_role;          -- 3. not directly callable\n```\n\nThen the policy is a single indexed lookup: `using ((select private.is_team_member(team_id)))`.\n\n### Least Privilege Around RLS\n\nRLS is not a substitute for grants. The application role should hold only the specific `select`/`insert`/`update` it needs on specific tables - never `grant all on all tables`, never a superuser connection (superusers bypass RLS entirely, and any SQL injection becomes catastrophic). Separate read-only roles for reporting.\n\n### Anti-Patterns\n\n- Enabling RLS without `force` and assuming the owner is covered.\n- Per-row function calls in policies (unwrapped `auth.uid()`, `current_setting()`).\n- SECURITY DEFINER helpers in an exposed schema, without `set search_path = ''`, or missing the internal identity check.\n- Policies referencing unindexed columns.\n- Relying on `service_role`/superuser connections in app code \"because RLS gets in the way\" - that removes the entire control.\n- Testing only the happy path: verify as the wrong user and as anon that rows are invisible.\n\n### Review Checklist\n\n- Every multi-tenant table: RLS enabled + forced, policies scoped to roles.\n- All policy function calls select-wrapped; all policy columns indexed.\n- SECURITY DEFINER helpers: private schema, pinned search_path, revoked EXECUTE, identity check inside.\n- App connects as a minimal role; no superuser DSNs outside migrations.\n- A test proves cross-tenant reads return zero rows, not an error the app happens to swallow.",
+      "frontmatter_overrides": {
+        "when_to_use": "Use when implementing or reviewing tenant isolation in Postgres/Supabase, writing or optimizing RLS policies, creating SECURITY DEFINER helpers, or auditing database role privileges."
+      },
+      "provenance": {
+        "source_url": "https://github.com/laguagu/claude-code-nextjs-skills/tree/main/skills/supabase-postgres-best-practices",
+        "source_type": "github-repo",
+        "captured_at": "2026-08-11T12:39:49.728843Z",
+        "rewritten": true,
+        "hunter_notes": "Rewritten from laguagu/claude-code-nextjs-skills supabase-postgres-best-practices references (security-rls-basics, security-rls-performance, security-privileges). Net-new: library's data skills cover schemas/query perf/vector search but had no RLS or database-privilege coverage. Always-on security category.",
+        "hunter_score": 77,
+        "hunter_breakdown": {
+          "stack_fit": 25,
+          "compliance": 20,
+          "social": 10,
+          "depth": 12,
+          "uniqueness": 10
+        }
       }
     },
     {

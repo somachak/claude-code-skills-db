@@ -13,7 +13,9 @@ React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, C
 - [`enforcing-design-consistency/`](./enforcing-design-consistency/) — Keeps AI-built UIs looking designed across screens and sessions: lock design decisions (accent, type scale, spacing, radius, motion) in a committed DESIGN.
 - [`frontend-design/`](./frontend-design/) — Create distinctive, production-grade frontend interfaces with high design quality.
 - [`hardening-forms-and-validation/`](./hardening-forms-and-validation/) — Strengthens form UX, validation rules, error states, async submission behavior, and client-server contract alignment.
+- [`implementing-nextjs-cache-components/`](./implementing-nextjs-cache-components/) — Implements Next.
 - [`modern-css-architecture/`](./modern-css-architecture/) — Improves CSS architecture, token usage, layout consistency, and responsive styling strategy.
 - [`optimizing-bundle-performance/`](./optimizing-bundle-performance/) — Finds bundle growth, heavy dependencies, route-splitting opportunities, and hydration risks.
+- [`optimizing-nextjs-seo/`](./optimizing-nextjs-seo/) — Implements and audits SEO in Next.
 - [`reviewing-frontend-security/`](./reviewing-frontend-security/) — Reviews browser-facing code for XSS, token exposure, unsafe rendering, insecure storage, and client-side trust mistakes.
 - [`verifying-responsive-layouts/`](./verifying-responsive-layouts/) — Checks breakpoint behavior, overflow, spacing collapse, and layout resilience across screen sizes.
