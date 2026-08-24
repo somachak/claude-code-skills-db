@@ -4,7 +4,7 @@ Installable Claude Code skills grouped by category. Every skill is a directory w
 
 ## Categories
 
-- [`ai-productivity/`](./ai-productivity/) — 17 skills. Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work, building RAG-ready docs, and cataloging patterns.
+- [`ai-productivity/`](./ai-productivity/) — 20 skills. Extracting reusable skills, reviewing PRs with Claude, planning multi-agent work, building RAG-ready docs, and cataloging patterns.
 - [`backend/`](./backend/) — 12 skills. Node.js, FastAPI, and Django patterns for APIs, auth, jobs, concurrency, webhooks, event-driven systems, and backend documentation.
 - [`data/`](./data/) — 7 skills. Schema design, SQL review, migrations, search/indexing, analytics instrumentation, and ETL validation.
 - [`frontend/`](./frontend/) — 15 skills. React / Next.js / TypeScript and Tailwind + shadcn UI patterns, accessibility, CSS architecture, responsive behavior, bundle performance, and browser-facing security.

@@ -1,116 +1,74 @@
 ---
 name: claude-api
-description: "Build, debug, and optimize Claude API / Anthropic SDK apps. Always includes prompt caching. Handles migrating between Claude model versions and choosing between API surfaces (single call, tool use, agentic loop, Managed Agents). TRIGGER: code imports `anthropic`/`@anthropic-ai/sdk`; user asks for Claude API, Anthropic SDK, or Managed Agents; user adds/modifies a Claude feature (caching, thinking, tool use, batch, files, citations) or model. SKIP: file uses `openai`/other-provider SDK, provider-neutral code, general ML."
+description: "Builds and debugs Claude API / Anthropic SDK applications: choosing between a single Messages call, a code-owned tool-use loop, and Managed Agents; current-generation defaults (adaptive thinking, effort levels, streaming, max_tokens sizing); prompt caching prefix discipline and silent-invalidator debugging; compaction vs context editing for long agent loops; task budgets vs max_tokens; and the migration breakages that return 400 (assistant prefills, budget_tokens, temperature/top_p). Use when writing or reviewing Anthropic SDK code, picking a model, debugging cache misses or truncated output, or migrating a codebase to a newer Claude model."
+when_to_use: Use whenever code calls the Anthropic SDK or Claude API, when choosing a model or API surface, or when debugging caching, streaming, tool use, thinking config, or a model migration. Skip if the project targets a different LLM provider.
 ---
 
-# Building LLM-Powered Applications with Claude
+## Claude API & Anthropic SDK
 
-## Before You Start
+Your training prior about model IDs, parameters, and pricing is stale by construction. Verify against `docs.claude.com` before writing model strings or quoting prices — this file is a decision map, not a price list.
 
-Scan for non-Anthropic provider markers — `import openai`, `langchain_openai`, `OpenAI(`, `gpt-4`, filenames like `agent-openai.py` or `*-generic.py`. If found, ask whether to switch to Claude or keep non-Claude. Do not edit non-Anthropic files with Anthropic SDK calls.
+### Defaults that are almost always right
 
-**Never guess SDK usage.** Import paths, method signatures, and class names must come from explicit documentation. WebFetch the SDK repo rather than infer from another language.
+- Model: `claude-opus-5`. Do not downgrade to Sonnet or Haiku for cost; that is the user's call, not yours.
+- Thinking: `thinking: {type: "adaptive"}` for anything non-trivial. Adaptive lets the model decide depth per request.
+- Streaming: on for any request with long input, long output, or high `max_tokens` — it is the fix for SDK HTTP timeouts. Use `.get_final_message()` / `.finalMessage()` when you don't need per-event handling.
+- `max_tokens`: ~16000 non-streaming, ~64000 streaming. Lowballing truncates mid-thought and costs a full retry. Go small only for classification (~256) or deliberate short outputs.
 
-## Defaults (non-negotiable)
+**Use exact model ID strings with no date suffix.** `claude-sonnet-5`, not `claude-sonnet-5-20260114`. Date-suffixed variants you recall from training are a common source of 404s.
 
-- **Model**: `claude-opus-4-7` unless user explicitly names another. Do not downgrade for cost.
-- **Thinking**: `thinking: {type: "adaptive"}` for anything remotely complex. `budget_tokens` is deprecated on 4.6/4.7.
-- **Streaming**: Default for long input/output or high `max_tokens`. Use `.get_final_message()` if you don't need individual events.
-- **Prompt caching**: Always include for large, repeated context.
+### Which surface?
 
-## Which Surface to Use
+| Need | Surface |
+|---|---|
+| Classify, summarize, extract, answer | Single Messages API call |
+| Multi-step pipeline where *your code* owns the control flow | Messages API + tool use, loop in your code |
+| Open-ended agent with your own tools and your own compute | Messages API + tool use (or the SDK's tool-runner helper) |
+| Stateful agent with a hosted sandbox, file mounts, scheduling, versioned config | Managed Agents |
 
-| Use Case | Surface |
-|----------|---------|
-| Classification, summarization, extraction, Q&A | Claude API — single call |
-| Multi-step with code-controlled logic | Claude API + tool use |
-| Custom agent (you host compute + tools) | Claude API agentic loop |
-| Server-managed stateful agent (Anthropic hosts execution) | Managed Agents |
-| Third-party providers (Bedrock, Vertex, Foundry) | Claude API + tool use only — Managed Agents is 1P only |
+Start at the top and move down only when the task genuinely needs model-driven exploration. "Simplest" means the least code you own — for a scheduled or memory-backed agent, Managed Agents is usually simpler than hand-rolling a loop plus a scheduler plus state files.
 
-**Decision tree:**
+Managed Agents flow is always **Agent (created once, versioned) → Session (per run)**. `model`, `system`, and `tools` live on the agent, never on the session. It is unsupported on Bedrock/Vertex/Foundry — use Messages API + tool use there.
+
+### Prompt caching: the whole game is prefix stability
+
+Render order is `tools` → `system` → `messages`. A single changed byte anywhere in the prefix invalidates everything after it.
+
 ```
-1. Is your deployment on Bedrock/Vertex/Foundry? → Claude API (Managed Agents unavailable)
-2. Single LLM call? → Claude API
-3. Want Anthropic to run agent loop + host container? → Managed Agents
-4. Multi-step, you control the loop? → Claude API + tool use
-5. Open-ended agent, you host compute? → Claude API agentic loop
-```
-
-**Should I build an agent?** Only if: (1) task is multi-step and hard to fully specify, (2) outcome justifies cost/latency, (3) Claude is capable at this task type, (4) errors can be caught and recovered from. "No" to any → stay simpler.
-
-## Current Models (2026-04-15)
-
-| Model | Model ID | Context | Input $/1M | Output $/1M |
-|-------|----------|---------|------------|-------------|
-| Claude Opus 4.7 | `claude-opus-4-7` | 1M | $5.00 | $25.00 |
-| Claude Opus 4.6 | `claude-opus-4-6` | 1M | $5.00 | $25.00 |
-| Claude Sonnet 4.6 | `claude-sonnet-4-6` | 1M | $3.00 | $15.00 |
-| Claude Haiku 4.5 | `claude-haiku-4-5` | 200K | $1.00 | $5.00 |
-
-**CRITICAL**: Use exact model ID strings above. Do NOT append date suffixes. `claude-sonnet-4-5`, not `claude-sonnet-4-5-20250514`.
-
-## Thinking & Effort
-
-- **Opus 4.7**: `thinking: {type: "adaptive"}` only. `budget_tokens` is removed — 400 error if used. Default effort: `"xhigh"` is best for most tasks.
-- **Opus 4.6 / Sonnet 4.6**: Use `thinking: {type: "adaptive"}`. `budget_tokens` deprecated but still functional as transitional escape hatch.
-- **Effort**: `output_config: {effort: "low"|"medium"|"high"|"xhigh"|"max"}`. `max` Opus-only. `xhigh` Opus 4.7 only. Default is `high`.
-- **Thinking display on Opus 4.7**: Thinking blocks stream empty by default. Set `thinking: {type: "adaptive", display: "summarized"}` to show visible progress.
-
-## Language Detection
-
-| File Pattern | SDK |
-|-------------|-----|
-| `*.py`, `pyproject.toml`, `requirements.txt` | Python (`anthropic`) |
-| `*.ts`, `*.tsx`, `package.json` | TypeScript (`@anthropic-ai/sdk`) |
-| `*.java`, `pom.xml`, `build.gradle` | Java |
-| `*.go`, `go.mod` | Go |
-| `*.rb`, `Gemfile` | Ruby |
-| `*.cs`, `*.csproj` | C# |
-| `*.php`, `composer.json` | PHP |
-
-If multiple languages: check which the user's current file relates to. If ambiguous, ask.
-
-## Anti-Patterns
-
-| Don't | Do Instead |
-|-------|-----------|
-| Use `requests`/`fetch` in Python/TS project | Use official SDK |
-| Fall back to OpenAI-compatible shims | Use Anthropic SDK |
-| Append date suffixes to model IDs | Use exact IDs from table |
-| Use `budget_tokens` on new 4.6/4.7 code | Use `thinking: {type: "adaptive"}` |
-| Choose model to save cost without asking user | Always use `claude-opus-4-7` as default |
-| Infer API from another language's SDK | WebFetch the target language's SDK docs |
-
-## Prompt Caching
-
-Always include for large, repeated context (system prompts, long docs, tool definitions). Add `cache_control: {type: "ephemeral"}` to the last block of content you want cached. Cache TTL is 5 minutes (ephemeral). Saves cost significantly on repeated calls.
-
-## Tool Use Pattern
-
-```python
-# Python — basic tool use loop
-import anthropic
-
-client = anthropic.Anthropic()
-
-tools = [{"name": "get_weather", "description": "Get weather for a location", 
-           "input_schema": {"type": "object", "properties": {"location": {"type": "string"}}, "required": ["location"]}}]
-
-response = client.messages.create(
-    model="claude-opus-4-7",
-    max_tokens=1024,
-    tools=tools,
-    messages=[{"role": "user", "content": "What's the weather in Tokyo?"}]
-)
-# Handle tool_use blocks in response.content
+[ tools (frozen, sorted) ][ system (frozen) ] ←cache_control  [ history ]  [ volatile: timestamp, user question ]
 ```
 
-## Checklist
+Put stable content first, volatile content after the last breakpoint. Max 4 breakpoints; minimum cacheable prefix ~1024 tokens — below that it silently doesn't cache.
 
-- [ ] Model ID is exact string from table (no date suffix appended)
-- [ ] Using official Anthropic SDK for the project language, not requests/fetch
-- [ ] Prompt caching added for large repeated context
-- [ ] Streaming enabled for long requests
-- [ ] Thinking set to `adaptive` (not `budget_tokens`) on 4.6/4.7
-- [ ] Effort level appropriate for task (default `high`, use `xhigh` on Opus 4.7 for complex work)
+**Verify, don't assume:** check `usage.cache_read_input_tokens` across repeated calls. Zero means a silent invalidator — `datetime.now()` in the system prompt, unsorted JSON keys, a tool list built from a set, or a per-request trace ID.
+
+For operator instructions mid-conversation, append a `{"role": "system"}` message to `messages[]` rather than editing top-level `system`; editing `system` throws away the cached prefix. (Supported on the Opus/Fable tier, not Sonnet 5.)
+
+### Long-running loops: compaction vs context editing
+
+They are different features and easy to confuse.
+
+- **Compaction** *summarizes* earlier context server-side as you approach the trigger threshold. Beta header `compact-2026-01-12`. **The critical mistake:** append the whole `response.content` back to `messages`, not just the extracted text — compaction blocks in the response are what the API uses to replace history on the next request. Extract only the string and you silently lose compaction state.
+- **Context editing** *clears* old blocks rather than summarizing. On `client.beta.messages.*` with `context-management-2025-06-27`, pass `context_management={"edits": [{"type": "clear_tool_uses_20250919"}]}` (or `clear_thinking_20251015`). Cheapest fix when tool results, not reasoning, are the bloat.
+
+### Task budgets ≠ max_tokens
+
+`max_tokens` is a hard per-response ceiling the model cannot see; it gets cut off mid-sentence. A **task budget** is an advisory token ceiling for a whole agentic loop that the model *can* see, so it paces itself and lands the plane. Set `output_config={"effort": "high", "task_budget": {"type": "tokens", "total": 64000}}` on a streaming beta call (minimum total 20,000). Leave `remaining` unset — the server tracks the countdown; passing a client-computed `remaining` while also resending full history under-reports spend. Only set it when you rewrite history between requests.
+
+### Migration pitfalls that bite
+
+- **Assistant prefills are removed** on the current model generation and return 400. Use `output_config.format` (structured outputs) or a system-prompt instruction to control response shape.
+- **`budget_tokens` is removed** on current models — `{type: "enabled", budget_tokens: N}` returns 400. Use `effort` levels instead.
+- **Sampling params** (`temperature`, `top_p`, `top_k`) are rejected on current models.
+- **Disabling thinking on Opus 5** is accepted only at effort `high` or below and degrades tool-call formatting. Prefer `effort: "low"` over disabling.
+- **Never silently truncate** oversized input. Tell the user and offer chunking or summarization.
+- **Confirm scope before a codebase migration.** "Migrate my project to Opus 5" names the what, not the where. Ask which directory or file list before editing.
+
+### Pre-flight checklist
+
+- [ ] Model ID verified against live docs, no date suffix appended
+- [ ] `thinking: adaptive` set; no `budget_tokens`, no `temperature`
+- [ ] Streaming enabled where output may be long
+- [ ] `cache_read_input_tokens` observed non-zero on the second identical call
+- [ ] Full `response.content` appended to history (not just text) if compaction is on
+- [ ] Tool-use loop terminates on `stop_reason` and handles `max_tokens` as an error, not a result
